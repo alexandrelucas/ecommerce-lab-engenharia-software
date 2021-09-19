@@ -1,0 +1,29 @@
+<div class="modal-header">
+    <p class="modal-title m-0" id="modal-basic-title"><span class="fas fa-list-ul mr-2"></span>Detalhes: </p>    
+  </div>
+  <div class="modal-body">
+    <div class="row-d-flex">
+      <h2>Número do Pedido: #{{pedido.numeroPedido}}</h2> 
+    </div>
+    <h3>Produtos do Pedido:</h3>
+    <div class="row d-flex justify-content-center align-items-center mt-4 mb-4" *ngFor="let p of produtosLista">
+      <div class="col-md-2">
+        <img [src]="p.imagem" style="height: 64px;"/>
+      </div>
+      <div class="col-md-4">
+        <p>({{p.qtd}}) {{p.titulo}} </p>
+      </div>
+      <div class="col-md-6">
+        <select name="cars" id="cars" class="form-control" >
+          <option *ngFor="let el of getListaStatus(); let i = index;" [value]="i" [selected]="p.status == i">{{getStatusNome(i)}}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="row">
+      <div class="d-flex justify-content-center">
+        <p class="mr-2">Valor Total:</p> <strong><p>{{pedido.valorTotal | currency: 'BRL'}}</p></strong>
+      </div>
+    </div>
+  </div>

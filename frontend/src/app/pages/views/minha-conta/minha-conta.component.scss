@@ -1,0 +1,53 @@
+.principal { 
+    width: 100%;
+    height: 100%;
+}
+.blocoPerfil {
+    min-width: 900px;
+    background-color: #f1f1f1;
+    margin: 100px;
+}
+.bandeiraWrapper {
+    width: 32px;
+    height: 32px;
+}
+.bandeiraWrapper > img {
+    width: 100%;
+    height: 100%;
+}
+.profileImage {
+    width: 100px;
+    height: 100px;
+}
+.profileImage > img {
+    width: 100%;
+    height: 100%;
+}
+.tituloUsuario {
+    padding: 20px;
+}
+.conteudo {
+    padding: 50px;
+}
+.btn-perfil {
+    padding-right: 20px;
+    padding-bottom: 20px;
+}
+.nav-link {
+    font-size: 14pt;
+    cursor: pointer;
+}.nav-link:active {
+    font-weight: bold;
+}
+.loader-ctn {
+    position: absolute;
+    width: 100%;
+    background-color: #ffffff52;
+    height: 100%;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 7;
+    display: flex!important;
+  }

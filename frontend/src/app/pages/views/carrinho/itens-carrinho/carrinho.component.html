@@ -1,0 +1,137 @@
+<div class="row w-100">
+  <div class="col-md-12">
+    <h1 class="mt-4 mb-4">Meu Carrinho</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Produto</th>
+          <th></th>
+          <th>Obs.</th>
+          <th>Preço</th>
+          <th class="tab-header">Quantidade</th>
+          <th class="tab-header">Total</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of carrinho.listaCompras">
+          <td class="car-imagem"><img src="{{ item.imagem }}" width="50px" height="50px"></td>
+          <td>
+            <p><strong>{{ 'Vinho ' + item.titulo }}</strong></p>
+            <p>{{ item.pais }}</p>
+            <p>{{ item.classificacao + ' - ' + item.quantidadeML + 'ml' }}</p>
+          </td>
+          <td>
+            <p>{{ 'Armazenamento: ' + item.tempoGuarda + ' anos' }}</p>
+            <p>{{ 'teor alcólico: ' + item.teorAlcolico + '%' }}</p>
+          </td>
+          <td>
+            <s><p>{{ item.precoDe | currency: 'BRL' }}</p></s>
+            <strong><p>{{ item.precoPor | currency: 'BRL' }}</p></strong>
+          </td>            
+          <td>
+            <div class="col-md-12 d-flex pr-2 pl-2 car-qtd">
+              <button class="car-btn-qtd" (click)="updateQtd(item, -1)" [disabled]="item.qtd == 0"><i class="fas fa-chevron-left"></i></button>
+              <p>{{ item.qtd }}</p>
+              <button class="car-btn-qtd" (click)="updateQtd(item, 1)"><i class="fas fa-chevron-right"></i></button>
+            </div>
+          </td>
+          <td class="tab-header">
+            <strong><p>{{ item.qtd * item.precoPor | currency: 'BRL' }}</p></strong>
+          </td>
+          <td>              
+            <button class="car-btn-qtd" (click)="removeCarrinho(item)"><i class="far fa-trash-alt"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-4">      
+    <form [formGroup]="cupomForm" class="mt-4">
+      <div class="d-flex align-items-center mb-1">
+        <mat-icon>card_giftcard</mat-icon>
+        <label class="p-0 mb-0 ml-2">Cupom de desconto</label>
+      </div>        
+      <div class="form-row">
+        <div class="form-group col-md-8">
+          <input type="text" class="form-control" formControlName="cupom" aria-describedby="cupom" placeholder="código">
+          <small class="form-text text-muted" *ngIf="cupomForm.get('cupom').value">{{ carrinho?.infoCupom }}</small>
+        </div>
+        <div class="form-group col-md-2">              
+          <button class="btn"  [ngClass]="setCupom ? 'btn-danger' : 'btn-dark'" (click)="validaCupom()">{{setCupom ? 'Remover' : 'Aplicar'}}</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="col-md-5">
+    <form [formGroup]="carrinhoForm" class="mt-4 ml-4">
+      <div class="d-flex align-items-center mb-1">
+        <mat-icon> local_shipping</mat-icon>
+        <label class="p-0 mb-0 ml-2">Calcular frete</label>
+      </div>        
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <input type="text" class="form-control" formControlName="cep" mask="00000-000" aria-describedby="cupom">
+        </div>
+        <div class="form-group col-md-2">              
+          <button class="btn btn-dark" (click)="calcularFrete()" [disabled]="carrinhoForm.invalid">OK</button>
+        </div>
+      </div>
+    </form>
+    <fieldset class="form-group" *ngIf="carrinho?.listaFrete?.length">
+      <legend class="col-form-label col-sm-2 m-0 p-0 pt-0">FRETE</legend>
+      <div class="row col-sm-10" *ngFor="let frete of carrinho.listaFrete; let i = index">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" [value]="frete.price" [(ngModel)]="carrinho.valorFrete">
+          <div class="d-flex justify-content-between">
+            <label>
+              <strong>{{ frete.company.name }}</strong>{{ ' (' + frete.name + ') - até ' + frete.delivery_time + ' dias úteis.' }}
+            </label>
+            <label>
+              {{ frete.price | currency: 'BRL' }}
+            </label>
+          </div>
+        </div>
+      </div>          
+    </fieldset>      
+  </div>
+  <div class="col-md-3 h-100">
+    <div class="row">
+      <div class="d-flex justify-content-between">
+        <p>Subtotal: </p>
+        <p>{{ updateValorCompras() | currency: 'BRL' }}</p>
+      </div>
+    </div>
+    <div class="row" *ngIf="carrinho.valorFrete != 0">
+      <div class="d-flex justify-content-between">
+        <p>Frete</p>
+        <p>{{ carrinho.valorFrete | currency: 'BRL' }}</p>
+      </div> 
+    </div>
+    <div class="row">
+      <div class="d-flex justify-content-between">
+        <p>Desconto</p>
+        <p>{{ '-' + carrinho.cupomDesconto | currency: 'BRL' }}</p>
+      </div> 
+    </div>
+    <div class="row">
+      <div class="d-flex justify-content-between">
+        <strong><p>Total</p></strong>
+        <strong><p>{{ updateValorTotal() | currency: 'BRL' }}</p></strong>
+      </div> 
+    </div>
+    <div class="row">
+      <button class="btn btn-dark" matStepperNext (click)="concluirPedido()" id="btn-carrinho-concluir-pedido">CONCLUIR PEDIDO</button>
+    </div>
+    <div class="row mt-2 mb-5">
+      <button class="btn btn-dark btn-continuar-compra" (click)="continuarCompra()">CONTINUAR COMPRANDO</button>
+    </div>
+  </div>
+</div>
+    

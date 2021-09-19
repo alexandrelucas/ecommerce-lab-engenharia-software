@@ -1,0 +1,30 @@
+.cadastroContainer {
+    width: 75rem;
+    height: 100%;
+    display: flex;    
+}
+
+.car-qtd {
+    align-items: baseline;
+    justify-content: space-around;
+    cursor: pointer;
+}
+.car-btn-qtd {
+    border: none;
+    background: none;
+}
+.car-imagem {
+    text-align: center;
+    vertical-align: middle;
+}
+.tab-header {
+    text-align: center;
+}
+.btn-continuar-compra {
+    color: #1c1f23;
+    background: #fff;
+}
+.btn-continuar-compra:hover {
+    color: #fff;
+    background:#1c1f23;
+}

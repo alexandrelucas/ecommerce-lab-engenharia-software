@@ -1,0 +1,30 @@
+.title{
+    margin: 3% 0 3% 15%;
+}
+.barra {
+    display: flex;
+    width: 2px;
+    background-color: rgb(242, 243, 244);
+    margin: 0px 32px;
+    padding: 0;
+}
+.btn-pre-cadastro {
+    color: #1c1f23;
+    background: #fff;
+}
+.btn-pre-cadastro:hover {
+    color: #fff;
+    background:#1c1f23;
+}
+.loader-ctn {
+    position: absolute;
+    width: 100%;
+    background-color: #ffffff52;
+    height: 100%;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 7;
+    display: flex!important;
+}

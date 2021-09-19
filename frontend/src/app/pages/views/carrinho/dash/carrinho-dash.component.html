@@ -1,0 +1,24 @@
+<div class="container">
+    <mat-horizontal-stepper labelPosition="bottom" #stepper>
+        <mat-step>
+            <ng-template matStepLabel>Carrinho</ng-template>
+            <app-carrinho></app-carrinho>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>Identificação</ng-template>
+            <app-identificacao></app-identificacao>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>Pagamento</ng-template>
+            <app-endereco-cartao></app-endereco-cartao>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>Confirmação</ng-template>
+            <app-pagamento></app-pagamento>
+        </mat-step>
+
+        <ng-template matStepperIcon="edit">
+            <mat-icon>done</mat-icon>
+        </ng-template>
+    </mat-horizontal-stepper>
+</div>  

@@ -1,0 +1,30 @@
+.title{
+    margin: 3% 0 3% 15%;
+}
+.barra {
+    display: flex;
+    width: 2px;
+    background-color: rgb(242, 243, 244);
+    margin: 0px 32px;
+    padding: 0;
+}
+.btn-pre-cadastro {
+    color: #1c1f23;
+    background: #fff;
+}
+.btn-pre-cadastro:hover {
+    color: #fff;
+    background:#1c1f23;
+}
+.btn-avancar {
+    float: right;
+    margin-top: 15px;
+}
+
+::ng-deep .modal-cartao > .modal-dialog {    
+    max-width: 400px !important;
+}
+
+::ng-deep .modal-endereco > .modal-dialog {    
+    max-width: 600px !important;
+}

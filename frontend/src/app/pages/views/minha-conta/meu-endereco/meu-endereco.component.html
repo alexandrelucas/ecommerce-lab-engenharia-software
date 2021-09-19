@@ -1,0 +1,74 @@
+<form [formGroup]="meuEnderecoForm">
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <input type="text" class="form-control" formControlName="cep" id="cep" mask="00000-000" (change)="onCEPChange()" placeholder="CEP" [ngClass]="aplicaCssErro('cep','meuEnderecoForm')">
+        <div class="invalid-feedback">
+          CEP obrigatório
+      </div>
+      </div>
+      <div class="form-group col-md-6">
+        <input type="text" class="form-control" formControlName="numero" id="numero" placeholder="Número" [ngClass]="aplicaCssErro('numero','meuEnderecoForm')">
+        <div class="invalid-feedback">
+          Número obrigatório
+      </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-8">
+        <input type="text" class="form-control" formControlName="logradouro" id="logradouro" placeholder="Endereço" [ngClass]="aplicaCssErro('logradouro','meuEnderecoForm')">
+        <div class="invalid-feedback">
+          Logradouro obrigatório
+      </div>
+      </div>
+      <div class="form-group col-md-4">
+        <input type="text" class="form-control" formControlName="complemento" id="complemento" placeholder="Complemento"> 
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <input type="text" class="form-control" formControlName="bairro" id="bairro" placeholder="Bairro" [ngClass]="aplicaCssErro('bairro','meuEnderecoForm')">
+        <div class="invalid-feedback">
+          Bairro obrigatório
+      </div>
+      </div>
+      <div class="form-group col-md-6">
+        <input type="text" class="form-control" formControlName="cidade" id="cidade" placeholder="Cidade" [ngClass]="aplicaCssErro('cidade','meuEnderecoForm')">
+        <div class="invalid-feedback">
+          Cidade obrigatória
+      </div>
+      </div>                               
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <input type="text" class="form-control" formControlName="uf" id="uf" placeholder="UF" [ngClass]="aplicaCssErro('uf','meuEnderecoForm')">
+        <div class="invalid-feedback">
+          Estado obrigatório
+      </div>
+      </div>      
+        <div class="form-group col-md-8">
+          <select class="form-control" id="pais" name="pais" [ngClass]="aplicaCssErro('pais','meuEnderecoForm')">
+            <option [selected]="country == endereco.pais ? true : false" *ngFor="let country of countryList" [value]="country">{{country}}</option>
+          </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-8">
+        <input type="text" class="form-control" formControlName="descricaoEndereco" id="descricaoEndereco" placeholder="Descrição do Endereço" [ngClass]="aplicaCssErro('descricaoEndereco','meuEnderecoForm')">
+        <div class="invalid-feedback">
+          Descrição obrigatória
+      </div>
+      </div>      
+        <div class="form-group col-md-4">
+          <select class="form-control" id="tipoEndereco" name="tipoEndereco" formControlName="tipoEndereco" [ngClass]="aplicaCssErro('tipoEndereco','meuEnderecoForm')">
+            <option value="">Selecione</option>
+            <option value="1">Cobrança</option>
+            <option value="2">Entrega</option>
+          </select>
+      </div>
+    </div>
+  </form>
+<div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-outline-danger mr-2" (click)="onDelete()">Excluir</button>
+    <button type="button" class="btn btn-primary" (click)="onUpdate()" [disabled]="meuEnderecoForm.invalid" *ngIf="endereco?.cep != undefined">Alterar</button>
+    <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="meuEnderecoForm.invalid" *ngIf="endereco?.cep == undefined">Cadastrar</button>
+</div>              

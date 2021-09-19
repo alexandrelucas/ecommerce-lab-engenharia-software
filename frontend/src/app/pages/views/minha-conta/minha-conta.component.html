@@ -1,0 +1,200 @@
+<div class="principal d-flex justify-content-center align-items-center" *ngIf="!showLoad">
+  <div class="card blocoPerfil">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light tituloUsuario">
+          <a class="navbar-brand" ><div class="profileImage">
+              <img src="https://icon-library.com/images/avatar-icon-images/avatar-icon-images-4.jpg"/>
+          </div></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <h1>{{ dadosCliente?.nome }} •</h1>
+              </li>
+              <li class="nav-item" [ngClass]="cardAtivo == 1 ? 'active' : ''">
+                <a class="nav-link" (click)="cardAtivo = 1">Meus Dados<span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item" [ngClass]="cardAtivo == 2 ? 'active' : ''">
+                <a class="nav-link" (click)="cardAtivo = 2">Endereço</a>
+              </li>
+              <li class="nav-item" [ngClass]="cardAtivo == 3 ? 'active' : ''">
+                <a class="nav-link" (click)="cardAtivo = 3">Método de Pagamento</a>
+              </li>
+              <li class="nav-item" [ngClass]="cardAtivo == 4 ? 'active' : ''">
+                <a class="nav-link" (click)="cardAtivo = 4">Minhas Compras</a>
+              </li>
+              <li class="nav-item" [ngClass]="cardAtivo == 5 ? 'active' : ''">
+                <a class="nav-link" (click)="cardAtivo = 5">Configurações da Conta</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <section class="conteudo" *ngIf="cardAtivo == 1">
+          <form [formGroup]="perfilForm">
+            <div class="card">
+              <div class="card-header">
+                <h1>Meus Dados</h1>
+              </div>
+              <div class="card-body">                
+                <div class="form-row">
+                  <div class="form-group col-md-12">   
+                    <label>Nome Completo</label>
+                    <input type="text" class="form-control" formControlName="nome" placeholder="Nome completo" [ngClass]="aplicaCssErro('nome','perfilForm')"/>                
+                    <div class="invalid-feedback">
+                      Nome obrigatório
+                    </div>
+                  </div>                  
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-6">                    
+                    <label>Nascimento</label>
+                    <input type="text" class="form-control" formControlName="dataNasc" [dropSpecialCharacters]="false" placeholder="Data de nascimento" mask="00/00/0000" [ngClass]="aplicaCssErro('dataNasc','perfilForm')"/>    
+                    <div class="invalid-feedback">
+                      Data de nascimento inválida
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label>Sexo</label>
+                    <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" formControlName="sexo" [ngClass]="aplicaCssErro('sexo','perfilForm')" [ngClass]="aplicaCssErro('sexo','perfilForm')">
+                      <option value="0">Selecione</option>
+                      <option value="M">Masculino</option>
+                      <option value="F">Feminino</option>
+                      <option value="O">Prefiro não informar</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label>Tipo Telefone</label>
+                    <select class="custom-select mr-sm-2" formControlName="tipoTelefone" [ngClass]="aplicaCssErro('tipoTelefone','perfilForm')">
+                      <option value="0">Selecione</option>
+                      <option value="casa">Casa</option>
+                      <option value="celular">Celular</option>
+                      <option value="comercial">Comercial</option>
+                    </select>
+                    <div class="invalid-feedback">
+                      Tipo obrigatório.
+                    </div>
+                  </div> 
+                  <div class="form-group col-md-6">
+                    <label>Telefone</label>
+                    <input type="text" class="form-control" formControlName="telefone" placeholder="Telefone" prefix="+55 " mask="(00) 0000-0000||(00) 0 0000-0000" [ngClass]="aplicaCssErro('telefone','perfilForm')"/>                    
+                    <div class="invalid-feedback">
+                      Telefone obrigatório
+                    </div>
+                  </div> 
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label>E-mail</label>
+                    <input type="text" class="form-control" [value]="dadosCliente?.email" disabled />
+                  </div>
+                  <div class="form-group col-md-6">                    
+                    <label>CPF</label>
+                    <input type="text" class="form-control" mask="000.000.000-00" formControlName="cpf" disabled />
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-end btn-perfil">          
+                <button type="button" class="btn btn-primary" (click)="onSubmitPerfil()" [disabled]="perfilForm.invalid">Alterar</button>
+              </div>   
+            </div>            
+          </form>          
+        </section>
+        <section class="conteudo" id="endereco" *ngIf="cardAtivo == 2">
+          <div class="card">
+            <div class="card-header">
+              <h1>Endereço</h1>
+            </div>
+            <div class="card-body"> 
+              <div class="d-flex justify-content-end mb-2">                
+                <button type="button" class="btn btn-outline-primary" (click)="addEndereco()">Adicionar</button>
+              </div>
+              <div class="accordion" id="accordionEndereco">
+                <div class="card" *ngFor="let endereco of dadosCliente?.endereco; index as i">
+                  <div class="card-header" [id]="'heading'+i">
+                    <h2 class="mb-0">
+                      <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" [attr.data-target]="'#collapse'+i" aria-expanded="true" aria-controls="collapseOne">
+                        {{ endereco.descricaoEndereco }}
+                      </button>
+                    </h2>
+                  </div>
+                  <div [id]="'collapse'+i" class="collapse" aria-labelledby="headingOne" [ngClass]="endereco?.cep == undefined ? 'show' : ''" data-parent="#accordionEndereco">
+                    <div class="card-body">
+                      <app-meu-endereco [endereco]="endereco" (deleteEvent)="onEnderecoDeleted($event)" (alterarEvent)="onEnderecoAlterado($event)"></app-meu-endereco>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="conteudo" id="pagamento" *ngIf="cardAtivo == 3">
+          <div class="card">
+            <div class="card-header">
+              <h1>Pagamento</h1>
+            </div>
+            <div class="card-body"> 
+              <div class="d-flex justify-content-end mb-2">
+                <button type="button" class="btn btn-outline-primary" (click)="addCartao()">Adicionar</button>
+              </div>
+              <div class="accordion" id="accordionPagamento">
+                <div class="card" *ngFor="let cartao of dadosCliente?.cartao index as i">              
+                  <div class="card-header" [id]="'heading'+i">
+                    <h2 class="mb-0">
+                      <button class="btn btn-link btn-block text-left d-flex align-items-center" type="button" data-toggle="collapse" [attr.data-target]="'#collapseCartao'+i" aria-expanded="true" aria-controls="collapseOne">
+                        <div class="bandeiraWrapper mr-2"><img [src]="'/assets/credit_card/' + cartao.bandeira + '.svg'" /></div> {{ bandeiras[cartao.bandeira] }}
+                      </button>
+                    </h2>
+                  </div>
+                  <div [id]="'collapseCartao'+i" class="collapse" aria-labelledby="headingOne" [ngClass]="cartao?.titular == undefined ? 'show' : ''" data-parent="#accordionPagamento">
+                    <div class="card-body">
+                      <app-meu-cartao [cartao]="cartao" (deleteEvent)="onCartaoDeleted($event)" (alterarEvent)="onCartaoAlterado($event)"></app-meu-cartao>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>  
+        </section>
+        <section class="conteudo" id="compras" *ngIf="cardAtivo == 4">
+          <div class="card">
+            <div class="card-header">
+              <h1>Minhas Compras</h1>
+            </div>
+            <div class="card-body"> 
+              <app-minhas-compras></app-minhas-compras>
+            </div>
+          </div>  
+        </section>
+        <section class="conteudo" id="configuracoes" *ngIf="cardAtivo == 5">
+          <div class="card">
+            <div class="card-header">
+              <h1>Configurações da Conta</h1>
+            </div>
+            <div class="card-body"> 
+              <div class="accordion" id="accordionAlterarSenha">
+                <div class="card mb-5">
+                  <div class="card-header" id="headingAlterarSenha">                    
+                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseAlterarSenha" aria-expanded="true" aria-controls="collapseOne">
+                      Alterar a Senha
+                    </button>                    
+                  </div>
+                  <div id="collapseAlterarSenha" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionAlterarSenha">
+                    <div class="card-body">
+                      <app-alterar-senha (alteraSenha)="onAlteraSenha($event)" ></app-alterar-senha>
+                    </div>
+                  </div>
+                </div>
+              </div>  
+            </div>  
+          </div>
+          <button type="button" class="btn btn-danger mt-4">Excluir a conta</button>
+        </section>
+  </div>
+</div>
+
+<div *ngIf="showLoad" class="loader-ctn">
+  <mat-spinner></mat-spinner>
+</div>

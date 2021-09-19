@@ -1,0 +1,205 @@
+<div class="container">
+    <div class="row d-flex justify-content-center mt-3">
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-12 d-flex align-items-center">
+                <mat-icon class="mr-2">location_on</mat-icon>
+                <h2 class="p-0 m-0">Selecione o endereço</h2>
+                </div>
+            </div>    
+            <div class="row d-flex justify-content-center">
+                <div class="card" style="width: 100%;">
+                    <div class="card-body">
+                        <h3 class="card-title mb-2"><strong>Endereço Principal</strong></h3>              
+                        <div *ngIf="carrinho.enderecos.length">
+                            <h5 class="card-text mb-0">{{ carrinho.enderecoEntrega.logradouro + ', ' + carrinho.enderecoEntrega.numero }}</h5>
+                            <h5 class="card-text mb-0">{{ carrinho.enderecoEntrega.bairro }}</h5>
+                            <h5 class="card-text mb-3">{{ 'CEP ' + carrinho.enderecoEntrega.cep + ' - ' + carrinho.enderecoEntrega.cidade + ' - ' + carrinho.enderecoEntrega.uf }}</h5>
+                            <div>
+                                <button class="btn btn-dark btn-sm mr-2" (click)="showModalEndereco(true)">Editar</button>
+                                <button class="btn btn-dark btn-sm btn-pre-cadastro" (click)="showModalTroca(modalTrocaEndereco)">Selecionar outro</button>
+                            </div>
+                        </div>
+                        <div *ngIf="!carrinho.enderecos.length">
+                            <button class="btn btn-dark btn-sm mr-2 mt-3" (click)="showModalEndereco(false)">Cadastrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-md-12 d-flex align-items-center">
+                <mat-icon class="mr-2">credit_card</mat-icon>
+                <h2 class="p-0 m-0">Pagamento</h2>
+                </div>
+            </div>    
+            <div class="row d-flex justify-content-center">
+                <div class="card" style="width: 100%;">
+                    <div class="card-body">
+                        <h3 class="card-title mb-2"><strong>Cartão Principal</strong></h3>              
+                        <div *ngIf="carrinho.cartoes.length">
+                            <h5 class="card-text mb-0">{{ carrinho.cartaoPagamento.titular }}</h5>
+                            <h5 class="card-text mb-0">{{ carrinho.cartaoPagamento.numero }}</h5>
+                            <h5 class="card-text mb-0">{{ carrinho.cartaoPagamento.dataValidade }}</h5>
+                            <h5 class="card-text mb-3">{{ getCardFlag(carrinho.cartaoPagamento.numero) | uppercase }}</h5>
+                            <div>
+                                <button class="btn btn-dark btn-sm mr-2" (click)="showModalCartao(true)">Editar</button>
+                                <button class="btn btn-dark btn-sm btn-pre-cadastro" (click)="showModalTroca(modalTrocaCartao)">Selecionar outro</button>
+                            </div>
+                        </div>
+                        <div *ngIf="!carrinho.cartoes.length">
+                            <button class="btn btn-dark btn-sm mr-2 mt-3" (click)="showModalCartao(false)">Cadastrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="barra"></div>
+
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-12 d-flex align-items-center">
+                <mat-icon class="mr-2">monetization_on</mat-icon>
+                <h2 class="p-0 m-0">Forma de Pagamento</h2>
+                </div>
+            </div>    
+            <div class="mt-2">                
+                <div class="form-group">
+                    <label>Método de Pagamento</label>
+                    <div class="form-check d-flex align-items-center">
+                        <input class="form-check-input" type="radio" name="metodo" value="credito" checked [(ngModel)]="pagamento.metodo" (change)="setQtdParcelas()">
+                        <label class="form-check-label" for="exampleRadios1">
+                        Crédito
+                        </label>
+                    </div>
+                    <div class="form-check d-flex align-items-center">
+                        <input class="form-check-input" type="radio" name="metodo" value="debito"  [(ngModel)]="pagamento.metodo" (change)="setQtdParcelas()">
+                        <label class="form-check-label" for="exampleRadios2">
+                        Débito
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Parcelas</label>
+                    <select class="custom-select mr-sm-2" [(ngModel)]="pagamento.qtdParcelas">
+                        <option value="0" selected>Selecione</option>
+                        <option value="{{parc}}" *ngFor="let parc of pagamento.totalParcelas">{{ parc + 'x' }}</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <div class="d-flex justify-content-between">
+                        <p>Subtotal: </p>
+                        <p>{{ carrinho.valorCompras | currency: 'BRL' }}</p>
+                    </div>
+                </div>
+                <div class="row" *ngIf="carrinho.valorFrete != 0">
+                    <div class="d-flex justify-content-between">
+                        <p>Frete</p>
+                        <p>{{ carrinho.valorFrete | currency: 'BRL' }}</p>
+                    </div> 
+                </div>
+                <div class="row">
+                    <div class="d-flex justify-content-between">
+                        <p>Desconto</p>
+                        <p>{{ '-' + carrinho.cupomDesconto | currency: 'BRL' }}</p>
+                    </div> 
+                </div>
+                <div class="row" *ngIf="pagamento.qtdParcelas != 0">
+                    <div class="d-flex justify-content-between">
+                        <p>Parcela</p>
+                        <strong>
+                            <p>{{ pagamento.qtdParcelas + 'x de' }} {{ getValorTotalPagamento() | currency: 'BRL' }}</p>
+                        </strong>
+                    </div> 
+                </div>
+                <div class="row">
+                    <div class="d-flex justify-content-between">
+                        <strong><p>Total</p></strong>
+                        <strong>                                 
+                            <p>{{ carrinho.valorTotal | currency: 'BRL' }}</p>
+                        </strong>
+                    </div> 
+                </div>
+            </div>
+            <div class="btn-avancar mt-5">
+                <button type="button" class="btn btn-dark btn-sm" matStepperNext (click)="setCarrinho()"
+                    [disabled]="carrinho.enderecoEntrega.id == undefined || carrinho.cartaoPagamento.id == undefined || pagamento.qtdParcelas == 0">
+                    CONFIRMAR PAGAMENTO
+                </button>
+            </div>
+        </div>       
+    </div>
+</div>
+
+
+<!-- MODAL TROCA ENDEREÇO -->
+<ng-template #modalTrocaEndereco let-modal class="modal-troca">
+    <div class="modal-header">
+        <div class="d-flex align-items-center">
+            <mat-icon class="mr-2">location_on</mat-icon>
+            <p class="modal-title p-0 m-0"><strong>Endereço</strong></p>
+        </div>
+    </div>
+    <div class="modal-body">        
+        <div *ngFor="let endereco of carrinho.enderecos">
+            <label [for]="endereco.logradouro" style="width: 100%;" id="{{  'endereco_' + endereco.id }}">
+                <div class="card mt-1" style="width: 100%;">
+                    <div class="card-body">                  
+                        <h3 class="card-title mb-2"><strong>Endereço de {{ endereco.tipoEndereco }}</strong></h3>
+                        <div class="d-flex align-items-center ">
+                            <input class="mr-3" [id]="endereco.logradouro" type="radio" value="{{ endereco.id }}" [(ngModel)]="enderecoTroca">
+                            <div>
+                                <h5 class="card-text mb-0">{{ endereco.logradouro + ', ' + endereco.numero }}</h5>
+                                <h5 class="card-text mb-0">{{ endereco.bairro }}</h5>
+                                <h5 class="card-text mb-0">{{ 'CEP ' + endereco.cep + ' - ' + endereco.cidade + ' - ' + endereco.uf }}</h5>                            
+                            </div>                        
+                        </div>
+                    </div>
+                </div>            
+            </label>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-dark btn-sm" (click)="setTrocaEndereco()" id="endereco-seleciona">Selecionar</button>
+        <button type="button" class="btn btn-dark btn-sm btn-pre-cadastro" (click)="showModalEndereco(false)" id="endereco-cria-novo">Novo Endereço</button>        
+    </div>
+</ng-template>
+
+
+<!-- MODAL TROCA CARTÃO -->
+<ng-template #modalTrocaCartao let-modal class="modal-troca">
+    <div class="modal-header">
+        <div class="d-flex align-items-center">
+            <mat-icon class="mr-2">credit_card</mat-icon>
+            <p class="modal-title p-0 m-0"><strong>Cartão</strong></p>
+        </div>
+    </div>
+    <div class="modal-body">        
+        <div *ngFor="let cartao of carrinho.cartoes">
+            <label [for]="cartao.id" style="width: 100%;" id="{{  'cartao_' + cartao.id }}">
+            <div class="card mt-1" style="width: 100%;">
+                <div class="card-body">                  
+                    <h3 class="card-title mb-2">
+                        <img [src]="'/assets/credit_card/' + cartao.bandeira + '.svg'"  width="30px"/>
+                        <strong>{{ cartao.bandeira | uppercase }}</strong>
+                    </h3>
+                    <div class="d-flex align-items-center ">
+                        <input class="mr-3" type="radio" [id]="cartao.id" value="{{ cartao.id }}" [(ngModel)]="cartaoTroca">
+                        <div>
+                            <h5 class="card-text mb-0">{{ cartao.titular }}</h5>
+                            <h5 class="card-text mb-0">{{ cartao.numero }}</h5>
+                            <h5 class="card-text mb-0">{{ cartao.dataValidade }}</h5>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+            </label>       
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-dark btn-sm" (click)="setTrocaCartao()" id="cartao-seleciona">Selecionar</button>
+        <button type="button" class="btn btn-dark btn-sm btn-pre-cadastro" (click)="showModalCartao(false)" id="cartao-novo">Novo Cartão</button>        
+    </div>
+</ng-template>
+

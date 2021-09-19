@@ -1,0 +1,31 @@
+* {
+    scroll-behavior: smooth !important;
+}
+.cabecalho {
+    grid-area: cabecalho;
+}
+.conteudo {
+    grid-area: conteudo;
+    min-height: 80vh;
+}
+.bg-vino {
+    background-color: #52012f;
+    color: #FFD700;
+}
+.bg-vino a {
+    color: #f1f1f1;
+}
+.principal {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas: 'cabecalho' 'conteudo' 'rodape';
+}
+.rodape {
+    grid-area: rodape;
+    background-color:black;
+    height: 142px;
+}
+.nav-content {
+    
+}

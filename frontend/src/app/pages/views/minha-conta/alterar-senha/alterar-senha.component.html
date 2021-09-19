@@ -1,0 +1,29 @@
+<form [formGroup]="alterarSenhaForm">
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <input type="text" class="form-control" formControlName="atual" placeholder="Senha atual" [ngClass]="aplicaCssErro('atual','alterarSenhaForm')"/>            
+            <div class="invalid-feedback">
+                Senha obrigatória
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <input type="text" class="form-control" formControlName="senhaNova" placeholder="Nova Senha" [ngClass]="aplicaCssErro('senhaNova','alterarSenhaForm')"/>
+            <div class="invalid-feedback">
+                {{ verificarErro('senhaNova') }}
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <input type="text" class="form-control" formControlName="confirmaSenha" placeholder="Confirmar Senha" [ngClass]="aplicaCssErro('confirmaSenha','alterarSenhaForm')"/>
+            <div *ngIf="!verifyConfirma()" class="invalid-feedback">
+                <div *ngIf="!verifyConfirma() && alterarSenhaForm.controls['confirmaSenha'].value.length">Senhas não conferem.</div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary" [disabled]="alterarSenhaForm.invalid" (click)="submit()">Salvar</button>
+</div>
