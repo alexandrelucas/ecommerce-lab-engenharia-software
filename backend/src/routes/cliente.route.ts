@@ -10,7 +10,7 @@ const ClienteRouter = express.Router();
 ClienteRouter.get('/todos', async (req, res) => {
     try {
         let listaClientes = await fachada.consultar(new Cliente()) as Array<Cliente>;
-        res.status(200).json({status: 1, message: 'OK', listaClientes});
+        res.status(200).json({status: 0, message: 'OK', listaClientes});
     } catch(e: any) {
         res.status(500).json({
             status: -1,
@@ -25,7 +25,7 @@ ClienteRouter.get('/:id', async (req, res) => {
     try {
         let id = parseInt(req.params.id);
         let cliente = (await fachada.consultar(new Cliente(id)))[0] as Cliente;
-        res.status(200).json({status: 1, message: 'OK', cliente});
+        res.status(200).json({status: 0, message: 'OK', cliente});
     } catch (e: any) {
         res.status(500).json({
             status: -1,
@@ -42,9 +42,9 @@ ClienteRouter.post('/', async (req, res) => {
         let msg = await fachada.cadastrar(cliente) ?? 'OK';
 
         if(Number.parseInt(msg)) {
-            res.status(200).json({status: 1, message: msg});
+            res.status(200).json({status: 0, message: msg});
         } else {
-            res.status(400).json({status: 0, message: msg});
+            res.status(400).json({status: 1, message: msg});
         }
 
     } catch(e: any) {
@@ -60,8 +60,8 @@ ClienteRouter.put('/:id', async (req, res) => {
     try {
         let id = parseInt(req.params.id);
         let cliente = Object.assign(new Cliente(id), req.body);
-        let msg = await fachada.alterar(cliente) ?? 'OK';
-        res.status(200).json({status: msg ? 0:1, message: msg});
+        let msg = await fachada.alterar(cliente);
+        res.status(200).json({status: msg ? 1:0, message: msg ?? 'OK'});
     } catch(e: any) {
         res.status(500).json({
             status: -1,
@@ -75,7 +75,8 @@ ClienteRouter.delete('/:id', async (req, res) => {
     try {
         let cliente = new Cliente();
         cliente.id = parseInt(req.params.id);
-        res.status(200).json({status: 1, message: await fachada.excluir(cliente)});
+        let msg = await fachada.excluir(cliente);
+        res.status(200).json({status: msg ? 1:0, message: msg ?? 'OK'});
     } catch(e: any) {
         res.status(500).json({
             status: -1,
@@ -89,8 +90,8 @@ ClienteRouter.post('/:id/alterar-senha', async (req, res) => {
     try {
         let id = parseInt(req.params.id);
         let cliente: Cliente = Object.assign(new Cliente(id), req.body);
-        let msg = await fachada.alterarSenha(cliente) ?? 'Ocorreu um problema desconhecido!';
-        res.status(200).json({status: msg ? 1:0, message: msg});
+        let msg = await fachada.alterarSenha(cliente);
+        res.status(200).json({status: msg ? 1:0, message: msg ?? 'Senha alterada com sucesso!'});
     } catch(e: any) {
         res.status(500).json({
             status: -1,
@@ -104,8 +105,8 @@ ClienteRouter.post('/:id/alterar-status', async (req, res) => {
     try {
         let id = parseInt(req.params.id);
         let cliente: Cliente = Object.assign(new Cliente(id), req.body);
-        let msg = await fachada.alterarClienteStatus(cliente) ?? 'Ocorreu um problema desconhecido!';
-        res.status(200).json({status: msg ? 1:0, message: msg});
+        let msg = await fachada.alterarClienteStatus(cliente);
+        res.status(200).json({status: msg ? 1:0, message: msg} ?? 'Status alterado com sucesso!');
     } catch(e: any) {
         res.status(500).json({
             status: -1,

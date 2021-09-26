@@ -4,9 +4,9 @@ import IStrategy from "../IStrategy";
 
 export default class ValidarExistenciaCliente implements IStrategy {
     
-    async processar(entidade: Cliente): Promise<string> {
-        if(entidade.hasId()) {
-            return 'Este usuário ja existe, deseja alterar?';
+    async processar(entidade: Cliente, altera: boolean): Promise<string> {
+        if(entidade.hasId() && altera) {
+            return null!;
         }
             
         let dao = new ClienteDAO();

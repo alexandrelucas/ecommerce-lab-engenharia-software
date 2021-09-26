@@ -2,7 +2,7 @@ import Cliente from "../../entidade/cliente.model";
 import IStrategy from "../IStrategy";
 
 export default class ValidarCPF implements IStrategy {
-    async processar(entidade: Cliente): Promise<string> {
+    async processar(entidade: Cliente, altera: boolean): Promise<string> {
         let cliente = entidade as Cliente;
         if(!this.validarCPF(cliente.cpf)) {
             return 'CPF Inválido';

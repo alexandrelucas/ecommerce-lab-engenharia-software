@@ -17,7 +17,7 @@ CupomRouter.get('/validar', async (req, res) => {
     
     if(cupom.codigo == codigo) {
         res.send({
-            status: 1,
+            status: 0,
             message: 'Cupom válido',
             cupomId: cupom.id,
             codigo: cupom.codigo,
@@ -26,7 +26,7 @@ CupomRouter.get('/validar', async (req, res) => {
         });
     } else {
         res.send({
-            status: 0,
+            status: 1,
             message: 'Cupom inválido'
         });
     }
@@ -36,22 +36,59 @@ CupomRouter.get('/validar', async (req, res) => {
 
 // Lista todos os cupoms
 CupomRouter.get('/todos', async (req, res) => {
-    res.send({message: 'OK'})
+    try {
+        let listaCupons = await fachada.consultar(new Cupom()) as Array<Cupom>;
+        res.status(200).json({status: 0, message: 'OK', listaCupons});
+    } catch(e: any) {
+        res.status(500).json({
+            status: -1,
+            message: e.toString(),
+        })
+    }
 });
 
 // Cadastra novo cupom
 CupomRouter.post('/', async (req, res) => {
-    res.send({message: 'Cupom cadastrado com sucesso!'})
+    try {
+        let cupom = Object.assign(new Cupom(), req.body);
+        let msg = await fachada.cadastrar(cupom);
+        res.status(200).json({status: msg ? 1:0, message: msg ?? 'OK'});
+    } catch(e: any) {
+        res.status(500).json({
+            status: -1,
+            message: e.toString()
+        });
+    }
 });
 
 // Altera cupom
 CupomRouter.put('/:id', async (req, res) => {
-    res.send({message: 'Cupom alterado com sucesso!'})
+    try {
+        let id = parseInt(req.params.id);
+        let cupom = Object.assign(new Cupom(id), req.body);
+        let msg = await fachada.alterar(cupom) ?? 'OK';
+        res.status(200).json({status: msg ? 1:0, message: msg ?? 'OK'});
+    } catch(e: any) {
+        res.status(500).json({
+            status: -1,
+            message: e.toString()
+        });
+    }
 });
 
 // Exclui cupom
 CupomRouter.delete('/:id', async (req, res) => {
-    res.send({message: 'Cupom excluído com sucesso!'})
+    try {
+        let cupom = new Cupom();
+        cupom.id = parseInt(req.params.id);
+        let msg = await fachada.excluir(cupom);
+        res.status(200).json({status: msg ? 1:0, message: msg ?? 'OK'});
+    } catch(e: any) {
+        res.status(500).json({
+            status: -1,
+            message: e.toString()
+        });
+    }
 });
 
 export default CupomRouter;

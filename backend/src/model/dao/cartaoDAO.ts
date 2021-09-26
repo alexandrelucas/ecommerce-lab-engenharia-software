@@ -5,6 +5,8 @@ import entidadeDominioModel from "../entidade/entidadeDominio.model";
 import IDAO from "./IDAO";
 
 export default class CartaoDAO implements IDAO {
+    tabela: string = 'cartoes';
+
     async salvar(entidade: entidadeDominioModel): Promise<entidadeDominioModel> {
         if(entidade.hasId()) return null!;
         try {            
@@ -12,7 +14,7 @@ export default class CartaoDAO implements IDAO {
             let colunas = Object.keys(entidade).map((e) => `"${e}"`).reduce((prev, cur) => `${prev} , ${cur}`);
             let valores = Object.values(entidade).map((v) => `'${v}'`).reduce((prev, cur) => `${prev} , ${cur}`);
             
-            let query = `INSERT INTO cartoes (${colunas}) VALUES (${valores}) RETURNING id`;
+            let query = `INSERT INTO ${this.tabela} (${colunas}) VALUES (${valores}) RETURNING id`;
             let id = await PgDatabase.query(query);
             entidade.id = id.rows[0].id;
             return entidade;
@@ -31,7 +33,7 @@ export default class CartaoDAO implements IDAO {
         });
 
         try {
-            let query = PgDatabase.query(`UPDATE cartoes SET ${dadosSQL} WHERE id = ${entidade.id}`);
+            let query = PgDatabase.query(`UPDATE ${this.tabela} SET ${dadosSQL} WHERE id = ${entidade.id}`);
             return entidade;
             
         } catch (err: any) {
@@ -40,7 +42,7 @@ export default class CartaoDAO implements IDAO {
     }
     async excluir(entidade: entidadeDominioModel): Promise<boolean> {
         if(entidade.hasId()) {
-            let endereco = await PgDatabase.query(`DELETE FROM cartoes WHERE id = ${entidade.id}`);
+            let endereco = await PgDatabase.query(`DELETE FROM ${this.tabela} WHERE id = ${entidade.id}`);
             if(endereco.rowCount == 1) {
                 return true;
             }
@@ -52,9 +54,9 @@ export default class CartaoDAO implements IDAO {
         
         let query;
         if(!clienteId){
-            query = entidade.hasId() ? `SELECT * FROM cartoes WHERE id=${entidade.id}` : 'SELECT * FROM cartoes'; 
+            query = entidade.hasId() ? `SELECT * FROM ${this.tabela} WHERE id=${entidade.id}` : `SELECT * FROM ${this.tabela}`; 
         }else{
-            query = `SELECT * FROM cartoes WHERE "clienteId"=${clienteId}`;
+            query = `SELECT * FROM ${this.tabela} WHERE "clienteId"=${clienteId}`;
         }
 
         let cartoes = PgDatabase.query(query);

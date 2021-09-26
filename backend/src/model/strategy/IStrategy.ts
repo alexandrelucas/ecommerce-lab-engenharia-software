@@ -1,5 +1,5 @@
 import EntidadeDominio from "../entidade/entidadeDominio.model";
 
 export default interface IStrategy {
-    processar(entidade: EntidadeDominio) : Promise<string>;
+    processar(entidade: EntidadeDominio, altera: boolean) : Promise<string>;
 }

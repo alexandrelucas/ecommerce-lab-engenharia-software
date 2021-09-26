@@ -3,11 +3,11 @@ export default class EntidadeDominio {
     dataCadastro?: Date;
     error?: string;
 
-    hasId(): boolean {
+    public hasId(): boolean {
         return (this.id != undefined || this.id != null);
     }
 
-    hasError(): boolean {
+    public hasError(): boolean {
         return (this.error != undefined || this.error != null);
     }
 }

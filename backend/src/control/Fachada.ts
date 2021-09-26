@@ -12,6 +12,7 @@ import ValidarExistenciaCliente from '../model/strategy/cliente/ValidarExistenci
 import ValidarDadosObrigatorios from '../model/strategy/cliente/ValidarDadosObrigatórios';
 import ValidarCartao from '../model/strategy/cartao/ValidarCartao';
 import ValidarEndereco from '../model/strategy/endereco/validarEndereco';
+import CupomDAO from '../model/dao/cupomDAO';
 
 export default class Fachada implements IFachada {
 
@@ -28,6 +29,7 @@ export default class Fachada implements IFachada {
         this.listaDaos.set('Cliente', new ClienteDAO());
         this.listaDaos.set('Endereco', new EnderecoDAO());
         this.listaDaos.set('Cartao', new CartaoDAO());
+        this.listaDaos.set('Cupom', new CupomDAO());
     }
     private definirRegras() {
         this.listaRegras = new Map<string, IStrategy[]>();
@@ -37,11 +39,12 @@ export default class Fachada implements IFachada {
         let validarDataNasc = new ValidarDataNasc();
         let validarExistencia = new ValidarExistenciaCliente();
         let validarDadosObrigatorios = new ValidarDadosObrigatorios();
+        
         this.listaRegras.set('Cliente', [
             validarDadosObrigatorios,
             validarDataNasc, 
             validarCPF,
-            // validarExistencia,
+            validarExistencia,
         ]);
 
         // Strategys Cartão
@@ -52,12 +55,14 @@ export default class Fachada implements IFachada {
         let validarEndereco = new ValidarEndereco();
         this.listaRegras.set('Endereco', [validarEndereco]);
     }
-    async executarRegras(entidade: EntidadeDominio): Promise<string> {
+    async executarRegras(entidade: EntidadeDominio, altera: boolean): Promise<string> {
         let nomeClasse = entidade.constructor.name;
         let msg: string = 'Erro na execução das regras';
 
+        if(!this.listaRegras?.has(nomeClasse)) return null!;
+
         for(const s of this.listaRegras!.get(nomeClasse)!) {
-            msg = await s.processar(entidade);
+            msg = await s.processar(entidade, altera);
             if(msg != null) break;
         }
         return msg;
@@ -65,8 +70,7 @@ export default class Fachada implements IFachada {
 
     async cadastrar(entidade: EntidadeDominio):  Promise<string> {
         let nomeClasse = entidade.constructor.name;
-        let mensagemRegras = await this.executarRegras(entidade);
-        
+        let mensagemRegras = await this.executarRegras(entidade, false);
         if(mensagemRegras) {
             return mensagemRegras;
         }
@@ -78,12 +82,20 @@ export default class Fachada implements IFachada {
             return clienteNovo.error!;
         }
 
+
         return clienteNovo?.id?.toString()!;
     }
     async alterar(entidade: EntidadeDominio): Promise<string> {
         let nomeClasse = entidade.constructor.name;
+        let mensagemRegras = await this.executarRegras(entidade, true);
+
+        if(mensagemRegras) {
+            return mensagemRegras;
+        }
 
         let result = await this.listaDaos?.get(nomeClasse)?.alterar(entidade);
+
+        console.log(result?.error);
         
         if(result?.hasError()) {
             return result.error!;
@@ -93,7 +105,7 @@ export default class Fachada implements IFachada {
     async excluir(entidade: EntidadeDominio): Promise<string> {        
         let nomeClasse: string = entidade.constructor.name;
         let hasDeleted = await this.listaDaos?.get(nomeClasse)?.excluir(entidade);
-        return hasDeleted ? 'Excluido com sucesso!' : 'Não foi possível excluir';
+        return hasDeleted ? null! : 'Não foi possível excluir';
     }
     async consultar(entidade: EntidadeDominio): Promise<EntidadeDominio[]> {
         let nomeClasse: string = entidade.constructor.name;

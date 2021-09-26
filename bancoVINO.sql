@@ -311,6 +311,7 @@ CREATE TABLE public."cuponsCliente"
     id serial NOT NULL,
     "cupomId" integer NOT NULL,
     "clienteId" integer NOT NULL,
+    usado boolean NOT NULL DEFAULT false,
     PRIMARY KEY (id),
     CONSTRAINT "FK_CUP" FOREIGN KEY ("cupomId")
         REFERENCES public."cupons" (id) MATCH SIMPLE

@@ -1,9 +1,9 @@
 import Cliente from "../../entidade/cliente.model";
-import entidadeDominioModel from "../../entidade/entidadeDominio.model";
+import EntidadeDominio from "../../entidade/entidadeDominio.model";
 import IStrategy from "../IStrategy";
 
 export default class ValidarDataNasc implements IStrategy {
-    async processar(entidade: entidadeDominioModel): Promise<string> {
+    async processar(entidade: EntidadeDominio, altera: boolean): Promise<string> {
         if(entidade.constructor.name == 'Cliente') {
             let cliente = entidade as Cliente;
 

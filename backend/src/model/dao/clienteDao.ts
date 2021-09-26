@@ -5,6 +5,7 @@ import Cliente from '../entidade/cliente.model';
 import { Encrypt } from '../../utils/encrypt';
 
 export default class ClienteDAO implements IDAO {
+    tabela: string = 'clientes';
    
     async salvar(entidade: EntidadeDominio): Promise<EntidadeDominio> {
         if(entidade.hasId()) return null!;
@@ -15,7 +16,7 @@ export default class ClienteDAO implements IDAO {
             cliente.senha = await Encrypt.cryptPassword(cliente.senha!);
             let colunas = Object.keys(cliente).map((e) => `"${e}"`).reduce((prev, cur) => `${prev} , ${cur}`);
             let valores = Object.values(cliente).map((v) => `'${v}'`).reduce((prev, cur) => `${prev} , ${cur}`);
-            let query = `INSERT INTO clientes (${colunas}) VALUES (${valores}) RETURNING id`;
+            let query = `INSERT INTO ${this.tabela} (${colunas}) VALUES (${valores}) RETURNING id`;
             let id = await PgDatabase.query(query);
             cliente.id = id.rows[0].id;
             return cliente;
@@ -36,8 +37,11 @@ export default class ClienteDAO implements IDAO {
         });
         
         try {
-            let query = PgDatabase.query(`UPDATE clientes SET ${dadosSQL} WHERE id = ${cliente.id}`);
-            return cliente;
+            let query = await PgDatabase.query(`UPDATE ${this.tabela} SET ${dadosSQL} WHERE id = ${cliente.id}`);
+            if(query.rowCount == 1) {
+                return cliente;
+            }
+            return {error: 'Cliente inexistente'} as EntidadeDominio;
             
         } catch (err: any) {
             return {error: 'ClienteDAO.alterar(): ' + err.toString()} as EntidadeDominio;
@@ -45,7 +49,7 @@ export default class ClienteDAO implements IDAO {
     }
     async excluir(entidade: EntidadeDominio): Promise<boolean> {
         if(entidade.hasId()) {
-            let cliente = await PgDatabase.query(`DELETE FROM Clientes WHERE id = ${entidade.id}`);
+            let cliente = await PgDatabase.query(`DELETE FROM ${this.tabela} WHERE id = ${entidade.id}`);
             if(cliente.rowCount == 1) {
                 return true;
             }
@@ -59,9 +63,9 @@ export default class ClienteDAO implements IDAO {
         let cliente = entidade as Cliente;
 
         if(cliente.cpf) {
-            query = `SELECT ${colunas} FROM clientes WHERE "cpf"='${cliente.cpf}';`;
+            query = `SELECT ${colunas} FROM ${this.tabela} WHERE "cpf"='${cliente.cpf}';`;
         } else {
-            query = entidade.hasId() ? `SELECT ${colunas} FROM clientes WHERE id=${entidade.id}` : `SELECT ${colunas} FROM clientes order by id`; 
+            query = entidade.hasId() ? `SELECT ${colunas} FROM ${this.tabela} WHERE id=${entidade.id}` : `SELECT ${colunas} FROM ${this.tabela} order by id`; 
         }
 
         try {
@@ -80,7 +84,7 @@ export default class ClienteDAO implements IDAO {
             
             if(!cliente.senha || !cliente.novaSenha) return 'Senha atual ou nova senha não informada!';
 
-            let query = `SELECT "senha" FROM clientes WHERE id=${entidade.id};`;
+            let query = `SELECT "senha" FROM ${this.tabela} WHERE id=${entidade.id};`;
             let senhaDoBanco: string = (await PgDatabase.query(query)).rows[0].senha;
 
             if(cliente.senha == cliente.novaSenha) {
@@ -89,9 +93,9 @@ export default class ClienteDAO implements IDAO {
             
             if(await Encrypt.comparePassword(cliente.senha!,senhaDoBanco)) {
                 let novaSenhaCriptografada = await Encrypt.cryptPassword(cliente.novaSenha!);
-                let queryUPDATE = `UPDATE clientes SET "senha" = '${novaSenhaCriptografada}' WHERE "id"='${cliente.id}';`;
+                let queryUPDATE = `UPDATE ${this.tabela} SET "senha" = '${novaSenhaCriptografada}' WHERE "id"='${cliente.id}';`;
                 await PgDatabase.query(queryUPDATE);
-                return 'Senha atualizada com sucesso!';
+                return null!;
             }
 
             return "A senha informada difere da senha cadastrada!";
@@ -102,13 +106,11 @@ export default class ClienteDAO implements IDAO {
     }
 
     async alterarStatus(entidade: EntidadeDominio): Promise<string> {
-        let cliente = entidade as Cliente;
-
         try {
             let cliente = entidade as Cliente;
-            let queryUPDATE = `UPDATE clientes SET "inativado" = '${cliente.inativado}' WHERE "id"='${cliente.id}';`;
+            let queryUPDATE = `UPDATE ${this.tabela} SET "inativado" = '${cliente.inativado}' WHERE "id"='${cliente.id}';`;
             await PgDatabase.query(queryUPDATE);
-            return `Alterou o status do cliente para ${cliente.inativado}`;
+            return null!;
         } catch (err: any) {
             return 'ClienteDAO.alterarStatus(): ' + err.toString();
         }
@@ -118,7 +120,7 @@ export default class ClienteDAO implements IDAO {
         try {
             let cliente = entidade as Cliente;
             
-            let query = `SELECT "senha", "id" FROM clientes WHERE email='${cliente.email}' AND inativado='false';`;
+            let query = `SELECT "senha", "id" FROM ${this.tabela} WHERE email='${cliente.email}' AND inativado='false';`;
             let resultado:any = (await PgDatabase.query(query)).rows[0];
             let senhaDoBanco: string = resultado.senha;
 
