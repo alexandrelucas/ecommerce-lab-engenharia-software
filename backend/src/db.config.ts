@@ -4,7 +4,7 @@ const PgDatabase = new Client({
     user: 'postgres',
     password: 'postgres',
     host: 'localhost',
-    database: 'vino2',
+    database: 'vino_novo',
     port: 5432
 });
 

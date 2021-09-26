@@ -3,7 +3,7 @@ import entidadeDominioModel from "../../entidade/entidadeDominio.model";
 import IStrategy from "../IStrategy";
 
 export default class ValidarEndereco implements IStrategy {
-    processar(entidade: entidadeDominioModel): string {
+    async processar(entidade: entidadeDominioModel): Promise<string> {
         if(entidade.constructor.name == 'Endereco') {
             let endereco = entidade as Endereco;
 

@@ -19,19 +19,15 @@ export default class ClienteDAO implements IDAO {
             let id = await PgDatabase.query(query);
             cliente.id = id.rows[0].id;
             return cliente;
-            
-        } catch (err) {
-            console.log('Erro no salvar ClienteDAO: ' + err);
+        } catch (err: any) {
+            return {error: 'ClienteDAO.salvar(): ' + err.toString()} as EntidadeDominio;
         }
-        return null!;
     }
     async alterar(entidade: EntidadeDominio): Promise<EntidadeDominio> {
         if(!entidade.hasId()) return null!;
 
         let cliente = entidade as Cliente;
-        if(cliente.senha) {
-            cliente.senha = await Encrypt.cryptPassword(cliente.senha!);
-        }
+        delete cliente.senha;
 
         let dadosSQL = Object.entries(cliente).map((key, value) => {
             return `"${key[0]}" = '${key[1]}'`;
@@ -43,14 +39,13 @@ export default class ClienteDAO implements IDAO {
             let query = PgDatabase.query(`UPDATE clientes SET ${dadosSQL} WHERE id = ${cliente.id}`);
             return cliente;
             
-        } catch (err) {
-            console.log('Erro no alterar ClienteDAO: ' + err);
+        } catch (err: any) {
+            return {error: 'ClienteDAO.alterar(): ' + err.toString()} as EntidadeDominio;
         }
-        return null!;
     }
     async excluir(entidade: EntidadeDominio): Promise<boolean> {
         if(entidade.hasId()) {
-            let cliente = await PgDatabase.query(`DELETE FROM clientes WHERE id = ${entidade.id}`);
+            let cliente = await PgDatabase.query(`DELETE FROM Clientes WHERE id = ${entidade.id}`);
             if(cliente.rowCount == 1) {
                 return true;
             }
@@ -69,10 +64,13 @@ export default class ClienteDAO implements IDAO {
             query = entidade.hasId() ? `SELECT ${colunas} FROM clientes WHERE id=${entidade.id}` : `SELECT ${colunas} FROM clientes order by id`; 
         }
 
-        let listaClientes = await PgDatabase.query(query);
-
-        let result:Array<EntidadeDominio> = listaClientes.rows;
-        return result ?? [];    
+        try {
+            let listaClientes = await PgDatabase.query(query);
+            let result:Array<EntidadeDominio> = listaClientes.rows;
+            return result ?? [];    
+        } catch(err: any) {
+            return [];
+        }
     }
 
     async alterarSenha(entidade: EntidadeDominio): Promise<string> {
@@ -98,11 +96,9 @@ export default class ClienteDAO implements IDAO {
 
             return "A senha informada difere da senha cadastrada!";
 
-        } catch (err) {
-            console.log('Erro no alterarSenha ClienteDAO: ' + err);
+        } catch (err: any) {
+            return 'ClienteDAO.alterarSenha(): ' + err.toString();
         }
-
-        return null!;
     }
 
     async alterarStatus(entidade: EntidadeDominio): Promise<string> {
@@ -113,11 +109,9 @@ export default class ClienteDAO implements IDAO {
             let queryUPDATE = `UPDATE clientes SET "inativado" = '${cliente.inativado}' WHERE "id"='${cliente.id}';`;
             await PgDatabase.query(queryUPDATE);
             return `Alterou o status do cliente para ${cliente.inativado}`;
-        } catch (err) {
-            console.log('Erro no alterarStatus ClienteDAO: ' + err);
+        } catch (err: any) {
+            return 'ClienteDAO.alterarStatus(): ' + err.toString();
         }
-
-        return null!;
     }
 
     async login(entidade: EntidadeDominio): Promise<string> {
@@ -134,8 +128,8 @@ export default class ClienteDAO implements IDAO {
                 return resultado.id;
             }
 
-        } catch (err) {
-            console.log('Erro em login no ClienteDAO: ' + err);
+        } catch (err: any) {
+            return 'ClienteDAO.login(): ' + err.toString();
         }
 
         return null!;

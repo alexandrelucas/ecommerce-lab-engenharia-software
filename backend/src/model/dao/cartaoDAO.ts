@@ -17,8 +17,8 @@ export default class CartaoDAO implements IDAO {
             entidade.id = id.rows[0].id;
             return entidade;
             
-        } catch (err) {
-            return null!;
+        } catch (err: any) {
+            return {error: 'CartaoDAO.salvar(): ' + err.toString()} as EntidadeDominio;
         }
     }
     async alterar(entidade: entidadeDominioModel): Promise<entidadeDominioModel> {
@@ -35,7 +35,7 @@ export default class CartaoDAO implements IDAO {
             return entidade;
             
         } catch (err: any) {
-            return err.toString();
+            return {error: 'CartaoDAO.alterar(): ' + err.toString()} as EntidadeDominio;
         }
     }
     async excluir(entidade: entidadeDominioModel): Promise<boolean> {

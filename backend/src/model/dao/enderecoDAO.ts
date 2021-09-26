@@ -21,10 +21,9 @@ export default class EnderecoDAO implements IDAO {
             entidade.id = id.rows[0].id;
             return entidade;
             
-        } catch (err) {
-            console.log('Erro salvar EnderecoDAO: ' + err);
+        } catch (err: any) {
+            return {error: 'EnderecoDAO.salvar(): ' + err.toString()} as EntidadeDominio;
         }
-        return null!;
     }
     async alterar(entidade: entidadeDominioModel): Promise<entidadeDominioModel> {
         if(!entidade.hasId()) return null!;
@@ -39,10 +38,9 @@ export default class EnderecoDAO implements IDAO {
             let query = PgDatabase.query(`UPDATE enderecos SET ${dadosSQL} WHERE id = ${entidade.id}`);
             return entidade;
             
-        } catch (err) {
-            console.log('Erro alterar EnderecoDAO: ' + err);
+        } catch (err: any) {
+            return {error: 'EnderecoDAO.alterar(): ' + err.toString()} as EntidadeDominio;
         }
-        return null!;
     }
     async excluir(entidade: entidadeDominioModel): Promise<boolean> {
         if(entidade.hasId()) {

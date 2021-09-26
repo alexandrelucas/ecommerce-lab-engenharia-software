@@ -12,6 +12,19 @@ app.use(cors());
 app.use('/', express.urlencoded({extended: true}));
 app.use('/', express.json());
 
+// Header
+app.use((req, res, next) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    next();
+  });
+app.use((err:any, req:any, res:any, next:any) => {
+    if (err instanceof SyntaxError) {
+        return res.status(400).send({ status: 0, message: err.message }); // Bad request
+    }
+    next();
+});
+
 app.use('/cliente', ClienteRouter);
 app.use('/pedido', PedidoRouter);
 app.use('/cupom', CupomRouter);

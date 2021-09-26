@@ -13,7 +13,7 @@ export default class ValidarCartao implements IStrategy {
         // elo: /^((((636368)|(438935)|(504175)|(451416)|(636297))\d{0,10})|((5067)|(4576)|(4011))\d{0,12})/
     };
     
-    processar(entidade: entidadeDominioModel): string {
+    async processar(entidade: entidadeDominioModel): Promise<string> {
         if(entidade.constructor.name == 'Cartao') {
             let cartao = entidade as Cartao;
 

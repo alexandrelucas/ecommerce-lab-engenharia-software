@@ -1,28 +1,21 @@
 import Cliente from "../../entidade/cliente.model";
-import entidadeDominioModel from "../../entidade/entidadeDominio.model";
 import IStrategy from "../IStrategy";
 
 export default class ValidarCPF implements IStrategy {
-    processar(entidade: entidadeDominioModel): string {
-
-        if(entidade.constructor.name == 'Cliente') {
-            let cliente = entidade as Cliente;
-            if(!this.validarCPF(cliente.cpf)) {
-                return 'CPF Inválido';
-            }
-        } else {
-            return 'Dados de Cliente incorreto';
+    async processar(entidade: Cliente): Promise<string> {
+        let cliente = entidade as Cliente;
+        if(!this.validarCPF(cliente.cpf)) {
+            return 'CPF Inválido';
         }
-
         return null!;
     }
 
     private validarCPF(cpf: string){
         let soma = 0;
         let resto;
-        let cpfLimpo = cpf.replace(/[^\d]/g, "");
+        let cpfLimpo = cpf?.replace(/[^\d]/g, "") ?? '';
     
-        if(cpfLimpo == '00000000000') return false;
+        if(cpfLimpo == '00000000000' || '') return false;
         for(let i=1; i<=9; i++) soma = soma + parseInt(cpfLimpo.substring(i-1, i)) * (11 - i);
         resto = (soma * 10) % 11;
     

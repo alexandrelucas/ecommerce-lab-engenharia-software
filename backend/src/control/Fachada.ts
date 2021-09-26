@@ -37,8 +37,12 @@ export default class Fachada implements IFachada {
         let validarDataNasc = new ValidarDataNasc();
         let validarExistencia = new ValidarExistenciaCliente();
         let validarDadosObrigatorios = new ValidarDadosObrigatorios();
-        this.listaRegras.set('Cliente', [validarCPF, validarDataNasc, validarDadosObrigatorios]);
-
+        this.listaRegras.set('Cliente', [
+            validarDadosObrigatorios,
+            validarDataNasc, 
+            validarCPF,
+            // validarExistencia,
+        ]);
 
         // Strategys Cartão
         let validarCartao = new ValidarCartao();
@@ -48,50 +52,48 @@ export default class Fachada implements IFachada {
         let validarEndereco = new ValidarEndereco();
         this.listaRegras.set('Endereco', [validarEndereco]);
     }
-    executarRegras(entidade: EntidadeDominio): string[] {
+    async executarRegras(entidade: EntidadeDominio): Promise<string> {
         let nomeClasse = entidade.constructor.name;
-        let listaMsg: string[];
+        let msg: string = 'Erro na execução das regras';
 
-        if(this.listaRegras) {
-           this.listaRegras.get(nomeClasse)?.forEach(async (s) => {
-              let m = s.processar(entidade);
-
-              if(m) {
-                  if(!listaMsg) listaMsg = new Array<string>();
-                  listaMsg.push(m); 
-              }
-           });
+        for(const s of this.listaRegras!.get(nomeClasse)!) {
+            msg = await s.processar(entidade);
+            if(msg != null) break;
         }
-        return listaMsg!;
+        return msg;
     }
 
-    async cadastrar(entidade: EntidadeDominio):  Promise<string[]> {
+    async cadastrar(entidade: EntidadeDominio):  Promise<string> {
         let nomeClasse = entidade.constructor.name;
-        let mensagemRegras = this.executarRegras(entidade);
+        let mensagemRegras = await this.executarRegras(entidade);
         
         if(mensagemRegras) {
             return mensagemRegras;
         }
 
         let clienteNovo = await this.listaDaos?.get(nomeClasse)?.salvar(entidade);
-        return [clienteNovo?.id?.toString() ?? null!];
-    }
-    async alterar(entidade: EntidadeDominio): Promise<string[]> {
-        let nomeClasse = entidade.constructor.name;
-        let mensagemRegras = this.executarRegras(entidade);
 
-
-        if(mensagemRegras) {
-            // return mensagemRegras;
+        if(clienteNovo?.hasError()) {
+            console.log(clienteNovo.error);
+            return clienteNovo.error!;
         }
 
-        await this.listaDaos?.get(nomeClasse)?.alterar(entidade);
+        return clienteNovo?.id?.toString()!;
+    }
+    async alterar(entidade: EntidadeDominio): Promise<string> {
+        let nomeClasse = entidade.constructor.name;
+
+        let result = await this.listaDaos?.get(nomeClasse)?.alterar(entidade);
+        
+        if(result?.hasError()) {
+            return result.error!;
+        }
         return null!;
     }
     async excluir(entidade: EntidadeDominio): Promise<string> {        
         let nomeClasse: string = entidade.constructor.name;
         let hasDeleted = await this.listaDaos?.get(nomeClasse)?.excluir(entidade);
-        return hasDeleted ? 'Excluido com sucesso!' : 'Erro ao excluir';
+        return hasDeleted ? 'Excluido com sucesso!' : 'Não foi possível excluir';
     }
     async consultar(entidade: EntidadeDominio): Promise<EntidadeDominio[]> {
         let nomeClasse: string = entidade.constructor.name;
