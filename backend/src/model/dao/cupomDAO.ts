@@ -50,13 +50,18 @@ export default class CupomDAO implements IDAO {
         return false;
     }
     async consultar(entidade: entidadeDominioModel): Promise<entidadeDominioModel[]> {
-        let cupomId = (entidade as Cupom).id;
+        let cupomCodigo = (entidade as Cupom).codigo;
+        let clienteId = (entidade as Cupom).clienteId;
+
         
         let query;
-        if(!cupomId){
+        if(clienteId) {
+            query = `SELECT * FROM cupons INNER JOIN "cuponsCliente" ON "clienteId"='${clienteId}'`;
+        }
+        else if(!cupomCodigo){
             query = `SELECT * FROM ${this.tabela}`; 
         }else{
-            query = `SELECT * FROM ${this.tabela} WHERE id=${entidade.id}`;
+            query = `SELECT * FROM ${this.tabela} WHERE codigo = '${cupomCodigo}' AND validade >= DATE(NOW())`;
         }
 
         let cupons = PgDatabase.query(query);

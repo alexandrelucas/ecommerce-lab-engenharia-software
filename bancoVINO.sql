@@ -200,6 +200,7 @@ CREATE TABLE public."cupons"
     "tipoCupom" character varying(255) NOT NULL,
     "valorDesconto" double precision NOT NULL,
     codigo character varying(255) NOT NULL,
+    validade date NOT NULL,
     PRIMARY KEY (id)
 );
 

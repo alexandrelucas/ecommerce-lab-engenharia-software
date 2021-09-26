@@ -8,36 +8,35 @@ const CupomRouter = express.Router();
 CupomRouter.get('/validar', async (req, res) => {
     let codigo = req.query.codigo;
 
-    let cupom = {
-        id: 1,
-        codigo: 'VINO2021',
-        valorDesconto: 20,
-        tipoCupom: 'Primeira compra'
-    } as Cupom;
-    
-    if(cupom.codigo == codigo) {
-        res.send({
-            status: 0,
-            message: 'Cupom válido',
-            cupomId: cupom.id,
-            codigo: cupom.codigo,
-            tipoCupom: cupom.tipoCupom,
-            valorDesconto: cupom.valorDesconto
-        });
-    } else {
-        res.send({
-            status: 1,
-            message: 'Cupom inválido'
-        });
+    try {
+        let cupom = (await fachada.consultar(new Cupom(null!, codigo?.toString())) as Array<Cupom>)[0];
+        res.status(200).json({status: cupom ? 0 : 1, message: cupom ? 'Cupom válido' : 'Cupom inválido', cupom});
+    } catch(e: any) {
+        res.status(500).json({
+            status: -1,
+            message: e.toString(),
+        })
     }
-
-    
 });
 
 // Lista todos os cupoms
 CupomRouter.get('/todos', async (req, res) => {
     try {
         let listaCupons = await fachada.consultar(new Cupom()) as Array<Cupom>;
+        res.status(200).json({status: 0, message: 'OK', listaCupons});
+    } catch(e: any) {
+        res.status(500).json({
+            status: -1,
+            message: e.toString(),
+        })
+    }
+});
+
+// Lista todos os cupons do cliente
+CupomRouter.get('/cliente/:id', async (req, res) => {
+    let clienteId = Number.parseInt(req.params.id);
+    try {
+        let listaCupons = await fachada.consultar(new Cupom(null!, null!, clienteId)) as Array<Cupom>;
         res.status(200).json({status: 0, message: 'OK', listaCupons});
     } catch(e: any) {
         res.status(500).json({

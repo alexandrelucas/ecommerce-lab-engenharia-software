@@ -3,6 +3,7 @@ import Cliente from '../model/entidade/cliente.model';
 import fachada from '../instanciaFachada';
 import EnderecoRouter from './endereco.route';
 import CartaoRouter from './cartao.route';
+import Endereco from '../model/entidade/endereco.model';
 
 const ClienteRouter = express.Router();
 
