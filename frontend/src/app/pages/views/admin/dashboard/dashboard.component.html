@@ -1,3 +1,43 @@
-<div class="card-header"><h2>Dashboard</h2></div>
+<div class="card-header">
+    <h2>Dashboard</h2>
+</div>    
 <div class="card-body">
+    <div class="row">
+        <div *ngFor="let c of cards" class="col-sm-3">
+            <div class="card card-info card-body" [ngClass]="c.background">
+                <h4 class="card-title">{{ c.title }}</h4>
+                <div class="d-flex justify-content-between card-icon">
+                    <i class="{{ c.icon }}"></i>
+                    <p class="card-text">{{ c.valorIni }}</p>                    
+                </div>
+                <div class="d-flex justify-content-between">
+                    <h5 class="card-subtitle m-0">{{ c.subTitle }}</h5>
+                    <h5 class="card-subtitle m-0">{{ c.valorFin }}</h5>
+                </div>
+            </div>
+        </div>    
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2>Recorrente e lucro anual</h2>
+                    <div>
+                        <canvas #vendas></canvas>
+                    </div>
+                </div>
+            </div>          
+        </div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2>Pesquisas de satisfação</h2>
+                    <div>
+                        <canvas #trocas style='width:326px;height:280px'></canvas>
+                    </div>
+                </div>
+            </div>          
+        </div>
+    </div>
 </div>

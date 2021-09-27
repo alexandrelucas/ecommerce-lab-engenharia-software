@@ -19,16 +19,22 @@ export class EnderecoCartaoComponent implements OnInit {
   
   public formEndereco: FormGroup;
   public formCartao: FormGroup;   
-  public formMetodoPag: FormGroup;   
     
   public enderecoTroca;
   public cartaoTroca;
+  public cartaoAdicional: boolean;
+  public setCartaoAdd: boolean;
 
   public pagamento = {
-    metodo: 'credito',
-    qtdParcelas: 0,
-    valorParcela: 0,
-    totalParcelas: [1,2,3,4,5,6]
+    cartaoPrincipal: {
+      numeroCartao: '',
+      valorAPagar: null,
+    },    
+    segundoCartao: {
+      numeroCartao: 0,
+      valorAPagar: null
+    },
+    obs: null
   }
 
   public carrinho:any = {
@@ -58,7 +64,6 @@ export class EnderecoCartaoComponent implements OnInit {
     this.loadCarrinho();    
     this.loadFormEndereco();
     this.loadFormCartao();
-    this.loadFormMetodoPag();
   }
 
   loadCarrinho(){
@@ -85,7 +90,7 @@ export class EnderecoCartaoComponent implements OnInit {
   }
 
   getCartao(){
-    this.cliente.getCartao(this.carrinho.clienteId).subscribe( (ret:any) => {      
+    this.cliente.getCartao(this.carrinho.clienteId).subscribe( (ret:any) => {
       if(ret.status == 1){
         this.carrinho.cartoes = ret.cartao;
         this.carrinho.cartoes.forEach(c => c.bandeira = this.getCardFlag(c.numero));
@@ -105,7 +110,10 @@ export class EnderecoCartaoComponent implements OnInit {
 
   setCartaoPagamento(){    
     if(this.carrinho.cartaoPagamento.id == undefined){      
-      this.carrinho.cartaoPagamento = this.carrinho.cartoes[0];
+      this.carrinho.cartaoPagamento = this.carrinho.cartoes[0];      
+      //console.log(JSON.stringify(JSON.parse(this.carrinho.cartaoPagamento.numero)))
+      this.pagamento.cartaoPrincipal.numeroCartao = JSON.stringify(JSON.parse(this.carrinho?.cartaoPagamento.numero));
+      //console.log(this.pagamento);
     }
   }
   
@@ -133,14 +141,6 @@ export class EnderecoCartaoComponent implements OnInit {
       numero: [this.carrinho.cartaoPagamento.numero ?? '', Validators.required],
       cvv: [this.carrinho.cartaoPagamento.cvv ?? '', Validators.required],
       dataValidade: [this.carrinho.cartaoPagamento.dataValidade ?? '', Validators.required]
-    });
-  }
-
-  loadFormMetodoPag(){    
-    this.formMetodoPag = this.formBuilder.group({
-      qtdParcelas: [this.pagamento.qtdParcelas ?? ''],
-      valorParcela: [this.pagamento.valorParcela ?? ''],
-      metodo: [this.pagamento.metodo ?? '']
     });
   }
 
@@ -193,6 +193,7 @@ export class EnderecoCartaoComponent implements OnInit {
   }
 
   setCarrinho(){
+    this.carrinho.pagamento.cartaoPrincipal.numeroCartao = this.carrinho.cartaoPagamento.numero;
     this.carrinho.pagamento = this.pagamento;
     this.carrinhoService.setLista(this.carrinho);
   }
@@ -221,12 +222,15 @@ export class EnderecoCartaoComponent implements OnInit {
     return false;
   }
 
-  getValorTotalPagamento(){
-    this.pagamento.valorParcela = (this.carrinho.valorTotal / this.pagamento.qtdParcelas);    
-    return this.pagamento.valorParcela;
+  addSegundoCartao(){
+    if(this.pagamento.segundoCartao.valorAPagar > 10){
+      this.pagamento.obs = null;
+      this.pagamento.cartaoPrincipal.valorAPagar = this.carrinho.valorTotal - this.pagamento.segundoCartao.valorAPagar;
+      this.setCartaoAdd = true;
+    }else{
+      this.pagamento.obs = 'O valor não pode ser menor que R$ 10,00';
+    }
   }
 
-  setQtdParcelas(){
-    this.pagamento.totalParcelas = this.pagamento.metodo == 'credito' ? [1,2,3,4,5,6] : [1]
-  }
+  
 }

@@ -25,7 +25,10 @@
                 <a class="nav-link" (click)="cardAtivo = 4">Minhas Compras</a>
               </li>
               <li class="nav-item" [ngClass]="cardAtivo == 5 ? 'active' : ''">
-                <a class="nav-link" (click)="cardAtivo = 5">Configurações da Conta</a>
+                <a class="nav-link" (click)="cardAtivo = 5">Meus Cupons</a>
+              </li>
+              <li class="nav-item" [ngClass]="cardAtivo == 6 ? 'active' : ''">
+                <a class="nav-link" (click)="cardAtivo = 6">Configurações da Conta</a>
               </li>
             </ul>
           </div>
@@ -168,7 +171,17 @@
             </div>
           </div>  
         </section>
-        <section class="conteudo" id="configuracoes" *ngIf="cardAtivo == 5">
+        <section class="conteudo" id="compras" *ngIf="cardAtivo == 5">
+          <div class="card">
+            <div class="card-header">
+              <h1>Meus Cupons</h1>
+            </div>
+            <div class="card-body"> 
+              <app-meus-cupons></app-meus-cupons>
+            </div>
+          </div>  
+        </section>
+        <section class="conteudo" id="configuracoes" *ngIf="cardAtivo == 6">
           <div class="card">
             <div class="card-header">
               <h1>Configurações da Conta</h1>

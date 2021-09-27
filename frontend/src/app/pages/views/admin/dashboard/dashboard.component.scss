@@ -1,0 +1,23 @@
+.card-body {
+
+}
+.card-icon{
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.card-info {
+    color: #fff;
+    &.A {
+        background-color: #4099ff;        
+    }
+    &.B {
+        background-color: #20c997;        
+    }
+    &.C {
+        background-color: #FFB64D;        
+    }
+    &.D {
+        background-color: #FF5370;
+    }
+}

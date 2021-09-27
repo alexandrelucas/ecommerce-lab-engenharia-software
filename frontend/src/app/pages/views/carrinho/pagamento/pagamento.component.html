@@ -42,6 +42,20 @@
                  {{ carrinho.enderecoEntrega.logradouro + ', ' + carrinho.enderecoEntrega.numero}}
                </div>
            </div>
+           <div *ngIf="carrinho.pagamento?.segundoCartao.valorAPagar">
+             <div class="row">
+                 <div class="d-flex justify-content-between">
+                     <p>Cartão Principal: </p>
+                     <p>{{ carrinho.pagamento?.cartaoPrincipal.valorAPagar | currency: 'BRL' }}</p>
+                 </div>
+             </div>
+             <div class="row">
+                 <div class="d-flex justify-content-between">
+                     <p>Cartão Adicional: </p>
+                     <p>{{ carrinho.pagamento?.segundoCartao.valorAPagar | currency: 'BRL' }}</p>
+                 </div>
+             </div>
+           </div>
            <div class="row">
                <div class="d-flex justify-content-between">
                  <p>Subtotal: </p>

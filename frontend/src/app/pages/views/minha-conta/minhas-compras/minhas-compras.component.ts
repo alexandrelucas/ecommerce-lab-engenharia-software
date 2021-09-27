@@ -54,7 +54,7 @@ export class MinhasComprasComponent implements OnInit, AfterViewInit {
     });
   }
 
-  setTrocaProduto(){    
+  setTrocaProduto(){
     ELEMENT_DATA.filter( c => c.id === this.itemSelecionado.id)[0].status = "Troca Solicitada";
     console.log(this.modalService.activeInstances);
   }
