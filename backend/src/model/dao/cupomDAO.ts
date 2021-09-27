@@ -7,10 +7,11 @@ import Cupom from "../entidade/cupom.model";
 export default class CupomDAO implements IDAO {
     tabela: string = 'cupons';
 
-    async salvar(entidade: entidadeDominioModel): Promise<entidadeDominioModel> {
+    async salvar(entidade: Cupom): Promise<entidadeDominioModel> {
         if(entidade.hasId()) return null!;
         try {            
             delete entidade.id;
+            delete entidade.clienteId;
             let colunas = Object.keys(entidade).map((e) => `"${e}"`).reduce((prev, cur) => `${prev} , ${cur}`);
             let valores = Object.values(entidade).map((v) => `'${v}'`).reduce((prev, cur) => `${prev} , ${cur}`);
             
@@ -23,9 +24,10 @@ export default class CupomDAO implements IDAO {
             return {error: 'CupomDAO.salvar(): ' + err.toString()} as EntidadeDominio;
         }
     }
-    async alterar(entidade: entidadeDominioModel): Promise<entidadeDominioModel> {
+    async alterar(entidade: Cupom): Promise<entidadeDominioModel> {
         if(!entidade.hasId()) return null!;        
 
+        delete entidade.clienteId;
         let dadosSQL = Object.entries(entidade).map((key, value) => {
             return `"${key[0]}" = '${key[1]}'`;
         }).reduce((pVal, cVal) => {
