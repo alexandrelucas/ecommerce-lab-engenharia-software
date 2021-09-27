@@ -64,6 +64,22 @@ export class CarrinhoComponent implements OnInit {
   updateQtd(item, valor){
     this.carrinho.listaCompras.filter(i => i.id === item.id)[0].qtd += valor;    
     this.updateValorCompras();
+    this.getVerificaEstoque(item);    
+  }
+
+  getEstoqueProduto(idProduto){
+    this.sandBox.getEstoqueProduto(idProduto).subscribe((result:any) => {
+      return result.produto;
+    });
+  }
+
+  getVerificaEstoque(produto){    
+    this.sandBox.getEstoqueProduto(produto.id).subscribe((result:any) => {      
+      let estoque = result.produto.quantidade;
+      let itemCarrinho = this.carrinho.listaCompras.filter(i => i.id === produto.id)[0];      
+
+      produto.qtd > estoque ? itemCarrinho.infoEstoque = true : itemCarrinho.infoEstoque = '';  
+    });
   }
 
   updateValorCompras(){
@@ -93,9 +109,10 @@ export class CarrinhoComponent implements OnInit {
     let cupom = this.cupomForm.get('cupom').value;
 
     if(!this.setCupom){
-      this.sandBox.validaCupom(cupom).subscribe( (ret:any) => {        
-        if(ret.status == 1){
-          this.carrinho.cupomDesconto = ret.valorDesconto;          
+      this.sandBox.validaCupom(cupom).subscribe( (ret:any) => {
+        if(ret.status == 0){
+          console.log(ret)
+          this.carrinho.cupomDesconto = ret.cupom.valorDesconto;          
           this.setCupom = !this.setCupom;
         }
         this.carrinho.infoCupom = ret.message;
@@ -111,7 +128,7 @@ export class CarrinhoComponent implements OnInit {
 
   getListaCarrinho(){
     this.carrinhoService.getLista().subscribe( lista => {
-      this.carrinho = lista;
+      this.carrinho = lista;      
     });
   }
 
@@ -123,5 +140,9 @@ export class CarrinhoComponent implements OnInit {
   concluirPedido(){
     this.carrinhoService.setLista(this.carrinho);
     //this.route.navigate(['home/carrinho/identificacao'])
+  }
+
+  validaBtn(){
+    return this.carrinho.listaCompras.filter(c => c.infoEstoque != '')[0] ? true : false;
   }
 }
