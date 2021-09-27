@@ -226,16 +226,16 @@ CREATE TABLE public."estoque"
         NOT VALID
 );
 
-ALTER TABLE public."éstoque"
+ALTER TABLE public."estoque"
     OWNER to postgres;
 
 CREATE TABLE public."pagamentos"
 (
-    id integer NOT NULL DEFAULT nextval('"Pagamentos_id_seq"'::regclass),
+    id serial NOT NULL,
     "dataPagamento" date NOT NULL,
     status character varying(255) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT "Pagamentos_pkey" PRIMARY KEY (id)
-)
+    PRIMARY KEY (id)
+);
 
 ALTER TABLE public."pagamentos"
     OWNER to postgres;
@@ -253,7 +253,7 @@ CREATE TABLE public."pagamentosCartoes"
         ON DELETE NO ACTION
         NOT VALID,
     CONSTRAINT "FK_CARTAO" FOREIGN KEY ("cartaoId")
-        REFERENCES public."CartoesCredito" (id) MATCH SIMPLE
+        REFERENCES public."cartoesCredito" (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID
