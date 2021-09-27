@@ -38,7 +38,7 @@ CartaoRouter.put('/cartoes/:id', async (req, res) => {
     try {
         let id = parseInt(req.params.id);
         let cartao = Object.assign(new Cartao(id), req.body);
-        let msg = await fachada.alterar(cartao) ?? 'OK';
+        let msg = await fachada.alterar(cartao);
         res.status(200).json({status: msg ? 1:0, message: msg ?? 'OK'});
     } catch(e: any) {
         res.status(500).json({

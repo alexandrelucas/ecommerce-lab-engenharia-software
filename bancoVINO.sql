@@ -111,6 +111,7 @@ CREATE TABLE public."enderecos"
     bairro character varying(50) NOT NULL,
     complemento character varying(30) NOT NULL,
     cidade character varying(255) NOT NULL,
+    descricaoEndereco character varying(255) NOT NULL,
     uf character varying(2) NOT NULL,
     "tipoEnderecoId" integer NOT NULL,
     "tipoResidenciaId" integer NOT NULL,
@@ -337,6 +338,9 @@ ALTER TABLE public."cuponsCliente"
 INSERT INTO public."tipoTelefone" (descricao) VALUES ('Celular');
 INSERT INTO public."tipoTelefone" (descricao) VALUES ('Residencial');
 INSERT INTO public."tipoTelefone" (descricao) VALUES ('Comercial');
+
+INSERT INTO public."tipoEndereco" (descricao) VALUES ('Cobrança');
+INSERT INTO public."tipoEndereco" (descricao) VALUES ('Entrega');
 
 INSERT INTO public."tipoResidencia" (descricao) VALUES ('Casa');
 INSERT INTO public."tipoResidencia" (descricao) VALUES ('Apartamento');
