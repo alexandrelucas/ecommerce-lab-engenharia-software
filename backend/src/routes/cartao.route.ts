@@ -23,7 +23,10 @@ CartaoRouter.post('/:id/cartoes', async (req, res) => {
         let clienteId = parseInt(req.params.id);
         let cartao = Object.assign(new Cartao(null!, clienteId), req.body);
         let msg = await fachada.cadastrar(cartao);
-        res.status(200).json({status: msg ? 1:0, message: msg ?? 'OK'});
+
+        let status = Number.parseInt(msg);
+
+        res.status(200).json({status: status ? 1:0, message: msg ?? 'OK'});
     } catch(e: any) {
         res.status(500).json({
             status: -1,
@@ -38,7 +41,7 @@ CartaoRouter.put('/cartoes/:id', async (req, res) => {
     try {
         let id = parseInt(req.params.id);
         let cartao = Object.assign(new Cartao(id), req.body);
-        let msg = await fachada.alterar(cartao) ?? 'OK';
+        let msg = await fachada.alterar(cartao);
         res.status(200).json({status: msg ? 1:0, message: msg ?? 'OK'});
     } catch(e: any) {
         res.status(500).json({
