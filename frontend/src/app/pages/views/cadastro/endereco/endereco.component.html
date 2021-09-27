@@ -14,13 +14,22 @@
       </div>
     </div>
     <div class="form-row">
-      <div class="form-group col-md-8">
+      <div class="form-group col-md-2">
+        <select class="form-control" id="tipoLogradouro" name="tipoLogradouro" formControlName="tipoLogradouroId" [ngClass]="aplicaCssErro('tipoLogradouroId','enderecoForm')">
+          <option value="0">Selecione</option>            
+          <option value="{{ tp.id }}" *ngFor="let tp of tipoLogradouro" >{{ tp.descricao }}</option>
+        </select>
+        <div class="invalid-feedback">
+          Tipo Logradouro obrigatório
+        </div>
+      </div>
+      <div class="form-group col-md-7">
         <input type="text" class="form-control" id="logradouro" formControlName="logradouro" placeholder="Endereço" [ngClass]="aplicaCssErro('logradouro','enderecoForm')" (change)="onChange()">
         <div class="invalid-feedback">
           Endereço inválido.
         </div>
       </div>
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-3">
         <input type="text" class="form-control" id="complemento" formControlName="complemento" placeholder="Complemento">
       </div>
     </div>
@@ -59,12 +68,11 @@
         </div>
       </div>      
         <div class="form-group col-md-4">
-          <select class="form-control" id="tipoEndereco" name="tipoEndereco" formControlName="tipoEndereco" 
-          [ngClass]="aplicaCssErro('tipoEndereco','enderecoForm')" (change)="onChange()">
-            <option value="">Selecione</option>
-            <option value="1">Cobrança</option>
-            <option value="2">Entrega</option>
-          </select>
+          <select class="form-control" id="tipoEndereco" name="tipoEndereco" formControlName="tipoEnderecoId" 
+          [ngClass]="aplicaCssErro('tipoEnderecoId','enderecoForm')" (change)="onChange()">
+            <option value="0">Selecione</option>
+            <option value="{{ tp.id }}" *ngFor="let tp of tipoEndereco" >{{ tp.descricao }}</option>
+          </select>          
       </div>
     </div>
   </form>  
