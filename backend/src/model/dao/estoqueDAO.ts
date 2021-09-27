@@ -52,7 +52,21 @@ export default class EstoqueDAO implements IDAO {
         if(produtoId) {
             query = `SELECT * FROM ${this.tabela} as e INNER JOIN "produtos" as p ON p.id = '${produtoId}'`;
         } else{
-            query = `SELECT * FROM ${this.tabela}`;
+            // query = `SELECT * FROM ${this.tabela}`;
+            query = `SELECT produtos.id, "codigo", "titulo",
+            produtos."descricao","imagem", "precoDe",
+            "precoPor", "quantidadeML", "tempoGuarda",
+            "teorAlcoolico", "peso", "comprimento",
+            "largura", "diametro", "formato", "paisId",
+            "categoriaId", "tipo", quantidade,
+            fornecedor, "valorCusto", "dataEntrada",
+            pais."sigla" as "paisSigla",
+            pais."descricao" as "pais",
+            categorias."descricao" as "categoria"
+            FROM estoque
+            INNER JOIN produtos ON produtos.id = estoque."produtoId"
+            INNER JOIN pais ON produtos."paisId" = pais.id
+            INNER JOIN categorias ON produtos."categoriaId" = categorias.id;`;
         }
 
         let cupons = PgDatabase.query(query);
