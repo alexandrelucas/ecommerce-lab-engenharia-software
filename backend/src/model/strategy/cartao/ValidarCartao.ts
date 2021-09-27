@@ -20,7 +20,7 @@ export default class ValidarCartao implements IStrategy {
             if(!cartao.cvv || cartao.cvv == '') return 'Código de segurança obrigatório';
             if(!cartao.dataValidade) return 'Data de validade obrigatória';
             if(!cartao.numero || cartao.numero == '') return 'Número do cartão obrigatório';
-            if(!cartao.titular || cartao.titular == '') return 'Nome do titular do cartão obrigatório';
+            if(!cartao.nomeTitular || cartao.nomeTitular == '') return 'Nome do titular do cartão obrigatório';
 
             if((cartao.cvv.length < 3 || cartao.cvv.length > 4)) return 'Código de segurança inválido';
             if(!this.getCardFlag(cartao.numero)) return 'Cartão inválido';

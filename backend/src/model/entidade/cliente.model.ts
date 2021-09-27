@@ -6,12 +6,12 @@ export default class Cliente extends EntidadeDominio {
     nome?: string;
     dataNasc?: Date;
     cpf!: string;
-    tipoTelefone?: number;
     telefone?: string;
     sexo?: string;
     email?: string;
     senha?: string;
     inativado?: boolean;
+    tipoTelefoneId?: number;
     classificacao?: number;
     novaSenha?: string;    
 

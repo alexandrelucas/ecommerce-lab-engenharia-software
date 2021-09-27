@@ -15,7 +15,7 @@ export default class ValidarDadosObrigatorios implements IStrategy {
             if((!cliente.senha || cliente.senha =='') && !altera) return 'Senha Obrigatória';
             if(!cliente.sexo || cliente.sexo =='') return 'Sexo Obrigatório';
             if(!cliente.telefone || cliente.telefone =='') return 'Telefone Obrigatório';
-            if(cliente.tipoTelefone == null) return 'Tipo de Telefone Obrigatório';
+            if(cliente.tipoTelefoneId == null) return 'Tipo de Telefone Obrigatório';
         } else {
             return 'Dados de Cliente incorreto';
         }

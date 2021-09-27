@@ -1,7 +1,6 @@
 import { KeyPairSyncResult } from "crypto";
 import Categoria from "./categoria.model";
 import EntidadeDominio from "./entidadeDominio.model";
-import Pais from "./pais.model";
 
 export default class Produto extends EntidadeDominio {
     codigo?: string;
@@ -12,12 +11,18 @@ export default class Produto extends EntidadeDominio {
     precoPor?: number;
     quantidadeML?: number;
     tempoGuarda?: number;
-    categoria?: Categoria;
     teorAlcoolico?: number;
-    pais?: Pais;
+    paisId?: number;
     peso?: number;
     comprimento?: number;
     largura?: number;
     diametro?: number;
     formato?: string;
+    categoriaId?: number;
+    tipo?: string;
+
+    constructor(id: number = null!) {
+       super();
+       this.id = id; 
+    }
 }

@@ -42,8 +42,8 @@ export default class CupomDAO implements IDAO {
     }
     async excluir(entidade: entidadeDominioModel): Promise<boolean> {
         if(entidade.hasId()) {
-            let endereco = await PgDatabase.query(`DELETE FROM ${this.tabela} WHERE id = ${entidade.id}`);
-            if(endereco.rowCount == 1) {
+            let cupom = await PgDatabase.query(`DELETE FROM ${this.tabela} WHERE id = ${entidade.id}`);
+            if(cupom.rowCount == 1) {
                 return true;
             }
         }

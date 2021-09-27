@@ -13,6 +13,12 @@ import ValidarDadosObrigatorios from '../model/strategy/cliente/ValidarDadosObri
 import ValidarCartao from '../model/strategy/cartao/ValidarCartao';
 import ValidarEndereco from '../model/strategy/endereco/validarEndereco';
 import CupomDAO from '../model/dao/cupomDAO';
+import PaisDAO from '../model/dao/paisDAO';
+import TipoDAO from '../model/dao/tipoDao';
+import ProdutoDAO from '../model/dao/produtoDAO';
+import PedidoDAO from '../model/dao/pedidoDAO';
+import EstoqueDAO from '../model/dao/estoqueDAO';
+import CategoriaDAO from '../model/dao/categoriaDAO';
 
 export default class Fachada implements IFachada {
 
@@ -30,6 +36,15 @@ export default class Fachada implements IFachada {
         this.listaDaos.set('Endereco', new EnderecoDAO());
         this.listaDaos.set('Cartao', new CartaoDAO());
         this.listaDaos.set('Cupom', new CupomDAO());
+        this.listaDaos.set('Pais', new PaisDAO());
+        this.listaDaos.set('TipoEndereco', new TipoDAO());
+        this.listaDaos.set('TipoLogradouro', new TipoDAO());
+        this.listaDaos.set('TipoResidencia', new TipoDAO());
+        this.listaDaos.set('TipoTelefone', new TipoDAO());
+        this.listaDaos.set('Produto', new ProdutoDAO());
+        this.listaDaos.set('Categoria', new CategoriaDAO());
+        this.listaDaos.set('Pedido', new PedidoDAO());
+        this.listaDaos.set('Estoque', new EstoqueDAO());
     }
     private definirRegras() {
         this.listaRegras = new Map<string, IStrategy[]>();
@@ -75,10 +90,9 @@ export default class Fachada implements IFachada {
             return mensagemRegras;
         }
 
-        let clienteNovo = await this.listaDaos?.get(nomeClasse)?.salvar(entidade);
+        let clienteNovo = await this.listaDaos?.get(nomeClasse)?.salvar(entidade)!;
 
-        if(clienteNovo?.hasError()) {
-            console.log(clienteNovo.error);
+        if(clienteNovo.error) {
             return clienteNovo.error!;
         }
 
@@ -97,7 +111,7 @@ export default class Fachada implements IFachada {
 
         console.log(result?.error);
         
-        if(result?.hasError()) {
+        if(result?.error) {
             return result.error!;
         }
         return null!;

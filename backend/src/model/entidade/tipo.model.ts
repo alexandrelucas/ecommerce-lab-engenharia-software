@@ -1,8 +1,5 @@
-export default class Tipo {
-    id?: number;
-    descricao?: String;
+import EntidadeDominio from "./entidadeDominio.model";
 
-    hasId(): boolean {
-        return (this.id != undefined || this.id != null);
-    }
+export default class Tipo extends EntidadeDominio{
+    descricao?: String;
 }

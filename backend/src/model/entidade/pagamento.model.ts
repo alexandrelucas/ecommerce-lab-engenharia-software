@@ -3,5 +3,6 @@ import EntidadeDominio from "./entidadeDominio.model";
 
 export default class Pagamento extends EntidadeDominio {
     id?: number;
-    cartao?: Cartao;
+    dataPagamento?: Date;
+    status?: string;
 }

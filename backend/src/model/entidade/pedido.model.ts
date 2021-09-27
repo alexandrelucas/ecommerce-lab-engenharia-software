@@ -19,13 +19,13 @@ enum StatusPedido {
 }
 
 export default class Pedido {
-    valorTotal?: number;
-    valorFrete?: number;
     id?: number;
-    status?: StatusPedido;
-    cliente?: Cliente;
-    cupom?: Cupom;
-    pagamento?: Pagamento;
-    dataPedido?: Date;
-    produtos?: Array<Produto>;
+    codigo?: string;
+    status?: number;
+    valorFrete?: number;
+    transportadora?: string;
+    valorTotal?: string;
+    cupomId?: number;
+    pagamentoId?: number;
+    data?: Date;
 }

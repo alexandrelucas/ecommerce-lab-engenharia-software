@@ -6,8 +6,4 @@ export default class EntidadeDominio {
     public hasId(): boolean {
         return (this.id != undefined || this.id != null);
     }
-
-    public hasError(): boolean {
-        return (this.error != undefined || this.error != null);
-    }
 }

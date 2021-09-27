@@ -71,9 +71,9 @@ CREATE TABLE public."clientes"
     senha character varying(255) NOT NULL,
     inativado boolean NOT NULL DEFAULT FALSE,
     classificacao integer NOT NULL DEFAULT 5,
-    "tipoTelefone" integer,
+    "tipoTelefoneId" integer,
     PRIMARY KEY (id),
-    CONSTRAINT "FK_CLI_TPTEL" FOREIGN KEY ("tipoTelefone")
+    CONSTRAINT "FK_CLI_TPTEL" FOREIGN KEY ("tipoTelefoneId")
         REFERENCES public."tipoTelefone" (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
@@ -89,6 +89,7 @@ CREATE TABLE public."cartoesCredito"
     "nomeTitular" character varying(255) NOT NULL,
     numero character varying(32) NOT NULL,
     cvv character varying(4) NOT NULL,
+    "dataValidade" date NOT NULL,
     "clienteId" integer NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT "FK_CC_CLI" FOREIGN KEY ("clienteId")
@@ -170,6 +171,7 @@ CREATE TABLE public."produtos"
     "quantidadeML" double precision,
     "tempoGuarda" integer,
     "teorAlcoolico" double precision,
+    tipo character varying(255) NOT NULL,
     peso double precision NOT NULL,
     comprimento double precision NOT NULL,
     altura double precision NOT NULL,

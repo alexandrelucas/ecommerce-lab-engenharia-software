@@ -2,7 +2,7 @@ import EntidadeDominio from "./entidadeDominio.model";
 
 export default class Cartao extends EntidadeDominio {
     clienteId?: number;
-    titular!: string;
+    nomeTitular!: string;
     numero!: string;
     cvv!: string;
     dataValidade!: Date;    

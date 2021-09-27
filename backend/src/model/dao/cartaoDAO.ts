@@ -5,7 +5,7 @@ import entidadeDominioModel from "../entidade/entidadeDominio.model";
 import IDAO from "./IDAO";
 
 export default class CartaoDAO implements IDAO {
-    tabela: string = 'cartoes';
+    tabela: string = '"cartoesCredito"';
 
     async salvar(entidade: entidadeDominioModel): Promise<entidadeDominioModel> {
         if(entidade.hasId()) return null!;
