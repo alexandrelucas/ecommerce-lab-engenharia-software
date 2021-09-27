@@ -18,6 +18,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MeusCuponsComponent } from './meus-cupons/meus-cupons.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MeuCartaoComponent, 
     AlterarSenhaComponent,
     ConfirmacaoDialog,
-    MinhasComprasComponent
+    MinhasComprasComponent,
+    MeusCuponsComponent
   ],
   imports: [
     CommonModule,

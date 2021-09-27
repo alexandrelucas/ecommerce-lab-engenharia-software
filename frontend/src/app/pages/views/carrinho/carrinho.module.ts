@@ -15,6 +15,7 @@ import { EnderecoCartaoComponent } from './endereco-cartao/endereco-cartao.compo
 import { EnderecoComponent } from './dialogs/endereco/endereco.component';
 import { CartaoComponent } from './dialogs/cartao/cartao.component';
 import { ResultadoComponent } from './pagamento/resultado/resultado.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [CarrinhoComponent, IdentificacaoComponent, PagamentoComponent, CarrinhoDashComponent, EnderecoCartaoComponent, EnderecoComponent, CartaoComponent, ResultadoComponent],
@@ -26,6 +27,7 @@ import { ResultadoComponent } from './pagamento/resultado/resultado.component';
     MatStepperModule,
     MatInputModule,
     MatIconModule,
+    MatCheckboxModule,
     NgxMaskModule.forRoot()
   ]
 })

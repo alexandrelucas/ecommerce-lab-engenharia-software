@@ -15,15 +15,18 @@ import { DetalhesPedidoComponent } from './pedidos/detalhes-pedido/detalhes-pedi
 import { CadastrarCupomComponent } from './cupons/cadastrar-cupom/cadastrar-cupom.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
+import { EstoqueComponent } from './estoque/estoque.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
-  declarations: [AdminComponent, ListaClienteComponent, DashboardComponent, CuponsComponent, ConfiguracoesComponent, PedidosComponent, DetalhesPedidoComponent, CadastrarCupomComponent],
+  declarations: [AdminComponent, ListaClienteComponent, DashboardComponent, CuponsComponent, ConfiguracoesComponent, PedidosComponent, DetalhesPedidoComponent, CadastrarCupomComponent, EstoqueComponent],
   imports: [
     CommonModule,
     AdminRoutingModule,
     MatTableModule,
     MatFormFieldModule,
     MatInputModule,
+    MatPaginatorModule,
     NgbModule,
     NgxMaskModule.forRoot(),
     FormsModule,

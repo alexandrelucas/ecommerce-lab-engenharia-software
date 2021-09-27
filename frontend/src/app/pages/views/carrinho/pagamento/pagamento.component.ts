@@ -12,7 +12,7 @@ import { ResultadoComponent } from './resultado/resultado.component';
 export class PagamentoComponent implements OnInit {
 
   public carrinho;
-  public storage: Storage;
+  public storage: Storage;  
 
   constructor(
     private carrinhoService: CarrinhoService,

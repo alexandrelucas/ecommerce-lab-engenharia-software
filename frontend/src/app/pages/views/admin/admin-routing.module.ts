@@ -4,6 +4,7 @@ import { AdminComponent } from './admin.component';
 import { ConfiguracoesComponent } from './configuracoes/configuracoes.component';
 import { CuponsComponent } from './cupons/cupons.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { EstoqueComponent } from './estoque/estoque.component';
 import { ListaClienteComponent } from './lista-cliente/lista-cliente.component';
 import { PedidosComponent } from './pedidos/pedidos.component';
 
@@ -15,6 +16,7 @@ const routes: Routes = [
       {path: 'clientes', component: ListaClienteComponent},
       {path: 'pedidos', component: PedidosComponent},
       {path: 'cupons', component: CuponsComponent},
+      {path: 'estoque', component:EstoqueComponent},
       {path: 'configuracoes', component: ConfiguracoesComponent}
     ]
 },
