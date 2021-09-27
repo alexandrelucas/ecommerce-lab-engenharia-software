@@ -70,11 +70,9 @@
                 <div class="form-row">
                   <div class="form-group col-md-6">
                     <label>Tipo Telefone</label>
-                    <select class="custom-select mr-sm-2" formControlName="tipoTelefone" [ngClass]="aplicaCssErro('tipoTelefone','perfilForm')">
+                    <select class="custom-select mr-sm-2" formControlName="tipoTelefoneId" [ngClass]="aplicaCssErro('tipoTelefoneId','perfilForm')">
                       <option value="0">Selecione</option>
-                      <option value="casa">Casa</option>
-                      <option value="celular">Celular</option>
-                      <option value="comercial">Comercial</option>
+                      <option value="{{ tp.id }}" *ngFor="let tp of tiposTelefone">{{ tp.descricao }}</option>                      
                     </select>
                     <div class="invalid-feedback">
                       Tipo obrigatório.

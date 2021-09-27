@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { SandBoxService } from 'src/app/shared/services/carrinho.service';
 
 @Component({
   selector: 'app-meus-cupons',
@@ -10,31 +11,42 @@ import { MatTableDataSource } from '@angular/material/table';
 export class MeusCuponsComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator: MatPaginator;  
-  displayedColumns: string[] = ['codigo', 'tipo', 'status', 'valorTotal', 'validade'];
-  dataSource = new MatTableDataSource<Cupom>(ELEMENT_DATA_COMPRA);
+  displayedColumns: string[] = ['codigo', 'tipoCupom', 'valorDesconto', 'validade', 'usado'];;
+  dataSource = new MatTableDataSource<Cupom>();
+  public storage;
+  public clienteId;
 
-  constructor() { }
+  constructor(
+    private servico: SandBoxService
+  ) { 
+    this.storage = window.localStorage;
+    this.clienteId = JSON.parse(this.storage.getItem('clienteId'));
+  }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
+    this.getCupomCliente(this.clienteId[0]);
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
 
+  getCupomCliente(idCliente){
+    this.servico.getCupomCliente(idCliente).subscribe( (result:any) => {
+      console.log(result);
+      this.dataSource = result.listaCupons;
+    })
+  }
+
 }
 
 export interface Cupom {
   id: number;
+  clienteId: number;
   codigo: string;
-  tipo: string;
-  status: string;
-  valorTotal: number;  
+  cupomId: number;
+  tipoCupom: string;  
+  valorDesconto: number;  
   validade: string;  
+  usado: boolean;
 }
-
-const ELEMENT_DATA_COMPRA: Cupom[] = [
-  {id: 1, codigo: '015645', tipo: 'TROCA', status: 'ATIVO', valorTotal: 41.0, validade: "12/11/2021"},
-  {id: 2, codigo: '045451', tipo: 'TROCA', status: 'ATIVO', valorTotal: 19.8, validade: "19/10/2021"},
-  {id: 3, codigo: 'VINO2021', tipo: 'PROMOCIONAL', status: 'ATIVO', valorTotal: 16.9, validade: "03/10/2021"},
-];

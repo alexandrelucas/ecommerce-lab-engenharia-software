@@ -34,7 +34,7 @@ export class EnderecoComponent implements OnInit {
       uf: [this.endereco.uf, Validators.required],
       pais: ['Brasil', Validators.required],
       descricaoEndereco: [this.endereco.descricaoEndereco, Validators.required],
-      tipoEndereco: [this.endereco.tipoEndereco, Validators.required]
+      tipoEndereco: [this.endereco.tipoEnderecoId, Validators.required]
     });
   }  
 

@@ -22,6 +22,7 @@ export class CadastrarCupomComponent implements OnInit {
       tipoCupom: [this.cupom.tipoCupom ?? '', Validators.required],
       codigo: [this.cupom.codigo ?? '', Validators.required],
       valorDesconto: [this.cupom?.valorDesconto ?? '', [Validators.required]],
+      validade: [this.cupom?.validade ?? '', Validators.required],
       ativo: [this.cupom.ativo ?? true, Validators.required]
     });
     console.log(this.cupomForm.get('ativo'))

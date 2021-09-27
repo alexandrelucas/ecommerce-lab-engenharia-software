@@ -36,7 +36,7 @@ export class MeuCartaoComponent implements OnInit {
     this.meuCartaoForm = this.formBuilder.group({
       id: [this.cartao.id ?? ''],
       bandeira: [this.cartao.bandeira ?? '', Validators.required],
-      titular: [this.cartao.titular ?? '', Validators.required],
+      nomeTitular: [this.cartao.nomeTitular ?? '', Validators.required],
       numero: [this.cartao.numero ?? '', Validators.required],
       cvv: [this.cartao.cvv ?? '', Validators.required],
       dataValidade: [this.cartao.dataValidade ?? '', Validators.required]      
@@ -74,6 +74,7 @@ export class MeuCartaoComponent implements OnInit {
 
   onUpdate(){
     this.clienteService.updateCartao(this.meuCartaoForm.value, this.clienteId).subscribe( result => {      
+      console.log(result)
       this.showModalSucesso('Info','Cartão alterado com sucesso!')
     });
   }
@@ -83,6 +84,7 @@ export class MeuCartaoComponent implements OnInit {
     this.meuCartaoForm.get('bandeira').setValue(this.getCardFlag(numero));
 
     this.clienteService.setCartao(this.clienteId, this.meuCartaoForm.value).subscribe( result => {      
+      console.log(result)
       this.showModalSucesso('Info', 'Cartão cadastrado com sucesso!');
     });    
   }

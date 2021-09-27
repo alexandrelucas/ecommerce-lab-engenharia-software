@@ -57,7 +57,7 @@ export default class ClienteDAO implements IDAO {
         return false;
     }
     async consultar(entidade: EntidadeDominio) : Promise<Array<EntidadeDominio>> {
-        let colunas:any = ['id', 'nome', 'email', 'dataNasc', 'cpf', 'tipoTelefone', 'telefone', 'sexo', 'email', 'inativado', 'classificacao'];
+        let colunas:any = ['id', 'nome', 'email', 'dataNasc', 'cpf', 'tipoTelefoneId', 'telefone', 'sexo', 'email', 'inativado', 'classificacao'];
         colunas = colunas.map((e: string) => `"${e}"`).reduce((prev: string, cur: string) => `${prev} , ${cur}`);
         let query;
         let cliente = entidade as Cliente;
@@ -67,9 +67,11 @@ export default class ClienteDAO implements IDAO {
         } else {
             query = entidade.hasId() ? `SELECT ${colunas} FROM ${this.tabela} WHERE id=${entidade.id}` : `SELECT ${colunas} FROM ${this.tabela} order by id`; 
         }
+        console.log(query)
 
         try {
-            let listaClientes = await PgDatabase.query(query);
+            let listaClientes = await PgDatabase.query(query);              
+            console.log(listaClientes);
             let result:Array<EntidadeDominio> = listaClientes.rows;
             return result ?? [];    
         } catch(err: any) {

@@ -6,6 +6,7 @@ import { ConfirmacaoDialog } from 'src/app/shared/dialogs/confirm/confirmacao-di
 import { Cartao } from 'src/app/shared/models/cartao.model';
 import { Cliente } from 'src/app/shared/models/cliente.model';
 import { Endereco } from 'src/app/shared/models/endereco.model';
+import { SandBoxService } from 'src/app/shared/services/carrinho.service';
 import { ClienteService } from 'src/app/shared/services/cliente.service';
 
 @Component({
@@ -21,6 +22,7 @@ export class MinhaContaComponent implements OnInit {
   public cardAtivo = 1;
   public showLoad: boolean;
   public clienteId: number;
+  public tiposTelefone = []
   public bandeiras = {
     mastercard: 'Master Card',
     visa: 'Visa',
@@ -35,7 +37,8 @@ export class MinhaContaComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
-    private clienteService: ClienteService
+    private clienteService: ClienteService,
+    private servico: SandBoxService
     ) {
       this.storage = window.localStorage;
       this.clienteId = JSON.parse(this.storage.getItem('clienteId'));
@@ -43,15 +46,21 @@ export class MinhaContaComponent implements OnInit {
 
   ngOnInit(): void {
     this.showLoad = true;
+    this.getTipoTelefone();
     this.getCliente();  
     this.getEnderecos();
     this.getCartoes();
   }
 
+  getTipoTelefone(){
+    this.servico.getTipoTelefone().subscribe( (result:any) => {      
+      this.tiposTelefone = result.tipoLogradouro;
+    });
+  }
+
   getCliente(){
     this.clienteService.getCliente(this.clienteId).subscribe( (result:any) => {
       this.carregaObjCliente(result.cliente);
-      console.log(result.cliente)
     });
   }
   getEnderecos(){
@@ -60,10 +69,10 @@ export class MinhaContaComponent implements OnInit {
     });
   }
   getCartoes(){
-    this.clienteService.getCartao(this.clienteId).subscribe( (result:any) => {
+    this.clienteService.getCartao(this.clienteId).subscribe( (result:any) => {      
       result.cartao.forEach(c => {
         c.bandeira = this.getCardFlag(c.numero);
-        this.dadosCliente.cartao.push(new Cartao(c.id, c.titular, c.numero, c.cvv, c.bandeira, c.dataValidade));
+        this.dadosCliente.cartao.push(new Cartao(c.id, c.nomeTitular, c.numero, c.cvv, c.bandeira, c.dataValidade));
       });
     });
   }
@@ -74,7 +83,7 @@ export class MinhaContaComponent implements OnInit {
       cpf: [this.dadosCliente.cpf],
       email: [this.dadosCliente.email],
       telefone: [this.dadosCliente.telefone ?? '', Validators.required],
-      tipoTelefone: [this.dadosCliente.tipoTelefone ?? '', Validators.required],
+      tipoTelefoneId: [this.dadosCliente.tipoTelefoneId ?? '0', Validators.required],
       sexo: [this.dadosCliente.sexo ?? '0', Validators.required],
       dataNasc: [this.dadosCliente.dataNasc ?? '', Validators.required]
     });
@@ -88,7 +97,7 @@ export class MinhaContaComponent implements OnInit {
     // this.dadosCliente.dataNasc = dados.dataNasc;
     this.dadosCliente.dataNasc = `${dataTratada[2]}/${dataTratada[1]}/${dataTratada[0]}`;
     this.dadosCliente.cpf = dados.cpf;
-    this.dadosCliente.tipoTelefone = dados.tipoTelefone;
+    this.dadosCliente.tipoTelefoneId = dados.tipoTelefoneId;
     this.dadosCliente.telefone = dados.telefone;
     this.dadosCliente.sexo = dados.sexo;
     this.dadosCliente.email = dados.email;

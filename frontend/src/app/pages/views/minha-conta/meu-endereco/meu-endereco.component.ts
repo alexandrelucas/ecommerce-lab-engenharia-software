@@ -5,6 +5,7 @@ import { AvisoDialog } from 'src/app/shared/dialogs/aviso/aviso-dialog';
 import { ConfirmacaoDialog } from 'src/app/shared/dialogs/confirm/confirmacao-dialog';
 import { Endereco } from 'src/app/shared/models/endereco.model';
 import { listaPaises } from 'src/app/shared/models/paises.model';
+import { SandBoxService } from 'src/app/shared/services/carrinho.service';
 import { ClienteService } from 'src/app/shared/services/cliente.service';
 
 @Component({
@@ -16,25 +17,29 @@ export class MeuEnderecoComponent implements OnInit {
 
   @Input('endereco') endereco: Endereco;
   @Output() deleteEvent = new EventEmitter();
-  //@Output() alterarEvent = new EventEmitter();
-
+  
   public countryList: Array<String>;
   public meuEnderecoForm: FormGroup;
   public storage;
+  public tipoEndereco = []
+  public tipoLogradouro = []
   public clienteId: number;
 
   constructor(
     private formBuilder: FormBuilder, 
     private clienteService: ClienteService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private servico: SandBoxService
   ) {
     this.countryList = listaPaises;
     this.storage = window.localStorage;
   }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.clienteId = JSON.parse(this.storage.getItem('clienteId'))[0];
-    
+    this.getTipoEndereco();
+    this.getTipoLogradouro();
+
     this.meuEnderecoForm = this.formBuilder.group({
       id: [this.endereco.id],
       cep: [this.endereco.cep ?? '', [Validators.required]],
@@ -44,12 +49,31 @@ export class MeuEnderecoComponent implements OnInit {
       bairro: [this.endereco.bairro ?? '', Validators.required],
       cidade: [this.endereco.cidade ?? '', Validators.required],
       uf: [this.endereco.uf ?? '', Validators.required],
-      pais: [this.endereco.pais ?? 'Brasil', Validators.required],
+      paisId: [this.endereco.paisId ?? 'Brasil', Validators.required],
       descricaoEndereco: [this.endereco.descricaoEndereco ?? '', Validators.required],
-      tipoEndereco: [this.endereco.tipoEndereco ?? '', Validators.required],
+      tipoEnderecoId: [this.endereco.tipoEnderecoId ?? '0', Validators.required],
+      tipoLogradouroId: [this.endereco.tipoLogradouroId ?? '0', Validators.required],
       clienteId: [this.clienteId]
     });
+
+    
   }
+
+  getTipoEndereco(){
+    this.servico.getTipoTelefone().subscribe( (result:any) => {      
+      this.tipoEndereco = result.tipoLogradouro;
+    });
+  }
+  getTipoLogradouro(){
+    this.servico.getTipoLogradouro().subscribe( (result:any) => {      
+      this.tipoLogradouro = result.tipoLogradouro;
+    });
+  }
+  // getTipoTelefone(){
+  //   this.servico.getTipoTelefone().subscribe( (result:any) => {      
+  //     this.tiposTelefone = result.tipoLogradouro;
+  //   });
+  // }
 
   aplicaCssErro(field, form){
     let touched = this[form].get(field).touched;      
@@ -96,12 +120,14 @@ export class MeuEnderecoComponent implements OnInit {
 
   onUpdate() {
     this.clienteService.updateEndereco(this.meuEnderecoForm.value, this.meuEnderecoForm.get('id').value).subscribe( (result: any) => {      
+      console.log(result)
       this.showModalSucesso('Info', result.message);
     });
   }
 
   onSubmit() {
-    this.clienteService.setEndereco(this.clienteId, this.meuEnderecoForm.value).subscribe( result => {      
+    this.clienteService.setEndereco(this.clienteId, this.meuEnderecoForm.value).subscribe( result => {
+      console.log(result)
       this.showModalSucesso('Info', 'Endereço criado com sucesso!');
     });
   }

@@ -1,7 +1,7 @@
 <form [formGroup]="meuCartaoForm">
     <div class="form-row">
         <div class="form-group col-md-12">
-            <input type="text" class="form-control" formControlName="titular" placeholder="Titular" [ngClass]="aplicaCssErro('titular','meuCartaoForm')"/>
+            <input type="text" class="form-control" formControlName="nomeTitular" placeholder="Titular" [ngClass]="aplicaCssErro('nomeTitular','meuCartaoForm')"/>
             <div class="invalid-feedback">
                 Nome obrigatório
             </div>

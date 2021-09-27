@@ -18,4 +18,53 @@ export class SandBoxService {
   validaCupom(idCupom){
     return this.http.get(this.baseUrl + `/cupom/validar?codigo=${idCupom}`)
   }
+
+  /* PRODUTOS */
+  getListaProdutos(){
+    return this.http.get(this.baseUrl + `/produtos`);
+  }
+
+  /* ESTOQUE */
+  getEstoqueProduto(idProduto){
+    return this.http.get(this.baseUrl + `/estoque/${idProduto}`);
+  }
+  getEstoque(){
+    return this.http.get(this.baseUrl + `/estoque`);
+  }  
+  
+
+  /* CUPOM */
+  getCupom(){
+    return this.http.get(this.baseUrl + `/cupom/todos`);
+  }
+  getCupomCliente(idCliente){
+    return this.http.get(this.baseUrl + `/cupom/cliente/${idCliente}`);
+  }
+  setCupom(cupom){    
+    delete cupom.ativo;
+    delete cupom.id;
+    return this.http.post(this.baseUrl + `/cupom/`, cupom);
+  }
+  deleteCupom(idCupom){
+    return this.http.delete(this.baseUrl + `/cupom/${idCupom}`);
+  }
+  updateCupom(idCupom, cupom){    
+    delete cupom.ativo;
+    return this.http.put(this.baseUrl + `/cupom/${idCupom}`, cupom);
+  }
+ 
+
+  /* TIPOS */
+  getTipoTelefone(){
+    return this.http.get(this.baseUrl + `/tipo/telefone`);
+  }
+  getTipoEndereco(){
+    return this.http.get(this.baseUrl + `/tipo/endereco`);
+  }
+  getTipoResidencia(){
+    return this.http.get(this.baseUrl + `/tipo/residencia`);
+  }
+  getTipoLogradouro(){
+    return this.http.get(this.baseUrl + `/tipo/logradouro`);
+  }
 }

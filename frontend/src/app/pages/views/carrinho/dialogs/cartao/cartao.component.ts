@@ -26,7 +26,7 @@ export class CartaoComponent implements OnInit {
     this.formCartao = this.formBuilder.group({
       id: [this.cartao.id],
       bandeira: [this.cartao.bandeira, Validators.required],
-      titular: [this.cartao.titular, Validators.required],
+      nomeTitular: [this.cartao.nomeTitular, Validators.required],
       numero: [this.cartao.numero, Validators.required],
       cvv: [this.cartao.cvv, Validators.required],
       dataValidade: [this.cartao.dataValidade, Validators.required]

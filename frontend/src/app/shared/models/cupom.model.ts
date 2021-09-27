@@ -3,5 +3,6 @@ export default class Cupom {
     tipoCupom?: string;
     valorDesconto?: number;
     codigo?: string;
+    validade?: Date;
     ativo?: boolean
 }

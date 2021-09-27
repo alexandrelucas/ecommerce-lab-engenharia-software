@@ -7,17 +7,18 @@ export class Endereco {
     bairro: string;
     cidade: string;
     uf: string;
-    pais: string;
+    paisId: string;
     descricaoEndereco: string;
-    tipoEndereco: string;
+    tipoEnderecoId: string;
+    tipoLogradouroId: string;
     clienteId: number
 
-    constructor(id?: number, descricaoEndereco?: string, pais?: string, logradouro?: string, cep?: string, numero?: string, complemento?: string,
-                bairro?: string, cidade?: string, uf?: string, tipoEndereco?: string, clienteId?: number
+    constructor(id?: number, descricaoEndereco?: string, paisId?: string, logradouro?: string, cep?: string, numero?: string, complemento?: string,
+                bairro?: string, cidade?: string, uf?: string, tipoEnderecoId?: string, tipoLogradouroId?: string, clienteId?: number
         ) {
         this.id = id;
         this.descricaoEndereco = descricaoEndereco;
-        this.pais = pais;
+        this.paisId = paisId;
         this.logradouro = logradouro;
         this.cep = cep;
         this.numero = numero;
@@ -25,7 +26,8 @@ export class Endereco {
         this.bairro = bairro;
         this.cidade = cidade;
         this.uf = uf;
-        this.tipoEndereco = tipoEndereco;
+        this.tipoEnderecoId = tipoEnderecoId;
+        this.tipoLogradouroId = tipoLogradouroId;
         this.clienteId = clienteId;
     }
 }

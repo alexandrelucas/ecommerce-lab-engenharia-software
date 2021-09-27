@@ -14,13 +14,22 @@
       </div>
     </div>
     <div class="form-row">
-      <div class="form-group col-md-8">
+      <div class="form-group col-md-2">        
+        <select class="form-control" id="tipoLogradouro" name="tipoLogradouro" formControlName="tipoLogradouroId" [ngClass]="aplicaCssErro('tipoLogradouroId','meuEnderecoForm')">
+          <option value="0">Selecione</option>            
+          <option value="{{ tp.id }}" *ngFor="let tp of tipoLogradouro" >{{ tp.descricao }}</option>
+        </select>
+        <div class="invalid-feedback">
+          Tipo Logradouro obrigatório
+        </div>
+      </div>
+      <div class="form-group col-md-7">
         <input type="text" class="form-control" formControlName="logradouro" id="logradouro" placeholder="Endereço" [ngClass]="aplicaCssErro('logradouro','meuEnderecoForm')">
         <div class="invalid-feedback">
           Logradouro obrigatório
+        </div>
       </div>
-      </div>
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-3">
         <input type="text" class="form-control" formControlName="complemento" id="complemento" placeholder="Complemento"> 
       </div>
     </div>
@@ -46,8 +55,8 @@
       </div>
       </div>      
         <div class="form-group col-md-8">
-          <select class="form-control" id="pais" name="pais" [ngClass]="aplicaCssErro('pais','meuEnderecoForm')">
-            <option [selected]="country == endereco.pais ? true : false" *ngFor="let country of countryList" [value]="country">{{country}}</option>
+          <select class="form-control" id="pais" name="pais" [ngClass]="aplicaCssErro('paisId','meuEnderecoForm')">
+            <option [selected]="country == endereco.paisId ? true : false" *ngFor="let country of countryList" [value]="country">{{country}}</option>
           </select>
       </div>
     </div>
@@ -59,10 +68,9 @@
       </div>
       </div>      
         <div class="form-group col-md-4">
-          <select class="form-control" id="tipoEndereco" name="tipoEndereco" formControlName="tipoEndereco" [ngClass]="aplicaCssErro('tipoEndereco','meuEnderecoForm')">
-            <option value="">Selecione</option>
-            <option value="1">Cobrança</option>
-            <option value="2">Entrega</option>
+          <select class="form-control" id="tipoEndereco" name="tipoEndereco" formControlName="tipoEnderecoId" [ngClass]="aplicaCssErro('tipoEnderecoId','meuEnderecoForm')">
+            <option value="0">Selecione</option>            
+            <option value="{{ tp.id }}" *ngFor="let tp of tipoEndereco" >{{ tp.descricao }}</option>
           </select>
       </div>
     </div>

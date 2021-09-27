@@ -11,6 +11,7 @@ const ClienteRouter = express.Router();
 ClienteRouter.get('/todos', async (req, res) => {
     try {
         let listaClientes = await fachada.consultar(new Cliente()) as Array<Cliente>;
+        console.log(listaClientes)
         res.status(200).json({status: 0, message: 'OK', listaClientes});
     } catch(e: any) {
         res.status(500).json({

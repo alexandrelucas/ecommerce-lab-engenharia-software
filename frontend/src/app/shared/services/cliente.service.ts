@@ -16,11 +16,8 @@ export class ClienteService {
   getViaCep(cep: String) {
     return this.http.get(`https://viacep.com.br/ws/${cep}/json/`);
   }
+   
 
-  // Admin Cliente
-  getListaCliente(){
-    return this.http.get(this.baseUrl + `/cliente/todos`);
-  }
   // Alterar status cliente ativado ou desativado
   setClienteDisabled(clienteId: number, isChecked: boolean) {
     return this.http.post(this.baseUrl + `/cliente/${clienteId}/alterar-status`, {
@@ -36,6 +33,9 @@ export class ClienteService {
   }
 
   //CLIENTE
+  getListaCliente(){
+    return this.http.get(this.baseUrl + `/cliente/todos`);
+  }
   getCliente(clienteId: number){
     return this.http.get(this.baseUrl + `/cliente/${clienteId}`)
   }
@@ -53,12 +53,15 @@ export class ClienteService {
   setEndereco(clienteId: number, endereco){    
     delete endereco.id;
     delete endereco.clienteId;
+    endereco.paisId = 2;
+    endereco.tipoResidenciaId = 1;
     
     console.log(clienteId)
     console.log(endereco)
     return this.http.post(this.baseUrl + `/cliente/${clienteId}/endereco`, endereco);
   }
   updateEndereco(endereco, enderecoId){
+    endereco.tipoResidenciaId = 1;
     return this.http.put(this.baseUrl + `/cliente/endereco/${enderecoId}`, endereco)
   }
   deleteEndereco(enderecoId){

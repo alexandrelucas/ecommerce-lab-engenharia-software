@@ -1,11 +1,12 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { listaProdutos } from 'src/app/shared/models/produtos.model';
+//import { listaProdutos } from 'src/app/shared/models/produtos.model';
 import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { Carrinho } from 'src/app/shared/models/carrinho.model';
 import { Router } from '@angular/router';
 import { CarrinhoService } from '../carrinho/carrinho.service';
 import { Endereco } from 'src/app/shared/models/endereco.model';
 import { Cartao } from 'src/app/shared/models/cartao.model';
+import { SandBoxService } from 'src/app/shared/services/carrinho.service';
 
 @Component({
   selector: 'app-produto',
@@ -13,8 +14,9 @@ import { Cartao } from 'src/app/shared/models/cartao.model';
   styleUrls: ['./produto.component.scss']
 })
 export class ProdutoComponent implements OnInit {
-
-  public produtos = listaProdutos;
+  
+  @ViewChild('modalData') modalData: TemplateRef<any>;
+  public produtos = []; //listaProdutos;
   public produtosFiltrados;
   public closeModal: string;  
   public carrinho = {
@@ -35,19 +37,27 @@ export class ProdutoComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private router: Router,
-    private carrinhoService: CarrinhoService
+    private carrinhoService: CarrinhoService,
+    private service: SandBoxService
   ) { }
-
-  @ViewChild('modalData') modalData: TemplateRef<any>;
+  
   ngOnInit(): void {
     this.carrinhoService.getLista().subscribe( ret => {
       if(ret){
         this.carrinho = ret;
       }
     });
+
+    this.loadListaProdutos();
   }
 
-  showCarrinho(content) {    
+  loadListaProdutos(){
+    this.service.getListaProdutos().subscribe( (result:any) => {
+      console.log(result);
+    })
+  }
+
+  showCarrinho(content) {
     this.modalService.open(content, {
         ariaLabelledBy: 'modal-basic-title',
         size: '100px', 
@@ -79,6 +89,14 @@ export class ProdutoComponent implements OnInit {
   updateQtd(item, valor){
     this.carrinho.listaCompras.filter(i => i.id === item.id)[0].qtd += valor;    
     this.updateValorTotal();
+
+    this.getEstoqueProduto(2)
+  }
+
+  getEstoqueProduto(idProduto){
+    this.service.getEstoqueProduto(idProduto).subscribe( (result:any) => {
+      console.log(result);
+    })
   }
 
   updateValorTotal(){

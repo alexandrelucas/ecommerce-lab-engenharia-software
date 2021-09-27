@@ -9,7 +9,7 @@ export class Cliente {
     email?: string;
     senha?: string;
     confirmaSenha?: string;       
-    tipoTelefone?: string;    
+    tipoTelefoneId?: string;    
     telefone?: string;
     sexo?: string;
     inativado?: boolean;

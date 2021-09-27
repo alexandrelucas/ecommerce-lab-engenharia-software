@@ -25,6 +25,8 @@ export class ListaClienteComponent implements OnInit {
 
   getListaClientes() {
     this.clienteService.getListaCliente().subscribe( (result:any) => {
+      console.log(result)
+
       result.listaClientes.forEach((cliente) => {
         let dataTratada = new RegExp(/\d{4}-\d{2}-\d{2}/).exec(cliente.dataNasc)[0].split('-');
         cliente.dataNasc = `${dataTratada[2]}/${dataTratada[1]}/${dataTratada[0]}`;
