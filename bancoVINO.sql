@@ -53,6 +53,7 @@ CREATE TABLE public."pais"
 (
     id serial NOT NULL,
     sigla character varying(2) NOT NULL,
+    descricao character varying(255) NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -89,7 +90,7 @@ CREATE TABLE public."cartoesCredito"
     "nomeTitular" character varying(255) NOT NULL,
     numero character varying(32) NOT NULL,
     cvv character varying(4) NOT NULL,
-    "dataValidade" date NOT NULL,
+    "dataValidade" character varying(20) NOT NULL,
     "clienteId" integer NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT "FK_CC_CLI" FOREIGN KEY ("clienteId")
@@ -357,9 +358,9 @@ INSERT INTO public."tipoLogradouro" (descricao) VALUES ('Travessa');
 INSERT INTO public."tipoLogradouro" (descricao) VALUES ('Viaduto');
 INSERT INTO public."tipoLogradouro" (descricao) VALUES ('Vila');
 
-INSERT INTO public.pais (sigla) VALUES ('AR');
-INSERT INTO public.pais (sigla) VALUES ('BR');
-INSERT INTO public.pais (sigla) VALUES ('ES');
-INSERT INTO public.pais (sigla) VALUES ('FR');
-INSERT INTO public.pais (sigla) VALUES ('IT');
-INSERT INTO public.pais (sigla) VALUES ('PT');
+INSERT INTO public.pais (sigla, descricao) VALUES ('AR', 'Argentina');
+INSERT INTO public.pais (sigla, descricao) VALUES ('BR', 'Brasil');
+INSERT INTO public.pais (sigla, descricao) VALUES ('ES', 'Espanha');
+INSERT INTO public.pais (sigla, descricao) VALUES ('FR', 'França');
+INSERT INTO public.pais (sigla, descricao) VALUES ('IT', 'Itália');
+INSERT INTO public.pais (sigla, descricao) VALUES ('PT', 'Portugal');
