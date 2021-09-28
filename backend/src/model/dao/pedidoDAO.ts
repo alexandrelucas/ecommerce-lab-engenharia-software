@@ -96,7 +96,7 @@ export default class PedidoDAO implements IDAO {
             INNER JOIN "pedidosProdutos" as pp ON p.id = pp."pedidoId"
             INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."id" = '${pedidoId}';`;
         } else if (clienteId) {
-            query = `SELECT p.codigo, p.status, "valorFrete", 
+            query = `SELECT p.id, p.codigo, p.status, "valorFrete", 
             transportadora, "valorSubTotal", "valorTotal", 
             data, "produtoId", "valor", "quantidade", 
             pagamentos.status as "statusPagamento" FROM pedidos as p 
