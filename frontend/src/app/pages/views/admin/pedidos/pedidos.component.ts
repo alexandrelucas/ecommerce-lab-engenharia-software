@@ -36,20 +36,7 @@ export class PedidosComponent implements OnInit {
       this.dataSource = new MatTableDataSource(result.pedidos);
       console.log(result.pedidos)
     });
-  }
-
-  ajustaResult(pedidos){
-    //console.
-    let listPedidos = [];
-    pedidos.reduce(function(prev, item) {
-      var key = item.codigo;
-      prev[key] = prev[key] || [];
-      prev[key].push(item);
-      return prev;
-    });    
-
-    //console.log(pedidos)
-  }
+  } 
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

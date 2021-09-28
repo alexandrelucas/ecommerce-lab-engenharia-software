@@ -78,8 +78,8 @@ export class SandBoxService {
   setPedido(dadosPedido){
     return this.http.post(this.baseUrl + `/pedido/`, dadosPedido);
   }
-  getPedido(){
-    return this.http.get(this.baseUrl + `/pedido/5`);
+  getPedido(idPedido){
+    return this.http.get(this.baseUrl + `/pedido/${idPedido}`);
   }
   getListaPedidos(){
     return this.http.get(this.baseUrl + `/pedido/todos`);
@@ -94,10 +94,14 @@ export class SandBoxService {
   }
   
   /** AUTORIZAR VENDA */
-
   autorizarVenda(pedidoId) {
     return this.http.post(this.baseUrl + `/venda/autorizar`, {
       pedidoId: pedidoId
     });
   }
+    
+  /** VENDAS */
+  getListaVendas(){
+    return this.http.get(this.baseUrl + `/venda/todos`);
+  }  
 }
