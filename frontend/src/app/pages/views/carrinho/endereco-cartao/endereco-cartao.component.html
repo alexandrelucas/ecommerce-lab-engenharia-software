@@ -118,7 +118,7 @@
                         <p>{{ carrinho.valorFrete | currency: 'BRL' }}</p>
                     </div> 
                 </div>
-                <div class="row">
+                <div class="row" *ngIf="carrinho.cupomDesconto">
                     <div class="d-flex justify-content-between">
                         <p>Desconto</p>
                         <p>{{ '-' + carrinho.cupomDesconto | currency: 'BRL' }}</p>

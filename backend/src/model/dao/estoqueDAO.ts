@@ -50,7 +50,7 @@ export default class EstoqueDAO implements IDAO {
         
         let query;
         if(produtoId) {
-            query = `SELECT * FROM ${this.tabela} as e INNER JOIN "produtos" as p ON p.id = '${produtoId}'`;
+            query = `SELECT * FROM ${this.tabela} as e INNER JOIN "produtos" as p ON p.id = e."produtoId" WHERE e."produtoId" = '${produtoId}'`;
         } else{
             // query = `SELECT * FROM ${this.tabela}`;
             query = `SELECT produtos.id, "codigo", "titulo",

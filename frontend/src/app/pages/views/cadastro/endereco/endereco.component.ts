@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter, Input, OnChanges } from '@angu
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ClienteService } from 'src/app/shared/services/cliente.service';
 import { listaPaises } from 'src/app/shared/models/paises.model';
+import { SandBoxService } from 'src/app/shared/services/carrinho.service';
 
 @Component({
   selector: 'app-endereco',
@@ -15,18 +16,34 @@ export class EnderecoComponent implements OnInit, OnChanges {
   @Input() loadData;
   public enderecoForm: FormGroup;
   public countryList: Array<String>;
+  public tipoEndereco = [];
+  public tipoLogradouro = [];
   
   constructor(
     private formBuilder: FormBuilder,
-    private clienteService: ClienteService
+    private clienteService: ClienteService,
+    private servico: SandBoxService
   ) { }
 
   ngOnInit(): void {
     this.loadForm();
+    this.getTipoEndereco();
+    this.getTipoLogradouro();
+  }
+
+  getTipoEndereco(){
+    this.servico.getTipoTelefone().subscribe( (result:any) => {
+      this.tipoEndereco = result.tipoLogradouro;
+    });
+  }
+  getTipoLogradouro(){
+    this.servico.getTipoLogradouro().subscribe( (result:any) => {
+      this.tipoLogradouro = result.tipoLogradouro;
+    });
   }
 
   ngOnChanges(){
-    if(this.resetEndereco != -1){      
+    if(this.resetEndereco != -1){
       this.resetForm();
     }
     if(this.loadData && this.resetEndereco == -1){
@@ -41,7 +58,8 @@ export class EnderecoComponent implements OnInit, OnChanges {
         uf: this.loadData.uf,
         pais: this.loadData.pais,
         descricaoEndereco: this.loadData.descricaoEndereco,
-        tipoEndereco: this.loadData.tipoEndereco
+        tipoEnderecoId: this.loadData.tipoEnderecoId,
+        tipoLogradouroId: this.loadData.tipoLogradouroId,
       });
       this.onChange();
     }
@@ -61,7 +79,8 @@ export class EnderecoComponent implements OnInit, OnChanges {
       uf: ['', Validators.required],
       pais: ['Brasil', Validators.required],
       descricaoEndereco: ['', Validators.required],
-      tipoEndereco: ['', Validators.required]
+      tipoEnderecoId: ['0', Validators.required],
+      tipoLogradouroId: ['0', Validators.required],
     });
   }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-//import { listaProdutos } from 'src/app/shared/models/produtos.model';
+import { listaProdutos } from 'src/app/shared/models/produtos.model';
 import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { Carrinho } from 'src/app/shared/models/carrinho.model';
 import { Router } from '@angular/router';
@@ -16,9 +16,9 @@ import { SandBoxService } from 'src/app/shared/services/carrinho.service';
 export class ProdutoComponent implements OnInit {
   
   @ViewChild('modalData') modalData: TemplateRef<any>;
-  public produtos = []; //listaProdutos;
+  public produtos = [];
   public produtosFiltrados;
-  public closeModal: string;  
+  public closeModal: string;
   public carrinho = {
     valorTotal: 0,
     valorCompras: 0,
@@ -48,12 +48,12 @@ export class ProdutoComponent implements OnInit {
       }
     });
 
-    this.loadListaProdutos();
+    this.getEstoque();
   }
 
-  loadListaProdutos(){
-    this.service.getListaProdutos().subscribe( (result:any) => {
-      console.log(result);
+  getEstoque(){
+    this.service.getEstoque().subscribe( (result:any) => {      
+      this.produtos = result.produtos;      
     })
   }
 
@@ -71,7 +71,7 @@ export class ProdutoComponent implements OnInit {
       existsItem.qtd++;
     }else{
       this.carrinho.listaCompras.push(new Carrinho(item.id, item.codigo, item.titulo, item.imagem, item.precoDe, item.precoPor, item.quantidadeML,
-        item.tempoGuarda, item.classificacao, item.tipo, item.teorAlcolico, item.paisCodigo, item.pais, item.descricao, 1, 0));
+        item.tempoGuarda, item.categoria, item.tipo, item.teorAlcoolico, item.paisSigla, item.pais, item.descricao, 1, 0, ''));
     }
 
     this.updateValorTotal();
@@ -87,23 +87,23 @@ export class ProdutoComponent implements OnInit {
   }
 
   updateQtd(item, valor){
-    this.carrinho.listaCompras.filter(i => i.id === item.id)[0].qtd += valor;    
+    this.carrinho.listaCompras.filter(i => i.id === item.id)[0].qtd += valor;
     this.updateValorTotal();
-
-    this.getEstoqueProduto(2)
+    this.getVerificaEstoque(item);    
   }
 
-  getEstoqueProduto(idProduto){
-    this.service.getEstoqueProduto(idProduto).subscribe( (result:any) => {
-      console.log(result);
-    })
+  getVerificaEstoque(produto){
+    let itemCarrinho = this.carrinho.listaCompras.filter(i => i.id === produto.id)[0];
+    let estoque = this.produtos.filter(item => item.id == produto.id)[0].quantidade;
+    
+    produto.qtd > estoque ? itemCarrinho.infoEstoque = true : itemCarrinho.infoEstoque = '';
   }
 
   updateValorTotal(){
     this.carrinho.valorCompras = this.carrinho.listaCompras.reduce((acc, item) => { return acc + (item.precoPor * item.qtd) }, 0);
   }
  
-  goParaPagamento(){    
+  goParaPagamento(){
     this.modalService.dismissAll();
     this.carrinhoService.setLista(this.carrinho);
     this.router.navigate(['home/carrinho']);    
@@ -113,16 +113,19 @@ export class ProdutoComponent implements OnInit {
     return this.produtosFiltrados ?? this.produtos;
   }
   
-  pesquisarProdutos(valor: string) {
+  pesquisarProdutos(valor: string) {    
     if(valor !== '') {
       valor = valor.toLowerCase();
       let nome = this.produtos.filter(p => p.titulo.toLowerCase().includes(valor));
       let pais = this.produtos.filter(p => p.pais.toLowerCase().includes(valor));
-      let classificacao = this.produtos.filter(p => p.classificacao.toLowerCase().includes(valor));
-      console.log(nome);
-      this.produtosFiltrados = [...nome, ...pais, ...classificacao];
+      let categoria = this.produtos.filter(p => p.categoria.toLowerCase().includes(valor));      
+      this.produtosFiltrados = [...nome, ...pais, ...categoria];
     } else {
       this.produtosFiltrados = undefined;
     }
+  }
+
+  validaBtn(){
+    return this.carrinho.listaCompras.filter(c => c.infoEstoque != '')[0] ? true : false;
   }
 }

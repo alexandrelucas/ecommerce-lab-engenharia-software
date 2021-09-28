@@ -123,10 +123,8 @@ export default class ClienteDAO implements IDAO {
             let cliente = entidade as Cliente;
             
             let query = `SELECT "senha", "id" FROM ${this.tabela} WHERE email='${cliente.email}' AND inativado='false';`;
-            let resultado:any = (await PgDatabase.query(query)).rows[0];
+            let resultado:any = (await PgDatabase.query(query)).rows[0];            
             let senhaDoBanco: string = resultado.senha;
-
-            console.log(resultado);
 
             if(await Encrypt.comparePassword(cliente.senha!, senhaDoBanco)) {
                 return resultado.id;

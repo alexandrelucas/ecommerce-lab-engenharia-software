@@ -6,25 +6,29 @@
     <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
     <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
     <li data-target="#carouselExampleIndicators" data-slide-to="5"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="6"></li>
   </ol>
   <div class="carousel-inner">
     <div class="carousel-item">
-      <img class="d-block w-100" src="https://vivavinho.vteximg.com.br/arquivos/ids/161392/21_036_VV_Fantasticos_Descontos_Desktop (1).png?v=637648299532930000" alt="Third slide">
+      <img class="d-block w-100" src="https://vivavinho.vteximg.com.br/arquivos/ids/161392/21_036_VV_Fantasticos_Descontos_Desktop (1).png?v=637648299532930000" alt="Fourth slide">
     </div>
-    <div class="carousel-item active">
+    <div class="carousel-item">
       <img class="d-block w-100" src="https://vivavinho.vteximg.com.br/arquivos/ids/161291/21_031_VV_Inverno_Desktop.png?v=637612710853230000" alt="First slide">
     </div>
     <div class="carousel-item">
       <img class="d-block w-100" src="https://vivavinho.vteximg.com.br/arquivos/ids/161349/21_030_VV_Amore_passo_desktop_99.png?v=637626624560830000" alt="Second slide">
     </div>
     <div class="carousel-item">
-      <img class="d-block w-100" src="https://vivavinho.vteximg.com.br/arquivos/ids/161137/21_019_VV_Lancamentos_Italianos_Desktop.png?v=637612712421170000" alt="Third slide">
+      <img class="d-block w-100" src="https://vivavinho.vteximg.com.br/arquivos/ids/161137/21_019_VV_Lancamentos_Italianos_Desktop.png?v=637612712421170000" alt="Fifth slide">
     </div>
     <div class="carousel-item">
-      <img class="d-block w-100" src="https://vivavinho.vteximg.com.br/arquivos/ids/161223/21_024_VV_Descorchados_Desktop.png?v=637612712878130000" alt="Third slide">
+      <img class="d-block w-100" src="https://vivavinho.vteximg.com.br/arquivos/ids/161223/21_024_VV_Descorchados_Desktop.png?v=637612712878130000" alt="Sixth slide">
     </div>
-    <div>
+    <div class="carousel-item">
       <img class="d-block w-100" src="https://vivavinho.vteximg.com.br/arquivos/ids/161443/21_037_VV_SB_desktop (3).gif?v=637660525400400000" alt="Last slide">
+    </div>
+    <div class="carousel-item active">
+      <img class="d-block w-100" src="https://vivavinho.vteximg.com.br/arquivos/ids/161490/21_041_VV_Primavera_desktop.png?v=637678573840600000" alt="Last slide">
     </div>
   </div>
   <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -58,7 +62,7 @@
     <div class="produtoImagem">
       <img [src]="produto.imagem">
     </div>
-    <div class="titulo"><img src="https://www.countryflags.io/{{produto.paisCodigo}}/flat/24.png"><h4>{{produto.titulo}}</h4></div>
+    <div class="titulo"><img src="https://www.countryflags.io/{{produto.paisSigla}}/flat/24.png"><h4>{{produto.titulo}}</h4></div>
     <p class="descricao">
       {{produto.classificacao}}
     </p>
@@ -109,10 +113,13 @@
         </div>
         <div class="col-md-3 p-0 car-preco">
           <p>{{ item.qtd * item.precoPor | currency: 'BRL'}}</p>
-        </div>
+        </div>        
         <div class="col-md-1">
           <button class="car-btn-qtd" (click)="removeCarrinho(item)"><i class="far fa-trash-alt"></i></button>
         </div>
+      </div>
+      <div style="display: flex; justify-content: flex-end;">
+        <small class="form-text text-muted" *ngIf="item.infoEstoque != ''">Qtd. indisponível no estoque.</small>
       </div>
     </div>    
     <div class="row m-1 mt-4">
@@ -125,7 +132,7 @@
     </div>
   </div>
   <div class="modal-footer">    
-    <button type="button" class="btn btn-danger" (click)="goParaPagamento()" [disabled]="(valorCompras == 0)" id="btn-carrinho-ir-para-pagamento">IR PARA O PAGAMENTO</button>
+    <button type="button" class="btn btn-danger" (click)="goParaPagamento()" [disabled]="(valorCompras == 0 || validaBtn())" id="btn-carrinho-ir-para-pagamento">IR PARA O PAGAMENTO</button>
     <button type="button" class="btn btn-light car-btn-continuar" (click)="modal.close()" id="btn-carrinho-continuar-comprando">CONTINUAR COMPRANDO</button>
   </div>
 </ng-template>

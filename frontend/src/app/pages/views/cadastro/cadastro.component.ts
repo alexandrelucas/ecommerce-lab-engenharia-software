@@ -141,9 +141,9 @@ export class CadastroComponent implements OnInit {
         bairro: this.endereco.get('bairro').value,
         cidade: this.endereco.get('cidade').value,
         uf: this.endereco.get('uf').value,
-        tipoEndereco: this.endereco.get('tipoEndereco').value,
-        tipoLogradouro: 1,
-        tipoResidencia: 1
+        tipoEnderecoId: this.endereco.get('tipoEnderecoId').value,
+        tipoLogradouroId: this.endereco.get('tipoLogradouroId').value,
+        tipoResidenciaId: 1
       });
     }else{
       this.listaEnderecos.forEach(e => {
