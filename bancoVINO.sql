@@ -235,7 +235,7 @@ CREATE TABLE public."pagamentos"
 (
     id serial NOT NULL,
     "dataPagamento" date NOT NULL,
-    status character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    status integer NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -275,6 +275,7 @@ CREATE TABLE public."pedidos"
     "valorTotal" double precision NOT NULL,
     "cupomId" integer,
     "pagamentoId" integer NOT NULL,
+    "enderecoId" integer NOT NULL,
     data date NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT "FK_PED_CUP" FOREIGN KEY ("cupomId")
@@ -284,6 +285,11 @@ CREATE TABLE public."pedidos"
         NOT VALID,
     CONSTRAINT "FK_PED_PAG" FOREIGN KEY ("pagamentoId")
         REFERENCES public."pagamentos" (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+    CONSTRAINT "FK_PED_END" FOREIGN KEY ("enderecoId")
+        REFERENCES public."enderecos" (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID
@@ -298,6 +304,7 @@ CREATE TABLE public."pedidosProdutos"
     "pedidoId" integer NOT NULL,
     "produtoId" integer NOT NULL,
     valor double precision NOT NULL,
+    quantidade integer NOT NULL DEFAULT 0,
     PRIMARY KEY (id),
     CONSTRAINT "FK_PED" FOREIGN KEY ("pedidoId")
         REFERENCES public."pedidos" (id) MATCH SIMPLE

@@ -28,4 +28,8 @@ export default class Pedido {
     cupomId?: number;
     pagamentoId?: number;
     data?: Date;
+
+    constructor(id: number = null!) {
+        this.id = id;
+    }
 }
