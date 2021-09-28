@@ -1,3 +1,4 @@
+import { DataSource } from '@angular/cdk/collections';
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -32,7 +33,7 @@ export class PedidosComponent implements OnInit {
   carregarListaPedidos() {    
     this.servico.getListaPedidos().subscribe((result:any) => {      
       //this.ajustaResult(result.pedidos);
-      this.dataSource = result.pedidos;
+      this.dataSource = new MatTableDataSource(result.pedidos);
       console.log(result.pedidos)
     });
   }
@@ -76,5 +77,13 @@ export class PedidosComponent implements OnInit {
    });
    modalRef.componentInstance.pedido = pedido;
    //console.log(modalRef.componentInstance);
+  }
+
+  autorizarVenda(pedidoId) {
+    this.servico.autorizarVenda(pedidoId).subscribe((result: any) => {
+      if(result.status == 0) {
+        this.carregarListaPedidos();
+      }
+    });
   }
 }

@@ -92,5 +92,12 @@ export class SandBoxService {
   getListaPaises(){
     return this.http.get(this.baseUrl + `/pais`);
   }
-    
+  
+  /** AUTORIZAR VENDA */
+
+  autorizarVenda(pedidoId) {
+    return this.http.post(this.baseUrl + `/venda/autorizar`, {
+      pedidoId: pedidoId
+    });
+  }
 }

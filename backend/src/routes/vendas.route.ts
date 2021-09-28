@@ -24,7 +24,12 @@ VendaRouter.post('/autorizar', async (req, res) => {
     try {
         let autorizarVenda = Object.assign(new Venda(), req.body);
         let msg = await fachada.cadastrar(autorizarVenda);
-        res.status(200).json({status: msg ? 1:0, message: msg ?? 'OK'});
+
+        if(Number.parseInt(msg)) {
+            res.status(200).json({status: 0, message: msg});
+        } else {
+            res.status(400).json({status: 1, message: msg});
+        }
     } catch(e: any) {
         res.status(500).json({
             status: -1,
