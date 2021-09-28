@@ -7,22 +7,14 @@
           <input matInput (keyup)="applyFilter($event)" placeholder="Ex. codigo do pedido, nome do cliente, status..." #input>
         </mat-form-field> -->
         
-        <table mat-table [dataSource]="dataSource">
-          <!-- Position Column -->
-          <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef> No. </th>
-            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-          </ng-container>
-          
-          
-
-          <ng-container matColumnDef="numeroPedido">
+        <table mat-table [dataSource]="dataSource">          
+          <ng-container matColumnDef="codigo">
             <th mat-header-cell *matHeaderCellDef> Número do Pedido </th>
-            <td mat-cell *matCellDef="let element"> #{{element.numeroPedido}} </td>
-          </ng-container>
+            <td mat-cell *matCellDef="let element"> #{{element.codigo}} </td>
+          </ng-container>          
 
           <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef> Status do Pedido </th>
+            <th mat-header-cell *matHeaderCellDef> Status </th>
             <!-- <td mat-cell *matCellDef="let element"> {{getStatusNome(element.status)}} </td> -->
             <td mat-cell *matCellDef="let element">
               <select name="cars" id="cars" class="form-control" style="max-width: 200px; height: 35px;">
@@ -31,15 +23,29 @@
           </td>
           </ng-container>
 
-          <!-- Name Column -->
+          <ng-container matColumnDef="quantidade">
+            <th mat-header-cell *matHeaderCellDef> Quantidade </th>
+            <td mat-cell *matCellDef="let element"> {{ element.quantidade }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="transportadora">
+            <th mat-header-cell *matHeaderCellDef> Entrega via </th>
+            <td mat-cell *matCellDef="let element"> {{ element.transportadora }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="valorFrete">
+            <th mat-header-cell *matHeaderCellDef> Taxa de Entrega </th>
+            <td mat-cell *matCellDef="let element"> {{element.valorFrete | currency: 'BRL'}} </td>
+          </ng-container>
+
           <ng-container matColumnDef="valorTotal">
             <th mat-header-cell *matHeaderCellDef> Valor Total </th>
             <td mat-cell *matCellDef="let element"> {{element.valorTotal | currency: 'BRL'}} </td>
           </ng-container>
 
-          <ng-container matColumnDef="dataPedido">
+          <ng-container matColumnDef="data">
             <th mat-header-cell *matHeaderCellDef> Data do Pedido </th>
-            <td mat-cell *matCellDef="let element"> {{element.dataPedido | date: 'dd/MM/yy'}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.data | date: 'dd/MM/yyyy'}} </td>
           </ng-container>
 
           <ng-container matColumnDef="acao">
