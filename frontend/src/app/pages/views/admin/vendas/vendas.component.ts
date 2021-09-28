@@ -24,7 +24,13 @@ export class VendasComponent implements OnInit {
     this.servico.getListaVendas().subscribe((result:any) => {
       console.log(result)
       this.dataSource = result.vendas;
+      /** id pedidoId valor */
     })
   }
+  carregarListaPedidos() {    
+    this.servico.getListaPedidos().subscribe((result:any) => {
+      console.log(result.pedidos)
+    });
+  } 
 
 }
