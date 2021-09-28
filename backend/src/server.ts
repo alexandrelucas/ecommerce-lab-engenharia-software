@@ -8,6 +8,7 @@ import PaisRouter from './routes/pais.route';
 import TipoRouter from './routes/tipos.route';
 import ProdutoRouter from './routes/produto.route';
 import EstoqueRouter from './routes/estoque.route';
+import VendaRouter from './routes/vendas.route';
 
 const app = express();
 const port = 3000;
@@ -38,6 +39,7 @@ app.use('/pais', PaisRouter);
 app.use('/tipo', TipoRouter);
 app.use('/produto', ProdutoRouter);
 app.use('/estoque', EstoqueRouter);
+app.use('/venda', VendaRouter);
 
 
 app.listen(port, () => {
