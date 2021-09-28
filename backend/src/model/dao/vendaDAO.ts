@@ -14,7 +14,6 @@ export default class VendaDAO implements IDAO {
 
             if(await this.consultarPedidoExistente(entidade.pedidoId)) return {error: 'Pedido já consta como vendido!'} as EntidadeDominio;
 
-            console.log(entidade);
             let pedidoDAO = new PedidoDAO();
             let pedido = (await pedidoDAO.consultar(new Pedido(entidade.pedidoId)))[0] as Pedido;
 
@@ -23,10 +22,14 @@ export default class VendaDAO implements IDAO {
 
             let query = `UPDATE pagamentos SET status=1 WHERE id = '${pedido.pagamentoId}';`;
 
-            let result = await PgDatabase.query(query);
+            let resultPagamento = await PgDatabase.query(query);
+
+            let queryAtualizaStatusPedido = `UPDATE pedidos SET status = 1 WHERE id = ${pedido.id}`;
+
+            let resultPedido = await PgDatabase.query(queryAtualizaStatusPedido);
 
             // Pagamento aprovado! Registrar venda
-            if(result.rowCount > 0){
+            if(resultPagamento.rowCount > 0 && resultPedido.rowCount > 0){
                 query = `INSERT INTO vendas("pedidoId", valor) VALUES ('${pedido.id}', '${pedido.valorTotal}') RETURNING id;`;
 
                 let result = await PgDatabase.query(query);
