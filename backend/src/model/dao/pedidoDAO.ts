@@ -1,7 +1,7 @@
 import PgDatabase from "../../db.config";
 import EntidadeDominio from "../entidade/entidadeDominio.model";
 import Estoque from "../entidade/estoque.model";
-import Pagamento from "../entidade/pagamento.model";
+import Pedido from "../entidade/pedido.model";
 import EstoqueDAO from "./estoqueDAO";
 import IDAO from "./IDAO";
 import PagamentoDAO from "./pagamentoDAO";
@@ -82,8 +82,40 @@ export default class PedidoDAO implements IDAO {
     async excluir(entidade: EntidadeDominio): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
-    async consultar(entidade: EntidadeDominio): Promise<EntidadeDominio[]> {
-        throw new Error("Method not implemented.");
+
+    async consultar(entidade: Pedido): Promise<EntidadeDominio[]> {
+        let pedidoId = entidade.id;
+        let clienteId = entidade.clienteId;
+        
+        let query;
+        if(pedidoId) {
+            query = `SELECT p.codigo, p.status, "valorFrete", 
+            transportadora, "valorSubTotal", "valorTotal", 
+            data, "produtoId", "valor", "quantidade", 
+            pagamentos.status as "statusPagamento" FROM pedidos as p 
+            INNER JOIN "pedidosProdutos" as pp ON p.id = pp."pedidoId"
+            INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."id" = '${pedidoId}';`;
+        } else if (clienteId) {
+            query = `SELECT p.codigo, p.status, "valorFrete", 
+            transportadora, "valorSubTotal", "valorTotal", 
+            data, "produtoId", "valor", "quantidade", 
+            pagamentos.status as "statusPagamento" FROM pedidos as p 
+            INNER JOIN "pedidosProdutos" as pp ON p.id = pp."pedidoId"
+            INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."clienteId" = '${clienteId}';`;
+        }
+        else{
+            // query = `SELECT * FROM ${this.tabela}`;
+            query = `SELECT p.codigo, p.status, "valorFrete", 
+            transportadora, "valorSubTotal", "valorTotal", 
+            data, "produtoId", "valor", "quantidade", 
+            pagamentos.status as "statusPagamento" FROM pedidos as p 
+            INNER JOIN "pedidosProdutos" as pp ON p.id = pp."pedidoId"
+            INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId";`;
+        }
+
+        let pedidos = await PgDatabase.query(query);
+        let result:Array<EntidadeDominio> = pedidos.rows;
+        return result ?? [];
     }
 
 }
