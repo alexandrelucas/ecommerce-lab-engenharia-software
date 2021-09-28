@@ -39,7 +39,7 @@
              <div class="row">
                <div class="d-flex justify-content-between">
                  <p>Endereço de Entrega: </p>
-                 {{ carrinho.enderecoEntrega.logradouro + ', ' + carrinho.enderecoEntrega.numero}}
+                 {{ carrinho.enderecoEntrega?.logradouro + ', ' + carrinho.enderecoEntrega?.numero}}
                </div>
            </div>
            <div *ngIf="carrinho.pagamento?.segundoCartao.valorAPagar">

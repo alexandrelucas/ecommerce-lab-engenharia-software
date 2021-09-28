@@ -5,6 +5,7 @@ import { Cliente } from 'src/app/shared/models/cliente.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Endereco } from 'src/app/shared/models/endereco.model';
 import { ClienteService } from 'src/app/shared/services/cliente.service';
+import { SandBoxService } from 'src/app/shared/services/carrinho.service';
 
 @Component({
   selector: 'app-cadastro',
@@ -23,6 +24,7 @@ export class CadastroComponent implements OnInit {
   public enderecoValid: boolean;
   public resetEndereco = 0;
   public listaEnderecos = [];
+  public tipoTelefone = [];
   public cliente: Cliente;
   public clienteComponent = true;
   public storage;
@@ -33,7 +35,8 @@ export class CadastroComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private service: ClienteService,    
+    private service: ClienteService,
+    private servico: SandBoxService
     ) {
     this.cliente = new Cliente();
     this.cliente.endereco = [];
@@ -41,6 +44,8 @@ export class CadastroComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getTipoTelefone();
+    
     this.cadastroForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       senha: ['', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')]],
@@ -50,10 +55,16 @@ export class CadastroComponent implements OnInit {
     this.dadosForm = this.formBuilder.group({
       nome: ['', Validators.required],
       cpf: ['', Validators.required],
-      tipoTelefone: ['0', Validators.required],
+      tipoTelefoneId: ['0', Validators.required],
       telefone: ['', Validators.required],
       sexo: ['0', Validators.required],
       dataNasc: ['', Validators.required],
+    });
+  }
+
+  getTipoTelefone(){
+    this.servico.getTipoTelefone().subscribe( (result:any) => {
+      this.tipoTelefone = result.tipoLogradouro;
     });
   }
  
@@ -120,7 +131,7 @@ export class CadastroComponent implements OnInit {
     this.dadosCliente = {
       nome : this.dadosForm.get('nome').value,
       cpf : this.dadosForm.get('cpf').value,
-      tipoTelefone : this.dadosForm.get('tipoTelefone').value,
+      tipoTelefoneId : this.dadosForm.get('tipoTelefoneId').value,
       telefone : this.dadosForm.get('telefone').value,
       sexo : this.dadosForm.get('sexo').value,
       dataNasc : this.dadosForm.get('dataNasc').value,
@@ -168,14 +179,13 @@ export class CadastroComponent implements OnInit {
   onSubmit(){
     this.preparaDados();
     this.preparaEndereco();
-
-    console.log(this.dadosCliente)
-    console.log(this.dadosEndereco)
-
-    this.service.setCliente(this.dadosCliente).subscribe( (result:any) => {
+    
+    this.service.setCliente(this.dadosCliente).subscribe( (result:any) => {      
       this.storage.setItem('clienteId', JSON.stringify(result.message));
+
       this.dadosEndereco.forEach( e => {
-        this.service.setEndereco(result.message, e).subscribe( result => {
+        delete e.pais;
+        this.service.setEndereco(result.message, e).subscribe( result => {          
         });
       })
       this.router.navigate(['home/produto']);

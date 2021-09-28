@@ -38,7 +38,7 @@
                     <div class="card-body">
                         <h3 class="card-title mb-2"><strong>Cartão Principal</strong></h3>              
                         <div *ngIf="carrinho.cartoes.length">
-                            <h5 class="card-text mb-0">{{ carrinho.cartaoPagamento.titular }}</h5>
+                            <h5 class="card-text mb-0">{{ carrinho.cartaoPagamento.nomeTitular }}</h5>
                             <h5 class="card-text mb-0">{{ carrinho.cartaoPagamento.numero }}</h5>
                             <h5 class="card-text mb-0">{{ carrinho.cartaoPagamento.dataValidade }}</h5>
                             <h5 class="card-text mb-3">{{ getCardFlag(carrinho.cartaoPagamento.numero) | uppercase }}</h5>
@@ -74,9 +74,9 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">2º Cartão</label>
                         <div class="col-sm-9">
-                            <select class="custom-select mr-sm-2" [(ngModel)]="pagamento.segundoCartao.numeroCartao">
-                                <option value="0" selected>Selecione</option>
-                                <option value="{{ cartao.numero }}" *ngFor="let cartao of carrinho.cartoes">{{ cartao.numero }}</option>
+                            <select class="custom-select mr-sm-2" [(ngModel)]="pagamento.segundoCartao.idCartao">
+                                <option value=0 selected>Selecione</option>
+                                <option value="{{ cartao.id }}" *ngFor="let cartao of carrinho.cartoes">{{ cartao.numero }}</option>
                             </select>
                         </div>
                     </div>
@@ -135,7 +135,7 @@
             </div>
             <div class="btn-avancar mt-5">
                 <button type="button" class="btn btn-dark btn-sm" matStepperNext (click)="setCarrinho()"
-                    [disabled]="carrinho.enderecoEntrega.id == undefined || carrinho.cartaoPagamento.id == undefined">
+                    [disabled]="carrinho.enderecoEntrega?.id == undefined || carrinho.cartaoPagamento?.id == undefined">
                     CONFIRMAR PAGAMENTO
                 </button>
             </div>
@@ -198,7 +198,7 @@
                     <div class="d-flex align-items-center ">
                         <input class="mr-3" type="radio" [id]="cartao.id" value="{{ cartao.id }}" [(ngModel)]="cartaoTroca">
                         <div>
-                            <h5 class="card-text mb-0">{{ cartao.titular }}</h5>
+                            <h5 class="card-text mb-0">{{ cartao.nomeTitular }}</h5>
                             <h5 class="card-text mb-0">{{ cartao.numero }}</h5>
                             <h5 class="card-text mb-0">{{ cartao.dataValidade }}</h5>
                         </div>                        

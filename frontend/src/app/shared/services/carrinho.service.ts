@@ -67,4 +67,18 @@ export class SandBoxService {
   getTipoLogradouro(){
     return this.http.get(this.baseUrl + `/tipo/logradouro`);
   }
+
+  /** PEDIDOS */
+  setPedido(dadosPedido){
+    return this.http.post(this.baseUrl + `/pedido/`, dadosPedido);
+  }
+  getPedido(){
+    return this.http.get(this.baseUrl + `/pedido/5`);
+  }
+  getListaPedidos(){
+    return this.http.get(this.baseUrl + `/pedido/todos`);
+  }
+  getPedidosMinhasCompras(idCliente){
+    return this.http.get(this.baseUrl + `/pedido/cliente/${idCliente}`);
+  }
 }

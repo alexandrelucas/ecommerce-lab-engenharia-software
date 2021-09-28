@@ -48,7 +48,7 @@
                 </div>
                 <div class="form-row">
                   <div class="form-group col-md-6">
-                    <input type="text" class="form-control" formControlName="cpf"  placeholder="CPF" mask="000.000.000-00" [ngClass]="aplicaCssErro('cpf','dadosForm')">
+                    <input type="text" class="form-control" formControlName="cpf" [dropSpecialCharacters]="false"  placeholder="CPF" mask="000.000.000-00" [ngClass]="aplicaCssErro('cpf','dadosForm')">
                     <div class="invalid-feedback">
                       CPF obrigatório.
                     </div>
@@ -64,11 +64,9 @@
                 </div>                
                 <div class="form-row">
                   <div class="form-group col-md-6">
-                    <select class="custom-select mr-sm-2" formControlName="tipoTelefone" [ngClass]="aplicaCssErro('tipoTelefone','dadosForm')">
+                    <select class="custom-select mr-sm-2" formControlName="tipoTelefoneId" [ngClass]="aplicaCssErro('tipoTelefoneId','dadosForm')">
                       <option value="0">Selecione</option>
-                      <option value="casa">Casa</option>
-                      <option value="celular">Celular</option>
-                      <option value="comercial">Comercial</option>
+                      <option value="{{ tp.id }}" *ngFor="let tp of tipoTelefone">{{ tp.descricao }}</option>
                     </select>
                     <div class="invalid-feedback">
                       Tipo obrigatório.

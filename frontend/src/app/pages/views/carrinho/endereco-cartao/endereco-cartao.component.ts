@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Cartao } from 'src/app/shared/models/cartao.model';
 import { Endereco } from 'src/app/shared/models/endereco.model';
+import { SandBoxService } from 'src/app/shared/services/carrinho.service';
 import { ClienteService } from 'src/app/shared/services/cliente.service';
 import { CarrinhoService } from '../carrinho.service';
 import { CartaoComponent } from '../dialogs/cartao/cartao.component';
@@ -27,15 +28,17 @@ export class EnderecoCartaoComponent implements OnInit {
 
   public pagamento = {
     cartaoPrincipal: {
-      numeroCartao: '',
-      valorAPagar: null,
+      idCartao: 0,
+      valorAPagar: 0,
     },    
     segundoCartao: {
-      numeroCartao: 0,
-      valorAPagar: null
+      idCartao: 0,
+      valorAPagar: 0
     },
-    obs: null
+    obs: null,
+    doisCartoes: false
   }
+  public cartoesPagamento = []
 
   public carrinho:any = {
     valorTotal: 0,
@@ -50,14 +53,14 @@ export class EnderecoCartaoComponent implements OnInit {
     enderecoEntrega: new Endereco(),
     cartoes: [],
     cartaoPagamento: new Cartao(),    
-    clienteId: null
+    clienteId: null,    
   }
 
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
     private carrinhoService: CarrinhoService,
-    private cliente: ClienteService,
+    private cliente: ClienteService    
   ) {}
 
   ngOnInit(): void {
@@ -78,9 +81,9 @@ export class EnderecoCartaoComponent implements OnInit {
     });
   }
 
-  getCliente(){
+  getCliente(){    
     this.cliente.getEndereco(this.carrinho.clienteId).subscribe( (ret:any) => {
-      if(ret.status == 1){
+      if(ret.status == 0){
         this.carrinho.enderecos = ret.endereco;
         this.setEnderecoEntrega();
       }else{
@@ -91,7 +94,7 @@ export class EnderecoCartaoComponent implements OnInit {
 
   getCartao(){
     this.cliente.getCartao(this.carrinho.clienteId).subscribe( (ret:any) => {
-      if(ret.status == 1){
+      if(ret.status == 0){
         this.carrinho.cartoes = ret.cartao;
         this.carrinho.cartoes.forEach(c => c.bandeira = this.getCardFlag(c.numero));
         this.setCartaoPagamento();
@@ -101,19 +104,16 @@ export class EnderecoCartaoComponent implements OnInit {
     });
   }
 
-  setEnderecoEntrega(){    
-    if(this.carrinho.enderecoEntrega.id == undefined){
+  setEnderecoEntrega(){
+    if(this.carrinho.enderecoEntrega?.id == undefined){
       let entrega = this.carrinho.enderecos.filter(end => end.tipoEndereco == 'entrega')[0];
       this.carrinho.enderecoEntrega = entrega ? entrega : this.carrinho.enderecos[0];
     }
   }
 
-  setCartaoPagamento(){    
-    if(this.carrinho.cartaoPagamento.id == undefined){      
+  setCartaoPagamento(){
+    if(this.carrinho.cartaoPagamento?.id == undefined){
       this.carrinho.cartaoPagamento = this.carrinho.cartoes[0];      
-      //console.log(JSON.stringify(JSON.parse(this.carrinho.cartaoPagamento.numero)))
-      this.pagamento.cartaoPrincipal.numeroCartao = JSON.stringify(JSON.parse(this.carrinho?.cartaoPagamento.numero));
-      //console.log(this.pagamento);
     }
   }
   
@@ -129,7 +129,8 @@ export class EnderecoCartaoComponent implements OnInit {
       uf: [this.carrinho.enderecoEntrega.uf ?? '', Validators.required],
       pais: ['Brasil', Validators.required],
       descricaoEndereco: [this.carrinho.enderecoEntrega.descricaoEndereco ?? '', Validators.required],
-      tipoEndereco: [this.carrinho.enderecoEntrega.tipoEndereco ?? '', Validators.required]
+      tipoEnderecoId: [this.carrinho.enderecoEntrega.tipoEnderecoId ?? '', Validators.required],
+      tipoLogradouroId: [this.carrinho.enderecoEntrega.tipoLogradouroId ?? '', Validators.required]
     });
   }
   
@@ -137,42 +138,71 @@ export class EnderecoCartaoComponent implements OnInit {
     this.formCartao = this.formBuilder.group({
       id: [this.carrinho.cartaoPagamento.id ?? ''],
       bandeira: [this.carrinho.cartaoPagamento.bandeira ?? '', Validators.required],
-      titular: [this.carrinho.cartaoPagamento.titular ?? '', Validators.required],
+      nomeTitular: [this.carrinho.cartaoPagamento.nomeTitular ?? '', Validators.required],
       numero: [this.carrinho.cartaoPagamento.numero ?? '', Validators.required],
       cvv: [this.carrinho.cartaoPagamento.cvv ?? '', Validators.required],
       dataValidade: [this.carrinho.cartaoPagamento.dataValidade ?? '', Validators.required]
     });
   }
 
-  showModalEndereco(tipo: boolean){    
+  showModalEndereco(tipo: boolean){
+    /** TIPO: 
+     * true = Edita  
+     * false = Cadastra
+     * */
+
     let modalRef = this.modalService.open(EnderecoComponent);
     modalRef.componentInstance.endereco = tipo ? this.carrinho.enderecoEntrega : new Endereco();
 
     modalRef.result.then(result => {
-      if(tipo){
-        this.carrinho.enderecoEntrega = result;
+      if(!result.id){
+        this.cliente.setEndereco(this.carrinho.clienteId, result).subscribe((res:any) => {
+          result.id = res.message;
+        });
+        this.carrinho.enderecos.push(result);
+      }else{        
+        this.cliente.updateEndereco(result, this.carrinho.clienteId).subscribe( (res: any) => {      
+          console.log(res)
+        });
+
         this.carrinho.enderecos[this.carrinho.enderecos.findIndex( e => e.id == result.id)] = result;
-      }else{
-        result.id = this.carrinho.enderecos.length + 1;
-        this.carrinho.enderecos.push(result)
-        this.setEnderecoEntrega();
+        this.carrinho.enderecoEntrega = result;        
+      }
+
+      if(!this.carrinho.enderecoEntrega){
+        this.carrinho.enderecoEntrega = result;
       }
     });
   }
 
   showModalCartao(tipo: boolean){
+    /** TIPO: 
+     * true = Edita  
+     * false = Cadastra
+     * */
+
     let modalRef = this.modalService.open(CartaoComponent);
     modalRef.componentInstance.cartao = tipo ? this.carrinho.cartaoPagamento : new Cartao();
 
     modalRef.result.then(result => {
-      if(tipo){
-        this.carrinho.cartaoPagamento = result;
-        this.carrinho.cartoes[this.carrinho.cartoes.findIndex( c => c.id == result.id)] = result;
+      if(!result.id){        
+        this.cliente.setCartao(this.carrinho.clienteId, result).subscribe((res:any) => {          
+          result.id = res.message;
+        });
+        this.carrinho.cartoes.push(result);
       }else{
-        result.id = this.carrinho.cartoes.length + 1;
-        this.carrinho.cartoes.push(result)
-        this.setCartaoPagamento();
+        this.cliente.updateCartao(result, this.carrinho.clienteId).subscribe( (res: any) => {      
+          console.log(res)
+        });
+
+        this.carrinho.cartoes[this.carrinho.cartoes.findIndex( c => c.id == result.id)] = result;
+        this.carrinho.cartaoPagamento = result;
       }
+
+      if(!this.carrinho.cartaoPagamento){
+        this.carrinho.cartaoPagamento = result;
+      }
+      console.log(this.carrinho);
     });
   }
 
@@ -192,13 +222,16 @@ export class EnderecoCartaoComponent implements OnInit {
     this.carrinho.cartaoPagamento = this.carrinho.cartoes[idx];
   }
 
-  setCarrinho(){
-    this.carrinho.pagamento.cartaoPrincipal.numeroCartao = this.carrinho.cartaoPagamento.numero;
-    this.carrinho.pagamento = this.pagamento;
-    this.carrinhoService.setLista(this.carrinho);
+  setCarrinho(){    
+    this.pagamento.cartaoPrincipal.idCartao = this.carrinho.cartaoPagamento.id;
+    this.pagamento.cartaoPrincipal.valorAPagar = this.carrinho.valorTotal;
+    let dados = this.carrinho;
+    dados.pagamento = this.pagamento;
+
+    this.carrinhoService.setLista(dados);
   }
 
-  getCardFlag(cardnumber){    
+  getCardFlag(cardnumber){        
     cardnumber.replace(/[^0-9]+/g, '');
 
     let cards = {
@@ -225,12 +258,11 @@ export class EnderecoCartaoComponent implements OnInit {
   addSegundoCartao(){
     if(this.pagamento.segundoCartao.valorAPagar > 10){
       this.pagamento.obs = null;
-      this.pagamento.cartaoPrincipal.valorAPagar = this.carrinho.valorTotal - this.pagamento.segundoCartao.valorAPagar;
       this.setCartaoAdd = true;
+      this.pagamento.doisCartoes = true;
+      this.pagamento.cartaoPrincipal.valorAPagar = this.carrinho.valorTotal - this.pagamento.segundoCartao.valorAPagar;
     }else{
       this.pagamento.obs = 'O valor não pode ser menor que R$ 10,00';
     }
   }
-
-  
 }
