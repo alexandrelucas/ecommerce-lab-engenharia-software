@@ -23,6 +23,12 @@ export class SandBoxService {
   getListaProdutos(){
     return this.http.get(this.baseUrl + `/produtos`);
   }
+  getProduto(idProduto){
+    return this.http.get(this.baseUrl + `/produto/${idProduto}`);
+  }
+  getListaCategorias(){
+    return this.http.get(this.baseUrl + `/produto/categoria/`);
+  }
 
   /* ESTOQUE */
   getEstoqueProduto(idProduto){
@@ -81,4 +87,10 @@ export class SandBoxService {
   getPedidosMinhasCompras(idCliente){
     return this.http.get(this.baseUrl + `/pedido/cliente/${idCliente}`);
   }
+
+  /** PAIS */
+  getListaPaises(){
+    return this.http.get(this.baseUrl + `/pais`);
+  }
+    
 }
