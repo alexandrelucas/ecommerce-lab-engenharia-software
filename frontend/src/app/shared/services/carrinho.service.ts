@@ -21,7 +21,7 @@ export class SandBoxService {
 
   /* PRODUTOS */
   getListaProdutos(){
-    return this.http.get(this.baseUrl + `/produtos`);
+    return this.http.get(this.baseUrl + `/produto`);
   }
   getProduto(idProduto){
     return this.http.get(this.baseUrl + `/produto/${idProduto}`);
@@ -94,7 +94,7 @@ export class SandBoxService {
   }
   
   /** AUTORIZAR VENDA */
-  autorizarVenda(pedidoId) {
+  autorizarVenda(pedidoId){
     return this.http.post(this.baseUrl + `/venda/autorizar`, {
       pedidoId: pedidoId
     });
