@@ -11,6 +11,9 @@ export default class VendaDAO implements IDAO {
 
         if(!entidade.pedidoId) return {error: 'Sem o id do pedido'} as EntidadeDominio;
         try {
+
+            if(await this.consultarPedidoExistente(entidade.pedidoId)) return {error: 'Pedido já consta como vendido!'} as EntidadeDominio;
+
             console.log(entidade);
             let pedidoDAO = new PedidoDAO();
             let pedido = (await pedidoDAO.consultar(new Pedido(entidade.pedidoId)))[0] as Pedido;
@@ -58,6 +61,19 @@ export default class VendaDAO implements IDAO {
         } catch(err: any) {
             return [];
         }
+    }
+
+    async consultarPedidoExistente(pedidoId: number) : Promise<boolean> {
+        try {
+            let query = `SELECT id FROM vendas WHERE "pedidoId" = '${pedidoId}';`;
+            let result = (await PgDatabase.query(query)).rowCount;
+
+            if(result > 0) return true;
+        } catch (e: any) {
+            return false;
+        }
+
+        return false;
     }
 
 }
