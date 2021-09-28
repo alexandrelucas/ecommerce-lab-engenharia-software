@@ -75,9 +75,7 @@ export class IdentificacaoComponent implements OnInit {
     if(this.loginForm.valid) {
       this.showLoad = true;      
 
-      this.cliente.login(this.loginForm.get('email').value, this.loginForm.get('senha').value).subscribe((res: any) => {
-        console.log(res.result)
-
+      this.cliente.login(this.loginForm.get('email').value, this.loginForm.get('senha').value).subscribe((res: any) => {        
         if(res.result) {
           this.storage.setItem('clienteId', JSON.stringify([...res.result.toString()]))
           this.carrinho.clienteId = res.result;

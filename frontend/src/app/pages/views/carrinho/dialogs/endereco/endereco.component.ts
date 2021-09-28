@@ -32,9 +32,10 @@ export class EnderecoComponent implements OnInit {
       bairro: [this.endereco.bairro, Validators.required],
       cidade: [this.endereco.cidade, Validators.required],
       uf: [this.endereco.uf, Validators.required],
-      pais: ['Brasil', Validators.required],
-      descricaoEndereco: [this.endereco.descricaoEndereco, Validators.required],
-      tipoEndereco: [this.endereco.tipoEnderecoId, Validators.required]
+      paisId: [1, Validators.required],
+      descricaoEndereco: ['Casa', Validators.required],
+      tipoEnderecoId: [2, Validators.required],
+      tipoLogradouroId: [2, Validators.required]
     });
   }  
 

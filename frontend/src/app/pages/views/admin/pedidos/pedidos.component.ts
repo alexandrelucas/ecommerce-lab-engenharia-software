@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Cliente } from 'src/app/shared/models/cliente.model';
 import { Pedido, StatusPedido, StatusPedidoNome } from 'src/app/shared/models/pedido.model';
 import { listaProdutos, Produto } from 'src/app/shared/models/produtos.model';
+import { SandBoxService } from 'src/app/shared/services/carrinho.service';
 import { DetalhesPedidoComponent } from './detalhes-pedido/detalhes-pedido.component';
 
 @Component({
@@ -15,7 +16,10 @@ export class PedidosComponent implements OnInit {
 
   public storage: Storage;
   public listaPedidos: Array<Pedido> = [];
-  constructor(private modalService: NgbModal) { 
+  constructor(
+    private modalService: NgbModal,
+    private servico: SandBoxService
+  ) { 
     this.storage = window.localStorage;
   }
 
@@ -29,7 +33,11 @@ export class PedidosComponent implements OnInit {
   }
 
   carregarListaPedidos() {
-    this.listaPedidos = JSON.parse(this.storage.getItem('listaPedidos'));
+    //this.listaPedidos = JSON.parse(this.storage.getItem('listaPedidos'));
+    this.servico.getListaPedidos().subscribe((result:any) => {
+      console.log(result)
+      this.listaPedidos = result.pedidos;
+    })
   }
 
   applyFilter(event: Event) {

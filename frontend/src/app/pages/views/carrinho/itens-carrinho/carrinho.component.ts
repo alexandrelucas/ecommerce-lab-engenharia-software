@@ -83,13 +83,17 @@ export class CarrinhoComponent implements OnInit {
   }
 
   updateValorCompras(){
-    return this.carrinho.valorCompras = this.carrinho.listaCompras.reduce((acc, item) => { return acc + (item.precoPor * item.qtd) }, 0);
+    if(this.carrinho){
+      return this.carrinho.valorCompras = this.carrinho?.listaCompras?.reduce((acc, item) => { return acc + (item.precoPor * item.qtd) }, 0);
+    }
   }
 
   updateValorTotal(){
-    let total = ((this.carrinho.valorCompras + parseFloat(this.carrinho.valorFrete.toString())) - this.carrinho.cupomDesconto);
-    this.carrinho.valorTotal = total > 0 ? total : 0;
-    return total > 0 ? total : 0;
+    if(this.carrinho){
+      let total = ((this.carrinho.valorCompras + parseFloat(this.carrinho.valorFrete.toString())) - this.carrinho.cupomDesconto);
+      this.carrinho.valorTotal = total > 0 ? total : 0;
+      return total > 0 ? total : 0;
+    }
   }
 
   calcularFrete(){
@@ -143,6 +147,8 @@ export class CarrinhoComponent implements OnInit {
   }
 
   validaBtn(){
-    return this.carrinho.listaCompras.filter(c => c.infoEstoque != '')[0] ? true : false;
+    if(this.carrinho){
+      return this.carrinho.listaCompras.filter(c => c.infoEstoque != '')[0] ? true : false;
+    }
   }
 }
