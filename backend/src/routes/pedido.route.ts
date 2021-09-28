@@ -5,20 +5,44 @@ import Pedido from '../model/entidade/pedido.model';
 const PedidoRouter = express.Router();
 
 // Lista todos os pedidos do sistema
-PedidoRouter.get('/todos', async (req, res) => {
-    let codigo = req.query.codigo;   
-    res.send('OK 2'); 
+PedidoRouter.get('/todos', async (req, res) => { 
+    try {
+        let pedidos = (await fachada.consultar(new Pedido()) as Array<Pedido>);
+        res.status(pedidos ? 200 : 404).json({status: pedidos ? 0 : 1, message: pedidos ? 'OK' : 'Este pedido não existe', pedidos});
+    } catch(e: any) {
+        res.status(500).json({
+            status: -1,
+            message: e.toString(),
+        })
+    }
 });
 
 // Consulta pedido pelo Id
 PedidoRouter.get('/:id', async (req, res) => {
-    let codigo = req.query.codigo;   
-    res.send('OK'); 
+    try {
+        let id = Number.parseInt(req.params.id);
+        let pedido = (await fachada.consultar(new Pedido(id)) as Array<Pedido>)[0];
+        res.status(pedido ? 200 : 404).json({status: pedido ? 0 : 1, message: pedido ? 'OK' : 'Este pedido não existe', pedido});
+    } catch(e: any) {
+        res.status(500).json({
+            status: -1,
+            message: e.toString(),
+        })
+    }
 });
 
 // Lista todos os pedidos do cliente
 PedidoRouter.get('/cliente/:clienteId', async (req, res) => {
-    res.send({message: 'OK'})
+    try {
+        let clienteId = Number.parseInt(req.params.clienteId);
+        let pedido = (await fachada.consultar(new Pedido(null!, clienteId)) as Array<Pedido>)[0];
+        res.status(pedido ? 200 : 404).json({status: pedido ? 0 : 1, message: pedido ? 'OK' : 'Este pedido não existe', pedido});
+    } catch(e: any) {
+        res.status(500).json({
+            status: -1,
+            message: e.toString(),
+        })
+    }
 });
 
 // realiza um pedido
@@ -34,6 +58,8 @@ PedidoRouter.post('/', async (req, res) => {
         });
     }
 });
+
+// FAZER DEPOIS ABAIXO
 
 // Altera pedido
 PedidoRouter.put('/:id', async (req, res) => {

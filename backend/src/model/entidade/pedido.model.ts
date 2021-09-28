@@ -1,5 +1,6 @@
 import Cliente from "./cliente.model";
 import Cupom from "./cupom.model";
+import EntidadeDominio from "./entidadeDominio.model";
 import Pagamento from "./pagamento.model";
 import Produto from "./produto.model";
 
@@ -18,7 +19,7 @@ enum StatusPedido {
     CANCELAMENTO_REJEITADO,
 }
 
-export default class Pedido {
+export default class Pedido extends EntidadeDominio{
     id?: number;
     codigo?: string;
     status?: number;
@@ -28,8 +29,11 @@ export default class Pedido {
     cupomId?: number;
     pagamentoId?: number;
     data?: Date;
+    clienteId?: number;
 
-    constructor(id: number = null!) {
+    constructor(id: number = null!, clienteId: number = null!) {
+        super();
         this.id = id;
+        this.clienteId = clienteId;
     }
 }
