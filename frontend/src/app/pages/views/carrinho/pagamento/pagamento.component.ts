@@ -75,7 +75,7 @@ export class PagamentoComponent implements OnInit {
       let modalRef = this.modalService.open(ResultadoComponent);      
       modalRef.componentInstance.numeroPedido = this.carrinho.numeroPedido;
       modalRef.componentInstance.status = this.carrinho.status;
-      modalRef.result.then(r => this.route.navigate(['/home/produtos']));
+      modalRef.result.then(r => this.route.navigate(['/home/minha-conta#pedidos']));
     })
   }
 }

@@ -35,8 +35,8 @@ PedidoRouter.get('/:id', async (req, res) => {
 PedidoRouter.get('/cliente/:clienteId', async (req, res) => {
     try {
         let clienteId = Number.parseInt(req.params.clienteId);
-        let pedido = (await fachada.consultar(new Pedido(null!, clienteId)) as Array<Pedido>)[0];
-        res.status(pedido ? 200 : 404).json({status: pedido ? 0 : 1, message: pedido ? 'OK' : 'Este pedido não existe', pedido});
+        let pedidos = (await fachada.consultar(new Pedido(null!, clienteId)) as Array<Pedido>);
+        res.status(pedidos ? 200 : 404).json({status: pedidos ? 0 : 1, message: pedidos ? 'OK' : 'Nenhum pedido encontrado', pedidos});
     } catch(e: any) {
         res.status(500).json({
             status: -1,

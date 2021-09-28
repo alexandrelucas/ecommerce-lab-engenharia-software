@@ -101,7 +101,7 @@ export default class PedidoDAO implements IDAO {
             data, "produtoId", "valor", "quantidade", 
             pagamentos.status as "statusPagamento" FROM pedidos as p 
             INNER JOIN "pedidosProdutos" as pp ON p.id = pp."pedidoId"
-            INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."clienteId" = '${clienteId}';`;
+            INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."clienteId" = '${clienteId}' ORDER BY id DESC;`;
         }
         else{
             // query = `SELECT * FROM ${this.tabela}`;

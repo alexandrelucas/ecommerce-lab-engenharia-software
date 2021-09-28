@@ -2,6 +2,8 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { StatusPedidoNome } from 'src/app/shared/models/pedido.model';
+import { SandBoxService } from 'src/app/shared/services/carrinho.service';
 
 @Component({
   selector: 'app-minhas-compras',
@@ -13,16 +15,29 @@ export class MinhasComprasComponent implements OnInit, AfterViewInit {
   public itensCompra = [];
   public compraSelecionada: Compra;
   public itemSelecionado: Produto;
+  public storage: Storage;
+  displayedColumns: string[] = ['codigo', 'status', 'data', 'quantidade', 'valorFrete','valorTotal', 'acao'];
+  dataSource = new MatTableDataSource<Compra>(ELEMENT_DATA_COMPRA);
 
   constructor(
     private modalService: NgbModal,
-  ) { }
+    private sandboxService: SandBoxService
+  ) {
+    this.storage = window.localStorage;
+   }
 
-  ngOnInit(): void {
+  carregarPedidos() {
+    let id = parseInt(JSON.parse(this.storage.getItem('clienteId'))[0]);
+    this.sandboxService.getPedidosMinhasCompras(id).subscribe((listaPedidos: any) => {
+      this.dataSource = new MatTableDataSource(listaPedidos.pedidos);
+    });
   }
 
-  displayedColumns: string[] = ['numeroPedido', 'status', 'valorTotal', 'data', 'metodoPagamento', 'cupom', 'acao'];
-  dataSource = new MatTableDataSource<Compra>(ELEMENT_DATA_COMPRA);
+  ngOnInit(): void {
+    this.carregarPedidos();
+  }
+
+  
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -65,6 +80,10 @@ export class MinhasComprasComponent implements OnInit, AfterViewInit {
     /**
      * SET compraSelecionada como cancelada.
      */
+  }
+
+  getStatusNome(status: number) {
+    return StatusPedidoNome[status];
   }
 }
 

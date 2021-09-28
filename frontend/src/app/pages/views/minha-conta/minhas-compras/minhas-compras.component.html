@@ -1,35 +1,36 @@
 <div class="mat-elevation">
     <table mat-table [dataSource]="dataSource">
         
-      <ng-container matColumnDef="numeroPedido">
+      <ng-container matColumnDef="codigo">
         <th mat-header-cell *matHeaderCellDef> Pedido </th>
-        <td mat-cell *matCellDef="let element"> {{element.numeroPedido}} </td>
+        <td mat-cell *matCellDef="let element"> #{{element.codigo}} </td>
       </ng-container>
   
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef> Status </th>
-        <td mat-cell *matCellDef="let element"> {{element.status | uppercase }} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="valorTotal">
-        <th mat-header-cell *matHeaderCellDef> Preço </th>
-        <td mat-cell *matCellDef="let element"> {{element.valorTotal | currency: 'BRL'}} </td>
-      </ng-container>
-    
-      <ng-container matColumnDef="metodoPagamento">
-        <th mat-header-cell *matHeaderCellDef> Método de Pagamento </th>
-        <td mat-cell *matCellDef="let element"> {{element.metodoPagamento}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="cupom">
-        <th mat-header-cell *matHeaderCellDef> Cupom desconto </th>
-        <td mat-cell *matCellDef="let element"> {{element.cupom | currency: 'BRL'}} </td>
+        <td mat-cell *matCellDef="let element"> {{getStatusNome(element.status)}} </td>
       </ng-container>
 
       <ng-container matColumnDef="data">
-        <th mat-header-cell *matHeaderCellDef> Data de Compra </th>
-        <td mat-cell *matCellDef="let element"> {{element.data}} </td>
+        <th mat-header-cell *matHeaderCellDef> Data </th>
+        <td mat-cell *matCellDef="let element"> {{element.data | date: 'dd/MM/yyyy'}} </td>
       </ng-container>
+
+      <ng-container matColumnDef="quantidade">
+        <th mat-header-cell *matHeaderCellDef> Quantidade </th>
+        <td mat-cell *matCellDef="let element"> {{element.quantidade}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="valorFrete">
+        <th mat-header-cell *matHeaderCellDef> Valor do Frete </th>
+        <td mat-cell *matCellDef="let element"> {{element.valorFrete | currency: 'BRL'}}  </td>
+      </ng-container>
+    
+      <ng-container matColumnDef="valorTotal">
+        <th mat-header-cell *matHeaderCellDef> Valor Pago</th>
+        <td mat-cell *matCellDef="let element"> {{element.valorTotal | currency: 'BRL'}} </td>
+      </ng-container>
+      
   
       <ng-container matColumnDef="acao">
         <th mat-header-cell *matHeaderCellDef>Ações</th>
@@ -49,7 +50,7 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
   
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+    <mat-paginator [pageSizeOptions]="[15, 20, 35]"
                    showFirstLastButtons 
                    aria-label="Select page of periodic elements">
     </mat-paginator>

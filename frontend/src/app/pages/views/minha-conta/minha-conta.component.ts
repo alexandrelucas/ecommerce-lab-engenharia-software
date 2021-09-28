@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { AvisoDialog } from 'src/app/shared/dialogs/aviso/aviso-dialog';
 import { ConfirmacaoDialog } from 'src/app/shared/dialogs/confirm/confirmacao-dialog';
 import { Cartao } from 'src/app/shared/models/cartao.model';
@@ -38,7 +39,8 @@ export class MinhaContaComponent implements OnInit {
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private clienteService: ClienteService,
-    private servico: SandBoxService
+    private servico: SandBoxService,
+    private router: Router
     ) {
       this.storage = window.localStorage;
       this.clienteId = JSON.parse(this.storage.getItem('clienteId'));
@@ -50,6 +52,11 @@ export class MinhaContaComponent implements OnInit {
     this.getCliente();  
     this.getEnderecos();
     this.getCartoes();
+
+    // so pra ir pras minhas compras
+    if(this.router.url.includes("#pedidos")) {
+      this.cardAtivo = 4;
+    }
   }
 
   getTipoTelefone(){
