@@ -21,6 +21,7 @@ import EstoqueDAO from '../model/dao/estoqueDAO';
 import CategoriaDAO from '../model/dao/categoriaDAO';
 import PagamentoDAO from '../model/dao/pagamentoDAO';
 import VendaDAO from '../model/dao/vendaDAO';
+import PedidoProdutoDAO from '../model/dao/pedidoProdutoDAO';
 
 export default class Fachada implements IFachada {
 
@@ -49,6 +50,7 @@ export default class Fachada implements IFachada {
         this.listaDaos.set('Estoque', new EstoqueDAO());
         this.listaDaos.set('Pagamento', new PagamentoDAO());
         this.listaDaos.set('Venda', new VendaDAO());
+        this.listaDaos.set('PedidoProduto', new PedidoProdutoDAO())
     }
     private definirRegras() {
         this.listaRegras = new Map<string, IStrategy[]>();
@@ -107,13 +109,13 @@ export default class Fachada implements IFachada {
         let nomeClasse = entidade.constructor.name;
         let mensagemRegras = await this.executarRegras(entidade, true);
 
+        console.log(nomeClasse);
+
         if(mensagemRegras) {
             return mensagemRegras;
         }
 
         let result = await this.listaDaos?.get(nomeClasse)?.alterar(entidade);
-
-        console.log(result?.error);
         
         if(result?.error) {
             return result.error!;

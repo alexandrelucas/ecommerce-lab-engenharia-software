@@ -1,6 +1,7 @@
 import express from 'express';
 import fachada from '../instanciaFachada';
 import Pedido from '../model/entidade/pedido.model';
+import PedidoProduto from '../model/entidade/pedidoProduto.model';
 
 const PedidoRouter = express.Router();
 
@@ -67,6 +68,29 @@ PedidoRouter.put('/:id', async (req, res) => {
         let pedidoId = parseInt(req.params.id);
         let pedido = Object.assign(new Pedido(pedidoId), req.body);
         let msg = await fachada.alterar(pedido);
+        res.status(200).json({status: msg ? 1:0, message: msg ?? 'OK'});
+    } catch(e: any) {
+        res.status(500).json({
+            status: -1,
+            message: e.toString()
+        });
+    }
+});
+
+PedidoRouter.put('/:id/produto/:pid', async (req, res) => {
+    try {
+        let pedidoId = parseInt(req.params.id);
+        let produtoId = parseInt(req.params.pid);
+
+        let produtoInfo = {
+            'pedidoId': pedidoId,
+            'status': req.body.status,
+            'produtoId': produtoId,
+        };
+
+        let pedido = Object.assign(new PedidoProduto(), produtoInfo);
+        let msg = await fachada.alterar(pedido);
+
         res.status(200).json({status: msg ? 1:0, message: msg ?? 'OK'});
     } catch(e: any) {
         res.status(500).json({
