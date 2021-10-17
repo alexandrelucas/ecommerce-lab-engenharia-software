@@ -12,6 +12,7 @@ import { SandBoxService } from 'src/app/shared/services/carrinho.service';
 })
 export class MinhasComprasComponent implements OnInit, AfterViewInit {
   
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   public itensCompra = [];
   public compraSelecionada: Compra;
   public itemSelecionado: Produto;
@@ -24,11 +25,13 @@ export class MinhasComprasComponent implements OnInit, AfterViewInit {
     private sandboxService: SandBoxService
   ) {
     this.storage = window.localStorage;
-   }
+  }
 
   carregarPedidos() {
+    console.log('carregando pedidos')
     let id = parseInt(JSON.parse(this.storage.getItem('clienteId'))[0]);
     this.sandboxService.getPedidosMinhasCompras(id).subscribe((listaPedidos: any) => {
+      console.log(listaPedidos)
       this.dataSource = new MatTableDataSource(listaPedidos.pedidos);
     });
   }
@@ -36,10 +39,6 @@ export class MinhasComprasComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.carregarPedidos();
   }
-
-  
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -86,7 +85,6 @@ export class MinhasComprasComponent implements OnInit, AfterViewInit {
     return StatusPedidoNome[status];
   }
 }
-
 
 export interface Compra {
   id: number;

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EstoqueComponent } from './estoque.component';
+import { EstoqueComponent } from '../pages/views/admin/estoque/estoque.component';
 
 describe('EstoqueComponent', () => {
   let component: EstoqueComponent;

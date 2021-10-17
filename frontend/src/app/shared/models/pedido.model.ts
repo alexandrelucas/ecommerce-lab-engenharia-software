@@ -7,6 +7,8 @@ export enum StatusPedido {
     EM_PROCESSAMENTO,
     PAGAMENTO_REALIZADO,
     EM_TRANSPORTE,
+    EM_ROTA_ENTREGA,
+    ENTREGUE,
     TROCA_SOLICITADA,
     TROCA_ACEITA,
     TROCA_AUTORIZADA,
@@ -22,15 +24,17 @@ export let StatusPedidoNome = {
     0: 'Em Processamento',
     1: 'Pagamento Realizado',
     2: 'Em Transporte',
-    3: 'Troca Solicitada',
-    4: 'Troca Aceita',
-    5: 'Troca Autorizada',
-    6: 'Troca Efetuada',
-    7: 'Troca Rejeitada',
-    8: 'Cancelamento Aceito',
-    9: 'Cancelamento Efetuado',
-    10: 'Cancelamento Solicitado',
-    11: 'Cancelamento Rejeitado'
+    3: 'Em Rota Entrega',
+    4: 'Entregue',    
+    5: 'Troca Solicitada',
+    6: 'Troca Aceita',
+    7: 'Troca Autorizada',
+    8: 'Troca Efetuada',
+    9: 'Troca Rejeitada',
+    10: 'Cancelamento Aceito',
+    11: 'Cancelamento Efetuado',
+    12: 'Cancelamento Solicitado',
+    13: 'Cancelamento Rejeitado'    
 };
 
 export class Pedido {

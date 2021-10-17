@@ -1,3 +1,10 @@
 ::ng-deep.detalhesPedido > .modal-dialog{
     max-width: 800px;
+    .mat-stepper-horizontal {
+        margin-top: 8px;
+    }
+    
+    .mat-form-field {
+        margin-top: 16px;
+    }
 }

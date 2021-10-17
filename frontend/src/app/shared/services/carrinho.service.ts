@@ -87,6 +87,9 @@ export class SandBoxService {
   getPedidosMinhasCompras(idCliente){
     return this.http.get(this.baseUrl + `/pedido/cliente/${idCliente}`);
   }
+  setStatusPedido(idPedido, status){
+    return this.http.put(this.baseUrl + `/pedido/${idPedido}`, status);
+  }
 
   /** PAIS */
   getListaPaises(){

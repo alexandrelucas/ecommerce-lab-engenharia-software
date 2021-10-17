@@ -18,6 +18,8 @@ import { NgxMaskModule } from 'ngx-mask';
 import { EstoqueComponent } from './estoque/estoque.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { VendasComponent } from './vendas/vendas.component';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [AdminComponent, ListaClienteComponent, DashboardComponent, CuponsComponent, ConfiguracoesComponent, PedidosComponent, DetalhesPedidoComponent, CadastrarCupomComponent, EstoqueComponent, VendasComponent],
@@ -31,6 +33,8 @@ import { VendasComponent } from './vendas/vendas.component';
     NgbModule,
     NgxMaskModule.forRoot(),
     FormsModule,
+    MatStepperModule,
+    MatIconModule,
     ReactiveFormsModule,
   ]
 })

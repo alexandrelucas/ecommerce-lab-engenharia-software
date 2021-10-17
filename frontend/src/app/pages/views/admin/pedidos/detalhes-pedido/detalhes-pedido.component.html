@@ -4,6 +4,7 @@
   <div class="modal-body">
     <div class="row-d-flex">
       <h2>Número do Pedido: #{{ pedido.codigo }}</h2> 
+      <!-- <p class="mr-2">Valor Total do Pedido:</p> <strong><p>{{pedido?.valorTotal | currency: 'BRL'}}</p></strong>       -->
     </div>
     <h3>Produtos do Pedido:</h3>
     <div class="row">
@@ -42,16 +43,43 @@
       </div>
     </div>
 
-      <div class="col-md-6">
-        <!-- <select name="cars" id="cars" class="form-control" >
-          <option *ngFor="let el of getListaStatus(); let i = index;" [value]="i" [selected]="p.status == i">{{getStatusNome(i)}}</option>
-        </select> -->
-      </div>    
+    <div class="col-md-6">
+      <!-- <select name="cars" id="cars" class="form-control" >
+        <option *ngFor="let el of getListaStatus(); let i = index;" [value]="i" [selected]="p.status == i">{{getStatusNome(i)}}</option>
+      </select> -->
+    </div>
+
+    <div>
+      <h3>Status do Pedido:</h3>
+      <mat-horizontal-stepper labelPosition="bottom" #stepper>
+        <mat-step label="Pagamento realizado">
+          <div>
+            <button class="btn btn-dark btn-sm" matStepperNext (click)="setStatusPedido(statusPedido.status = 2)">Aprovar</button>
+          </div>
+        </mat-step>
+        <mat-step label="Em transporte">
+          <div>
+            <button class="btn btn-dark btn-sm" matStepperNext (click)="setStatusPedido(statusPedido.status = 3)">Aprovar</button>
+          </div>
+        </mat-step>        
+        <mat-step label="Em rota entrega">
+          <div>
+            <button class="btn btn-dark btn-sm" matStepperNext (click)="setStatusPedido(statusPedido.status = 4)">Aprovar</button>
+          </div>
+        </mat-step>        
+        <mat-step label="Entregue">          
+          <p>Produto entregue.</p>
+        </mat-step>
+
+        <ng-template matStepperIcon="edit">
+          <mat-icon>done</mat-icon>
+        </ng-template>
+      </mat-horizontal-stepper>
+    </div>
+
   </div>
-  <div class="modal-footer">
+  <div class="modal-footer">    
     <div class="row">
-      <div class="d-flex justify-content-center">
-        <p class="mr-2">Valor Total do Pedido:</p> <strong><p>{{pedido?.valorTotal | currency: 'BRL'}}</p></strong>
-      </div>
+      <button class="btn btn-dark btn-sm" (click)="closeModal()">Fechar</button>
     </div>
   </div>

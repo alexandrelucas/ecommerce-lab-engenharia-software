@@ -32,9 +32,7 @@ export class PedidosComponent implements OnInit {
 
   carregarListaPedidos() {    
     this.servico.getListaPedidos().subscribe((result:any) => {      
-      //this.ajustaResult(result.pedidos);
       this.dataSource = new MatTableDataSource(result.pedidos);
-      console.log(result.pedidos)
     });
   } 
 
@@ -59,11 +57,15 @@ export class PedidosComponent implements OnInit {
   }
 
   showDetalhesPedido(pedido) {
-   const modalRef = this.modalService.open(DetalhesPedidoComponent, {
-     windowClass: 'detalhesPedido'
-   });
-   modalRef.componentInstance.pedido = pedido;
-   //console.log(modalRef.componentInstance);
+    const modalRef = this.modalService.open(DetalhesPedidoComponent, {
+      windowClass: 'detalhesPedido'
+    });
+    modalRef.componentInstance.pedido = pedido;   
+    
+    modalRef.result.then((res:any) => {      
+      let idxPedido = this.dataSource.data.findIndex((dt:any) => dt.id == res.id && dt.produtoId == res.produtoId);
+      this.dataSource.data[idxPedido].status = res.status;
+    });
   }
 
   autorizarVenda(pedidoId) {
