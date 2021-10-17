@@ -71,9 +71,6 @@ export default class PedidoDAO implements IDAO {
             return {error: 'Pedido inválido!'} as EntidadeDominio;
         }
 
-        // Dar baixa no estoque
-
-
         return entidade;
     }
     async alterar(entidade: Pedido): Promise<EntidadeDominio> {
@@ -104,28 +101,16 @@ export default class PedidoDAO implements IDAO {
         
         let query;
         if(pedidoId) {
-            query = `SELECT p.id, p."pagamentoId", p.codigo, p.status, "valorFrete", 
-            transportadora, "valorSubTotal", "valorTotal", 
-            data, "valor", "quantidade", 
-            pagamentos.status as "statusPagamento" FROM pedidos as p 
-            INNER JOIN "pedidosProdutos" as pp ON p.id = pp."pedidoId"
-            INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."id" = '${pedidoId}';`;
+            query = `SELECT p.id, p.codigo, p.status, p."valorFrete", p.transportadora, p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
+            pedidos as p WHERE p."id" = '${pedidoId}';`;
         } else if (clienteId) {
-            query = `SELECT p.id, p.codigo, p.status, "valorFrete", 
-            transportadora, "valorSubTotal", "valorTotal", 
-            data, "valor", "quantidade", 
-            pagamentos.status as "statusPagamento" FROM pedidos as p 
-            INNER JOIN "pedidosProdutos" as pp ON p.id = pp."pedidoId"
-            INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."clienteId" = '${clienteId}' ORDER BY id DESC;`;
+            query = `SELECT p.id, p.codigo, p.status, p."valorFrete", p.transportadora, p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
+            pedidos as p WHERE p."clienteId" = '${clienteId}' ORDER BY id DESC;`;
         }
         else{
             // query = `SELECT * FROM ${this.tabela}`;
-            query = `SELECT p.id, p.codigo, p.status, "valorFrete", 
-            transportadora, "valorSubTotal", "valorTotal", 
-            data, "valor", "quantidade", 
-            pagamentos.status as "statusPagamento" FROM pedidos as p 
-            INNER JOIN "pedidosProdutos" as pp ON p.id = pp."pedidoId"
-            INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId";`;
+            query = `SELECT p.id, p.codigo, p.status, p."valorFrete", p.transportadora, p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
+            pedidos as p;`;
         }
 
         let pedidos = await PgDatabase.query(query);
@@ -137,7 +122,7 @@ export default class PedidoDAO implements IDAO {
             FROM produtos as p 
             INNER JOIN "pedidosProdutos" as pp 
             ON p.id = pp."produtoId" INNER JOIN categorias as c ON c.id = p."categoriaId"
-            INNER JOIN pais ON pais.id = p."paisId" WHERE pp.id = ${p.id};`;
+            INNER JOIN pais ON pais.id = p."paisId" WHERE pp."pedidoId" = ${p.id};`;
 
             let produtos = await PgDatabase.query(produtoQuery);
 
