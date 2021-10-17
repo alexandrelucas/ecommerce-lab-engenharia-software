@@ -76,6 +76,11 @@ export default class PedidoDAO implements IDAO {
     async alterar(entidade: Pedido): Promise<EntidadeDominio> {
         if(!entidade.id) return {error: 'Sem o id do pedido'} as EntidadeDominio;
         try {
+
+            if(entidade.status == 0 || entidade.status == 1) {
+                return {error: `status ${entidade.status} somente para autorização de venda.`} as EntidadeDominio;
+            }
+
             let queryAtualizaStatusPedido = `UPDATE pedidos SET status = ${entidade.status} WHERE id = ${entidade.id}`;
 
             let resultPedido = await PgDatabase.query(queryAtualizaStatusPedido);
@@ -101,13 +106,16 @@ export default class PedidoDAO implements IDAO {
         
         let query;
         if(pedidoId) {
-            query = `SELECT * FROM pedidos WHERE pedidos."id" = '${pedidoId}';`;
+            query = `SELECT p.id, p.codigo, p.status, p."valorFrete", p.transportadora, p."pagamentoId", pagamentos.status as "statusPagamento", p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
+            pedidos as p INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."id" = '${pedidoId}';`;
         } else if (clienteId) {
-            query = `SELECT * FROM pedidos WHERE pedidos."clienteId" = '${clienteId}' ORDER BY id DESC;`;
+            query = `SELECT p.id, p.codigo, p.status, p."valorFrete", p.transportadora, p."pagamentoId", pagamentos.status as "statusPagamento", p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
+            pedidos as p INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."clienteId" = '${clienteId}' ORDER BY id DESC;`;
         }
         else{
             // query = `SELECT * FROM ${this.tabela}`;
-            query = `SELECT * FROM pedidos;`;
+            query = `SELECT p.id, p.codigo, p.status, p."valorFrete", p.transportadora, p."pagamentoId", pagamentos.status as "statusPagamento" , p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
+            pedidos as p INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId";`;
         }
 
         let pedidos = await PgDatabase.query(query);
@@ -115,7 +123,7 @@ export default class PedidoDAO implements IDAO {
 
         if(pedidos.rowCount > 0) {
             for(const p of pedidos.rows) {
-               let produtoQuery = `SELECT p.id, p.codigo, pp.quantidade, pp.status, pp.valor ,p.titulo, p.descricao, p.imagem, p."quantidadeML", p."tempoGuarda", p."teorAlcoolico", p.tipo, p.peso, c.descricao as "categoria", pais.sigla as "paisSigla", pais.descricao as "pais" 
+               let produtoQuery = `SELECT p.id, p.codigo, pp.quantidade, pp.valor, p.titulo, p.descricao, p.imagem, p."quantidadeML", p."tempoGuarda", p."teorAlcoolico", p.tipo, p.peso, c.descricao as "categoria", pais.sigla as "paisSigla", pais.descricao as "pais" 
             FROM produtos as p 
             INNER JOIN "pedidosProdutos" as pp 
             ON p.id = pp."produtoId" INNER JOIN categorias as c ON c.id = p."categoriaId"
