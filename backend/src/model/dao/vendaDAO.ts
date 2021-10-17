@@ -16,7 +16,8 @@ export default class VendaDAO implements IDAO {
 
             let pedidoDAO = new PedidoDAO();
             let pedido = (await pedidoDAO.consultar(new Pedido(entidade.pedidoId)))[0] as Pedido;
-
+            
+            console.log(pedido.pagamentoId);
 
             if(!pedido) return {error: 'Pedido inválido!'} as EntidadeDominio;
 
@@ -58,7 +59,6 @@ export default class VendaDAO implements IDAO {
         try {
             
             let vendas = await PgDatabase.query('SELECT * FROM vendas;');              
-            console.log(vendas);
             let result:Array<EntidadeDominio> = vendas.rows;
             return result ?? [];    
         } catch(err: any) {

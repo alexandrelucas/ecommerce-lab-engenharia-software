@@ -101,16 +101,13 @@ export default class PedidoDAO implements IDAO {
         
         let query;
         if(pedidoId) {
-            query = `SELECT p.id, p.codigo, p.status, p."valorFrete", p.transportadora, p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
-            pedidos as p WHERE p."id" = '${pedidoId}';`;
+            query = `SELECT * FROM pedidos WHERE pedidos."id" = '${pedidoId}';`;
         } else if (clienteId) {
-            query = `SELECT p.id, p.codigo, p.status, p."valorFrete", p.transportadora, p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
-            pedidos as p WHERE p."clienteId" = '${clienteId}' ORDER BY id DESC;`;
+            query = `SELECT * FROM pedidos WHERE pedidos."clienteId" = '${clienteId}' ORDER BY id DESC;`;
         }
         else{
             // query = `SELECT * FROM ${this.tabela}`;
-            query = `SELECT p.id, p.codigo, p.status, p."valorFrete", p.transportadora, p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
-            pedidos as p;`;
+            query = `SELECT * FROM pedidos;`;
         }
 
         let pedidos = await PgDatabase.query(query);
@@ -118,7 +115,7 @@ export default class PedidoDAO implements IDAO {
 
         if(pedidos.rowCount > 0) {
             for(const p of pedidos.rows) {
-               let produtoQuery = `SELECT p.id, p.codigo, pp.quantidade, pp.valor ,p.titulo, p.descricao, p.imagem, p."quantidadeML", p."tempoGuarda", p."teorAlcoolico", p.tipo, p.peso, c.descricao as "categoria", pais.sigla as "paisSigla", pais.descricao as "pais" 
+               let produtoQuery = `SELECT p.id, p.codigo, pp.quantidade, pp.status, pp.valor ,p.titulo, p.descricao, p.imagem, p."quantidadeML", p."tempoGuarda", p."teorAlcoolico", p.tipo, p.peso, c.descricao as "categoria", pais.sigla as "paisSigla", pais.descricao as "pais" 
             FROM produtos as p 
             INNER JOIN "pedidosProdutos" as pp 
             ON p.id = pp."produtoId" INNER JOIN categorias as c ON c.id = p."categoriaId"
