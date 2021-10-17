@@ -123,7 +123,7 @@ export default class PedidoDAO implements IDAO {
 
         if(pedidos.rowCount > 0) {
             for(const p of pedidos.rows) {
-               let produtoQuery = `SELECT p.id, p.codigo, pp.quantidade, pp.valor, p.titulo, p.descricao, p.imagem, p."quantidadeML", p."tempoGuarda", p."teorAlcoolico", p.tipo, p.peso, c.descricao as "categoria", pais.sigla as "paisSigla", pais.descricao as "pais" 
+               let produtoQuery = `SELECT p.id, p.codigo, pp.status, pp.quantidade, pp.valor, p.titulo, p.descricao, p.imagem, p."quantidadeML", p."tempoGuarda", p."teorAlcoolico", p.tipo, p.peso, c.descricao as "categoria", pais.sigla as "paisSigla", pais.descricao as "pais" 
             FROM produtos as p 
             INNER JOIN "pedidosProdutos" as pp 
             ON p.id = pp."produtoId" INNER JOIN categorias as c ON c.id = p."categoriaId"
