@@ -32,8 +32,14 @@ export default class PedidoProdutoDAO implements IDAO {
     excluir(entidade: entidadeDominioModel): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
-    consultar(entidade: entidadeDominioModel): Promise<entidadeDominioModel[]> {
-        throw new Error("Method not implemented.");
+    async consultar(entidade: entidadeDominioModel): Promise<entidadeDominioModel[]> {
+        let query = `SELECT pp."pedidoId", p.codigo, produtos.titulo , pp."produtoId", p.data, pp.status FROM "pedidosProdutos" as pp
+        INNER JOIN pedidos as p ON p.id = pp."pedidoId"
+        INNER JOIN produtos ON pp."produtoId" = produtos.id WHERE pp.status >= 5 AND pp.status <= 9`;
+
+        let trocaSolicitada = PgDatabase.query(query);
+        let result:Array<EntidadeDominio> = (await trocaSolicitada).rows;
+        return result ?? [];
     }
 
 }
