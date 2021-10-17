@@ -22,7 +22,7 @@ export class DetalhesPedidoComponent implements OnInit {
   public listaProdutos = []
   public paises = []
   public categorias = []
-  public statusPedido = { status : ''}  
+  public statusPedido = { status : 0}  
 
   constructor(
     private servico: SandBoxService,
@@ -81,7 +81,7 @@ export class DetalhesPedidoComponent implements OnInit {
     return this.categorias.filter(p => p.id == categoriaId)[0].descricao;
   }
 
-  setStatusPedido(){
+  setStatusPedido(status){
     this.servico.setStatusPedido(this.pedido.id, this.statusPedido).subscribe((ret:any) => {      
     })
   }
