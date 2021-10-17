@@ -103,17 +103,24 @@ export default class PedidoDAO implements IDAO {
         let clienteId = entidade.clienteId;
         
         let query;
+        let produtoQuery = '';
         if(pedidoId) {
             query = `SELECT p.id, p."pagamentoId", p.codigo, p.status, "valorFrete", 
             transportadora, "valorSubTotal", "valorTotal", 
-            data, "produtoId", "valor", "quantidade", 
+            data, "valor", "quantidade", 
             pagamentos.status as "statusPagamento" FROM pedidos as p 
             INNER JOIN "pedidosProdutos" as pp ON p.id = pp."pedidoId"
             INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."id" = '${pedidoId}';`;
+
+           produtoQuery = `SELECT p.id, p.codigo, pp.quantidade, pp.valor ,p.titulo, p.descricao, p.imagem, p."quantidadeML", p."tempoGuarda", p."teorAlcoolico", p.tipo, p.peso, c.descricao as "categoria", pais.sigla, pais.descricao 
+        FROM produtos as p 
+        INNER JOIN "pedidosProdutos" as pp 
+        ON p.id = pp."produtoId" INNER JOIN categorias as c ON c.id = p."categoriaId"
+        INNER JOIN pais ON pais.id = p."paisId" WHERE pp.id = ${pedidoId};`; 
         } else if (clienteId) {
             query = `SELECT p.id, p.codigo, p.status, "valorFrete", 
             transportadora, "valorSubTotal", "valorTotal", 
-            data, "produtoId", "valor", "quantidade", 
+            data, "valor", "quantidade", 
             pagamentos.status as "statusPagamento" FROM pedidos as p 
             INNER JOIN "pedidosProdutos" as pp ON p.id = pp."pedidoId"
             INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."clienteId" = '${clienteId}' ORDER BY id DESC;`;
@@ -122,14 +129,27 @@ export default class PedidoDAO implements IDAO {
             // query = `SELECT * FROM ${this.tabela}`;
             query = `SELECT p.id, p.codigo, p.status, "valorFrete", 
             transportadora, "valorSubTotal", "valorTotal", 
-            data, "produtoId", "valor", "quantidade", 
+            data, "valor", "quantidade", 
             pagamentos.status as "statusPagamento" FROM pedidos as p 
             INNER JOIN "pedidosProdutos" as pp ON p.id = pp."pedidoId"
             INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId";`;
         }
 
-        let pedidos = await PgDatabase.query(query);
+        let pedidos:any = await PgDatabase.query(query);
+
+        if(pedidoId) {
+            produtoQuery = `SELECT p.id, p.codigo, pp.quantidade, pp.valor ,p.titulo, p.descricao, p.imagem, p."quantidadeML", p."tempoGuarda", p."teorAlcoolico", p.tipo, p.peso, c.descricao as "categoria", pais.sigla as "paisSigla", pais.descricao as "pais" 
+            FROM produtos as p 
+            INNER JOIN "pedidosProdutos" as pp 
+            ON p.id = pp."produtoId" INNER JOIN categorias as c ON c.id = p."categoriaId"
+            INNER JOIN pais ON pais.id = p."paisId" WHERE pp.id = ${pedidoId};`;
+            
+            let produtos = await PgDatabase.query(produtoQuery);
+            pedidos.rows[0].produtos = produtos.rows;
+        }
+
         let result:Array<EntidadeDominio> = pedidos.rows;
+
         return result ?? [];
     }
 
