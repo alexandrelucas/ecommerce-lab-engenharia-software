@@ -20,9 +20,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { VendasComponent } from './vendas/vendas.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatIconModule } from '@angular/material/icon';
+import { TrocasComponent } from './trocas/trocas.component';
 
 @NgModule({
-  declarations: [AdminComponent, ListaClienteComponent, DashboardComponent, CuponsComponent, ConfiguracoesComponent, PedidosComponent, DetalhesPedidoComponent, CadastrarCupomComponent, EstoqueComponent, VendasComponent],
+  declarations: [AdminComponent, ListaClienteComponent, DashboardComponent, CuponsComponent, ConfiguracoesComponent, PedidosComponent, DetalhesPedidoComponent, CadastrarCupomComponent, EstoqueComponent, VendasComponent, TrocasComponent],
   imports: [
     CommonModule,
     AdminRoutingModule,

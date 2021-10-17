@@ -90,6 +90,9 @@ export class SandBoxService {
   setStatusPedido(idPedido, status){
     return this.http.put(this.baseUrl + `/pedido/${idPedido}`, status);
   }
+  setStatusTrocaProduto(idPedido, idProduto, status){
+    return this.http.put(this.baseUrl + `/pedido/${idPedido}/produto/${idProduto}`, status)
+  }
 
   /** PAIS */
   getListaPaises(){

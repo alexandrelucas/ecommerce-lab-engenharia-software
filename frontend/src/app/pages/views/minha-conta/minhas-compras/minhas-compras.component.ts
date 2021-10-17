@@ -17,21 +17,24 @@ export class MinhasComprasComponent implements OnInit, AfterViewInit {
   public compraSelecionada: Compra;
   public itemSelecionado: Produto;
   public storage: Storage;
+  public listaPedidos = []
+  public statusTroca = { status : 0 }
   displayedColumns: string[] = ['codigo', 'status', 'data', 'quantidade', 'valorFrete','valorTotal', 'acao'];
-  dataSource = new MatTableDataSource<Compra>(ELEMENT_DATA_COMPRA);
+  dataSource = new MatTableDataSource<Compra>();
 
   constructor(
     private modalService: NgbModal,
-    private sandboxService: SandBoxService
+    private servico: SandBoxService
   ) {
     this.storage = window.localStorage;
   }
 
   carregarPedidos() {
-    console.log('carregando pedidos')
     let id = parseInt(JSON.parse(this.storage.getItem('clienteId'))[0]);
-    this.sandboxService.getPedidosMinhasCompras(id).subscribe((listaPedidos: any) => {
-      console.log(listaPedidos)
+    this.servico.getPedidosMinhasCompras(id).subscribe((listaPedidos: any) => {
+      this.listaPedidos = listaPedidos.pedidos;
+      console.log(this.listaPedidos)
+
       this.dataSource = new MatTableDataSource(listaPedidos.pedidos);
     });
   }
@@ -44,41 +47,47 @@ export class MinhasComprasComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  showDetalheCompra(content, idCompra){    
-    this.itensCompra = ELEMENT_DATA.filter( compra => compra.numeroPedido == idCompra);
+  showDetalheCompra(content, compra){    
+    this.itensCompra = this.listaPedidos.filter(pedido => pedido.codigo == compra.codigo )[0]    
+    console.log(this.itensCompra)
+
     this.modalService.open(content, {
       windowClass: 'modal-produtos'
     })
   }
+  
+  showModalTrocaProduto(content, produto, itensCompra){
+    this.itemSelecionado = produto;
+    this.itemSelecionado.idPedido = itensCompra.id;
+    this.itemSelecionado.idCodPedido = itensCompra.codigo;
+    
+    this.modalService.open(content, {
+      windowClass: 'modal-troca'
+    });
+  }
 
-  showModalCancelaCompra(content, idPedido){
-    this.compraSelecionada = ELEMENT_DATA_COMPRA.filter( c => c.numeroPedido === idPedido)[0];
+  confirmaTrocaProduto(){    
+    this.statusTroca.status = 5;    
+    this.servico.setStatusTrocaProduto(this.itemSelecionado.idPedido, this.itemSelecionado.id, this.statusTroca).subscribe((ret:any) => {
+      console.log(ret)
+      if(ret.status == 0){
+        this.itemSelecionado.status = 5;
+      }
+    });
+  }
+
+  showModalCancelaCompra(content, pedido){
+    this.compraSelecionada = pedido;
 
     this.modalService.open(content, {
       windowClass: 'modal-compra'
     });
   }
 
-  showModalTrocaProduto(content, idItem){
-    this.itemSelecionado = ELEMENT_DATA.filter( c => c.id === idItem)[0];
-    console.log(this.itemSelecionado)
-
-    this.modalService.open(content, {
-      windowClass: 'modal-troca'
-    });
-  }
-
-  setTrocaProduto(){
-    ELEMENT_DATA.filter( c => c.id === this.itemSelecionado.id)[0].status = "Troca Solicitada";
-    console.log(this.modalService.activeInstances);
-  }
-
-  setCancelarCompra(){
-    ELEMENT_DATA_COMPRA.filter(compra => compra.id == this.compraSelecionada.id)[0].status = "Cancelamento Solicitado"
-    this.modalService.dismissAll();
-    /**
-     * SET compraSelecionada como cancelada.
-     */
+  confirmaCancelarCompra(){
+    console.log(this.compraSelecionada);
+    //ELEMENT_DATA_COMPRA.filter(compra => compra.id == this.compraSelecionada.id)[0].status = "Cancelamento Solicitado"
+    this.modalService.dismissAll();    
   }
 
   getStatusNome(status: number) {
@@ -95,25 +104,14 @@ export interface Compra {
   metodoPagamento: string;
   cupom: number;
 }
-
 export interface Produto {
   id: number;
   numeroPedido: string;
   nome: string;
-  status: string;
+  status: number;
   preco: number;
   qtd: number;
   data: string;
+  idCodPedido?: number;
+  idPedido?: number;
 }
-
-const ELEMENT_DATA_COMPRA: Compra[] = [
-  {id: 1, numeroPedido: '03498642', status: 'CONCLUÍDO',   valorTotal: 292.0, data: "31/08/2021", metodoPagamento: "Cartão de Crédito", cupom: 30},
-  {id: 2, numeroPedido: '04323932', status: 'EM TRANSITO', valorTotal: 89.99, data: "10/09/2021", metodoPagamento: "Boleto bancário",   cupom: 25},
-];
-
-const ELEMENT_DATA: Produto[] = [
-  {id: 1, numeroPedido:'03498642',  nome: 'Cruz Del Sur Malbec', status: 'CONCLUÍDO', preco: 100.0, qtd: 2, data: "31/08/2021"},
-  {id: 2, numeroPedido:'03498642',  nome: 'El Bravo',            status: 'EM PROCESSAMENTO', preco: 42.0, qtd: 1, data: "31/08/2021"},
-  {id: 3, numeroPedido:'03498642',  nome: 'Fonte Serrana',       status: 'EM TRANSITO', preco: 150.0, qtd: 1, data: "31/08/2021"},
-  {id: 4, numeroPedido:'04323932',  nome: 'Sangue de Boi',       status: 'CONCLUÍDO', preco: 89.99, qtd: 2, data: "31/08/2021"},
-];

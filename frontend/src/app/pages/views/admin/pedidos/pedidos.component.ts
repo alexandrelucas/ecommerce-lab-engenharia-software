@@ -31,7 +31,8 @@ export class PedidosComponent implements OnInit {
   }
 
   carregarListaPedidos() {    
-    this.servico.getListaPedidos().subscribe((result:any) => {      
+    this.servico.getListaPedidos().subscribe((result:any) => {
+      console.log(result)
       this.dataSource = new MatTableDataSource(result.pedidos);
     });
   } 

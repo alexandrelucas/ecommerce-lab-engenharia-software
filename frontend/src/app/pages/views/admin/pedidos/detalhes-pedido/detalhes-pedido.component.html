@@ -24,30 +24,24 @@
               <td class="car-imagem"><img src="{{ item.imagem }}" width="50px" height="50px"></td>
               <td>
                 <p><strong>{{ 'Vinho ' + item.titulo }}</strong></p>
-                <p>{{ getPaisNome(item.paisId) }}</p>
-                <p>{{ getCategoriaNome(item?.categoriaId) }}{{' - ' + item.quantidadeML + 'ml' }}</p>
+                <p>{{ getPaisNome(item.paisSigla) }}</p>
+                <p>{{ item?.categoria }}{{' - ' + item.quantidadeML + 'ml' }}</p>
               </td>
               <td>
                 <p>{{ 'Armazenamento: ' + item.tempoGuarda + ' anos' }}</p>
                 <p>{{ 'teor alcólico: ' + item.teorAlcoolico + '%' }}</p>
               </td>
               <td>                
-                <strong><p>{{ item.precoPor | currency: 'BRL' }}</p></strong>
+                <strong><p>{{ item.valor | currency: 'BRL' }}</p></strong>
               </td>            
               <td>
-                <p style="text-align: center;">{{ pedido.quantidade }}</p>
+                <p style="text-align: center;">{{ item.quantidade }}</p>
               </td>              
             </tr>
           </tbody>
         </table>
       </div>
-    </div>
-
-    <div class="col-md-6">
-      <!-- <select name="cars" id="cars" class="form-control" >
-        <option *ngFor="let el of getListaStatus(); let i = index;" [value]="i" [selected]="p.status == i">{{getStatusNome(i)}}</option>
-      </select> -->
-    </div>
+    </div>    
 
     <div>
       <h3>Status do Pedido:</h3>

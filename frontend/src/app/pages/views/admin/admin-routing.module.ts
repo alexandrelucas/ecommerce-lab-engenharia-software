@@ -7,6 +7,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { EstoqueComponent } from './estoque/estoque.component';
 import { ListaClienteComponent } from './lista-cliente/lista-cliente.component';
 import { PedidosComponent } from './pedidos/pedidos.component';
+import { TrocasComponent } from './trocas/trocas.component';
 import { VendasComponent } from './vendas/vendas.component';
 
 const routes: Routes = [
@@ -17,6 +18,7 @@ const routes: Routes = [
       {path: 'clientes', component: ListaClienteComponent},
       {path: 'pedidos', component: PedidosComponent},
       {path: 'vendas', component:VendasComponent},
+      {path: 'trocas', component:TrocasComponent},
       {path: 'cupons', component: CuponsComponent},
       {path: 'estoque', component:EstoqueComponent},
       {path: 'configuracoes', component: ConfiguracoesComponent}

@@ -55,9 +55,7 @@ export class ClienteService {
     delete endereco.clienteId;
     endereco.paisId = 2;
     endereco.tipoResidenciaId = 1;
-    
-    console.log(clienteId)
-    console.log(endereco)
+        
     return this.http.post(this.baseUrl + `/cliente/${clienteId}/endereco`, endereco);
   }
   updateEndereco(endereco, enderecoId){

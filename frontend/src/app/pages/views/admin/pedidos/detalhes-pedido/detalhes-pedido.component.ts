@@ -22,7 +22,7 @@ export class DetalhesPedidoComponent implements OnInit {
   public listaProdutos = []
   public paises = []
   public categorias = []
-  public statusPedido = { status : 0}  
+  public statusPedido = { status : 0}
 
   constructor(
     private servico: SandBoxService,
@@ -30,10 +30,9 @@ export class DetalhesPedidoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.produtosLista = this.pedido.listaCompras;    
+    console.log(this.pedido)
+    this.produtosLista = this.pedido.listaCompras;
     this.getListaPaises();
-    this.getListaCategorias();
-    this.getInfoProdutos();
   }
 
   ngAfterViewInit() {
@@ -41,26 +40,19 @@ export class DetalhesPedidoComponent implements OnInit {
     setTimeout(() => {
       for(let i = 1; i < this.pedido.status; i++){
         this.stepper.selectedIndex = i;
-      }      
-    }, 0);    
+      }
+    }, 0);
   }
 
-  getListaCategorias(){
-    this.servico.getListaCategorias().subscribe((result:any) => {
-      this.categorias = result.categorias;
-    });
-  }
-  
   getListaPaises(){
     this.servico.getListaPaises().subscribe((result:any) => {
       this.paises = result.paises;
+      this.carregaListaProdutos();
     });
   }
 
-  getInfoProdutos(){
-    this.servico.getProduto(this.pedido.produtoId).subscribe((result:any) => {
-      this.listaProdutos.push(result.produto);
-    })
+  carregaListaProdutos(){
+    this.listaProdutos = this.pedido.produtos;
   }
 
   getListaStatus() {
@@ -74,15 +66,12 @@ export class DetalhesPedidoComponent implements OnInit {
     return StatusPedidoNome[status];
   }
 
-  getPaisNome(paisId){    
-    return this.paises.filter(p => p.id == paisId)[0].descricao;
+  getPaisNome(paisSigla){
+    return this.paises.filter(p => p.sigla == paisSigla)[0].descricao;
   }
-  getCategoriaNome(categoriaId){    
-    return this.categorias.filter(p => p.id == categoriaId)[0].descricao;
-  }
-
+ 
   setStatusPedido(status){
-    this.servico.setStatusPedido(this.pedido.id, this.statusPedido).subscribe((ret:any) => {      
+    this.servico.setStatusPedido(this.pedido.id, this.statusPedido).subscribe((ret:any) => {
     })
   }
 

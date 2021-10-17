@@ -18,7 +18,7 @@
 
       <ng-container matColumnDef="quantidade">
         <th mat-header-cell *matHeaderCellDef> Quantidade </th>
-        <td mat-cell *matCellDef="let element"> {{element.quantidade}} </td>
+        <td mat-cell *matCellDef="let element"> {{element.quantidade }} </td>
       </ng-container>
 
       <ng-container matColumnDef="valorFrete">
@@ -34,12 +34,12 @@
   
       <ng-container matColumnDef="acao">
         <th mat-header-cell *matHeaderCellDef>Ações</th>
-        <td mat-cell *matCellDef="let element"> 
-          <button class="btn btn-dark btn-sm mr-2" matTooltip="Detalhes" 
-            (click)="showDetalheCompra(modalDetalhesCompra,element.numeroPedido)"><i class="fas fa-receipt mr-1"></i>
+        <td mat-cell *matCellDef="let element">
+          <button class="btn btn-dark btn-sm mr-2" matTooltip="Detalhes"
+            (click)="showDetalheCompra(modalDetalhesCompra, element)"><i class="fas fa-receipt mr-1"></i>
           </button>
-          <button class="btn btn-dark btn-sm mr-2" matTooltip="Cancelar Compra"
-            (click)="showModalCancelaCompra(modalCancelaPedido, element.numeroPedido)"><i class="fas fa-trash mr-1"></i>
+          <button class="btn btn-dark btn-sm mr-2" matTooltip="Cancelar Compra" *ngIf="element.status != 4"
+            (click)="showModalCancelaCompra(modalCancelaPedido, element)"><i class="fas fa-trash mr-1"></i>
           </button>
         </td>
       </ng-container>
@@ -59,12 +59,29 @@
 
 
 
-<!-- MODAL TROCA PRODUTO -->
-<!-- <ng-template #modalDetalhesCompra let-modal id="modal-produtos" class="modal-produtos">
+<!-- MODAL CANCELAR PEDIDO -->
+<ng-template #modalCancelaPedido let-modal class="modal-cancela">
+  <div class="modal-header">
+    <div class="d-flex align-items-center">
+        <mat-icon class="mr-2">assignment</mat-icon>
+        <p class="modal-title p-0 m-0"><strong>{{ 'Pedido: #' + compraSelecionada.codigo }}</strong></p>
+    </div>
+  </div>
+  <div class="modal-body">
+    <p>{{ 'Deseja realmente cancelar o pedido nrº '}} <strong>{{'#' + compraSelecionada.codigo }}</strong> {{ '?' }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger btn-sm" (click)="modal.close()">Cancelar</button>
+    <button type="button" class="btn btn-dark btn-sm" (click)="confirmaCancelarCompra()">Confirmar</button>
+  </div>
+</ng-template>  
+
+<!-- MODAL DETALHES PRODUTO -->
+<ng-template #modalDetalhesCompra let-modal id="modal-produtos" class="modal-produtos">
   <div class="modal-header">
       <div class="d-flex align-items-center">
           <mat-icon class="mr-2">assignment</mat-icon>
-          <p class="modal-title p-0 m-0"><strong>{{ 'Pedido: #' + itensCompra[0].numeroPedido }}</strong></p>
+          <p class="modal-title p-0 m-0"><strong>{{ 'Pedido: #' + itensCompra.codigo }}</strong></p>
       </div>
   </div>
   <div class="modal-body">
@@ -73,65 +90,47 @@
         <thead>
           <tr>
             <th>#</th>
-            <th>Item</th>
+            <th>Item</th>            
+            <th>País</th>
             <th>Status</th>
-            <th>Preço</th>
-            <th>Quantidade</th>
-            <th>Data</th>
+            <th>Qtd.</th>
+            <th>Preço</th>            
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let itens of itensCompra">
+          <tr *ngFor="let itens of itensCompra.produtos">
             <td>{{ itens.id }}</td>
-            <td>{{ itens.nome }}</td>
-            <td>{{ itens.status }}</td>
-            <td>{{ itens.preco }}</td>
-            <td>{{ itens.qtd }}</td>
-            <td>{{ itens.data }}</td>
+            <td>{{ itens.titulo }}</td>
+            <td>{{ itens.pais }}</td>
+            <td>{{ getStatusNome(itens.status) }}</td>
+            <td>{{ itens.quantidade }}</td>
+            <td>{{ itens.valor | currency:'BRL' }}</td>
             <td>
-              <button class="btn btn-dark btn-sm mr-2" matTooltip="Solicitar Troca"
-                (click)="showModalTrocaProduto(modalTrocaProduto, itens.id)"><i class="fas fa-exchange-alt"></i>
+              <button class="btn btn-dark btn-sm mr-2" matTooltip="Solicitar Troca" *ngIf="itensCompra.status == 4"
+                (click)="showModalTrocaProduto(modalTrocaProduto, itens, itensCompra)"><i class="fas fa-exchange-alt"></i>
               </button>
             </td>
-          </tr>                  
+          </tr>
         </tbody>
       </table>
     </div>      
   </div>  
-</ng-template>   -->
-
-
-<!-- MODAL CANCELAR PEDIDO -->
-<ng-template #modalCancelaPedido let-modal class="modal-cancela">
-  <div class="modal-header">
-    <div class="d-flex align-items-center">
-        <mat-icon class="mr-2">assignment</mat-icon>
-        <p class="modal-title p-0 m-0"><strong>{{ 'Pedido: #' }}</strong></p>
-    </div>
-  </div>
-  <div class="modal-body">
-    <p>{{ 'Deseja realmente cancelar o pedido nrº '}} <strong>{{'#' + compraSelecionada.numeroPedido }}</strong> {{ '?' }}</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-danger btn-sm" (click)="modal.close()">Cancelar</button>
-    <button type="button" class="btn btn-dark btn-sm" (click)="setCancelarCompra()">Confirmar</button>
-  </div>
 </ng-template>
 
-<!-- MODAL TROCA PRODUTO -->
+<!-- MODAL TROCA ITEM DO PEDIDO -->
 <ng-template #modalTrocaProduto let-modal class="modal-cancela">
   <div class="modal-header">
     <div class="d-flex align-items-center">
         <mat-icon class="mr-2">assignment</mat-icon>
-        <p class="modal-title p-0 m-0"><strong>{{ 'Pedido: #' }}</strong></p>
+        <p class="modal-title p-0 m-0"><strong>{{ 'Pedido: #' + itemSelecionado.idPedido }}</strong></p>
     </div>
   </div>
   <div class="modal-body">
-    <p>{{ 'Confirma a troca do item ' }}<strong>{{ itemSelecionado.nome }}</strong> {{ '?' }}</p>
+    <p>{{ 'Confirma a troca do item ' }}<strong>{{ itemSelecionado.titulo }}</strong> {{ '?' }}</p>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-danger btn-sm" (click)="modal.close()">Cancelar</button>
-    <button type="button" class="btn btn-dark btn-sm" (click)="setTrocaProduto()" (click)="modal.close()">Confirmar</button>
+    <button type="button" class="btn btn-dark btn-sm" (click)="confirmaTrocaProduto()" (click)="modal.close()">Confirmar</button>
   </div>
 </ng-template>

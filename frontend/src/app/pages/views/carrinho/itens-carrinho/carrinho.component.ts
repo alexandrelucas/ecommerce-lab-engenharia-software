@@ -98,6 +98,7 @@ export class CarrinhoComponent implements OnInit {
 
   calcularFrete(){
     this.sandBox.calculaFrete(this.carrinhoForm.get('cep').value).subscribe( (res:any) => {
+      this.carrinho.listaFrete = [];
       res.forEach(element => {
         if(element.price){
           if(element.name == ".Com"){
