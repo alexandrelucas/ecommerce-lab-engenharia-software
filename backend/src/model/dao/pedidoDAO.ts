@@ -76,8 +76,23 @@ export default class PedidoDAO implements IDAO {
 
         return entidade;
     }
-    async alterar(entidade: EntidadeDominio): Promise<EntidadeDominio> {
-        throw new Error("Method not implemented.");
+    async alterar(entidade: Pedido): Promise<EntidadeDominio> {
+        if(!entidade.id) return {error: 'Sem o id do pedido'} as EntidadeDominio;
+        try {
+            let queryAtualizaStatusPedido = `UPDATE pedidos SET status = ${entidade.status} WHERE id = ${entidade.id}`;
+
+            let resultPedido = await PgDatabase.query(queryAtualizaStatusPedido);
+
+            // Status pedido alterado
+            if(resultPedido.rowCount > 0){
+                return entidade;
+            } else {
+                return {error: 'Status do pedido não alterado!'} as EntidadeDominio;
+            }
+
+        } catch (e: any) {
+            return {error: 'VendaDAO.salvar(): ' + e.toString()} as EntidadeDominio;
+        }
     }
     async excluir(entidade: EntidadeDominio): Promise<boolean> {
         throw new Error("Method not implemented.");
