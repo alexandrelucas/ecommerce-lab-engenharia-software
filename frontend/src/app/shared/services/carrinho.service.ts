@@ -110,4 +110,9 @@ export class SandBoxService {
   getListaVendas(){
     return this.http.get(this.baseUrl + `/venda/todos`);
   }  
+
+  /** TROCAS */
+  getListaTrocas(){
+    return this.http.get(this.baseUrl + `/troca/todos`);
+  } 
 }
