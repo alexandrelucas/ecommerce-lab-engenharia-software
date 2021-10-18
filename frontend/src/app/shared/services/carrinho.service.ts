@@ -46,7 +46,7 @@ export class SandBoxService {
   getCupomCliente(idCliente){
     return this.http.get(this.baseUrl + `/cupom/cliente/${idCliente}`);
   }
-  setCupom(cupom){    
+  setCupom(cupom){
     delete cupom.ativo;
     delete cupom.id;
     return this.http.post(this.baseUrl + `/cupom/`, cupom);
@@ -57,8 +57,7 @@ export class SandBoxService {
   updateCupom(idCupom, cupom){    
     delete cupom.ativo;
     return this.http.put(this.baseUrl + `/cupom/${idCupom}`, cupom);
-  }
- 
+  }  
 
   /* TIPOS */
   getTipoTelefone(){
@@ -115,4 +114,9 @@ export class SandBoxService {
   getListaTrocas(){
     return this.http.get(this.baseUrl + `/troca/todos`);
   } 
+  gerarCupomCliente(cupom){
+    console.log(cupom)    
+
+    return this.http.post(this.baseUrl + `/troca/gerarCupom`, cupom);
+  }
 }
