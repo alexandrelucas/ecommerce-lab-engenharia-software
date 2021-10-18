@@ -35,7 +35,7 @@ export default class PedidoProdutoDAO implements IDAO {
     async consultar(entidade: entidadeDominioModel): Promise<entidadeDominioModel[]> {
         let query = `SELECT pp."pedidoId", p.codigo, produtos.titulo , pp."produtoId", p.data, pp.status FROM "pedidosProdutos" as pp
         INNER JOIN pedidos as p ON p.id = pp."pedidoId"
-        INNER JOIN produtos ON pp."produtoId" = produtos.id WHERE pp.status >= 5 AND pp.status <= 9`;
+        INNER JOIN produtos ON pp."produtoId" = produtos.id WHERE pp.status >= 5 AND pp.status <= 9 ORDER BY pp.status DESC`;
 
         let trocaSolicitada = PgDatabase.query(query);
         let result:Array<EntidadeDominio> = (await trocaSolicitada).rows;
