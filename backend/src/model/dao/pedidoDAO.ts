@@ -6,6 +6,7 @@ import Pedido from "../entidade/pedido.model";
 import EnderecoDAO from "./enderecoDAO";
 import EstoqueDAO from "./estoqueDAO";
 import IDAO from "./IDAO";
+import PagamentoCartoesDAO from "./pagamentoCartoesDAO";
 import PagamentoDAO from "./pagamentoDAO";
 
 export default class PedidoDAO implements IDAO {
@@ -138,9 +139,11 @@ export default class PedidoDAO implements IDAO {
 
             let produtos = await PgDatabase.query(produtoQuery);
             let endereco = await new EnderecoDAO().consultar(new Endereco(p.enderecoId));
+            let cartoes = await new PagamentoCartoesDAO().consultar({id: p.pagamentoId} as EntidadeDominio);
 
             p.produtos = produtos.rows;
             p.enderecoEntrega = endereco[0];
+            p.cartoesUsados = cartoes;
             }
         }
 
