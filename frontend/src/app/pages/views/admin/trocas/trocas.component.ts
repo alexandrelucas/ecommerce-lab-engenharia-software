@@ -44,11 +44,11 @@ export class TrocasComponent implements OnInit {
 
   setStatusTroca(idPedido, idProduto, status){
     this.statusTroca.status = status;
-    this.servico.setStatusTrocaProduto(idPedido, idProduto, this.statusTroca).subscribe((ret:any) => {      
+    this.servico.setStatusTrocaProduto(idPedido, idProduto, this.statusTroca).subscribe((ret:any) => {
       if(ret.status == 0){
         this.getSolicitacoesTroca();
       }
-    });
+    });    
   }
 }
 

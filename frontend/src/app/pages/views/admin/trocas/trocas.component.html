@@ -33,17 +33,13 @@
             <ng-container matColumnDef="acoes">
                 <th mat-header-cell *matHeaderCellDef> Ações </th>
                 <td mat-cell *matCellDef="let element">
-                    <button class="btn btn-dark btn-sm mr-2" (click)="setStatusTroca(element.pedidoId, element.produtoId, 7)">Autorizar</button>
-                    <button class="btn btn-danger btn-sm" (click)="setStatusTroca(element.pedidoId, element.produtoId, 9)">Recusar</button>
+                    <button class="btn btn-dark btn-sm mr-2" (click)="setStatusTroca(element.pedidoId, element.produtoId, 7)" [disabled]="element.status != 5">Autorizar</button>
+                    <button class="btn btn-danger btn-sm" (click)="setStatusTroca(element.pedidoId, element.produtoId, 9)" [disabled]="element.status != 5">Recusar</button>
                 </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        
-          <!-- <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="4">Não foram encontrado os dados para a consulta: "{{input.value}}"</td>
-          </tr> -->
         </table>
         </div>
     </div>
