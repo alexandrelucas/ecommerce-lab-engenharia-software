@@ -33,7 +33,7 @@ export default class PedidoProdutoDAO implements IDAO {
         throw new Error("Method not implemented.");
     }
     async consultar(entidade: entidadeDominioModel): Promise<entidadeDominioModel[]> {
-        let query = `SELECT p."clienteId", p."valorTotal", pp."pedidoId", p.codigo, produtos.titulo , pp."produtoId", p.data, pp.status FROM "pedidosProdutos" as pp
+        let query = `SELECT p."clienteId", pp."pedidoId", p.codigo, produtos.titulo , pp."produtoId", pp.valor, pp.quantidade, p.data, pp.status FROM "pedidosProdutos" as pp
         INNER JOIN pedidos as p ON p.id = pp."pedidoId"
         INNER JOIN produtos ON pp."produtoId" = produtos.id WHERE pp.status >= 5 AND pp.status <= 9 ORDER BY pp."pedidoId" DESC`;
 
