@@ -23,6 +23,7 @@ import PagamentoDAO from '../model/dao/pagamentoDAO';
 import VendaDAO from '../model/dao/vendaDAO';
 import PedidoProdutoDAO from '../model/dao/pedidoProdutoDAO';
 import PagamentoCartoesDAO from '../model/dao/pagamentoCartoesDAO';
+import CupomClienteDAO from '../model/dao/cupomClienteDAO';
 
 export default class Fachada implements IFachada {
 
@@ -53,6 +54,7 @@ export default class Fachada implements IFachada {
         this.listaDaos.set('Venda', new VendaDAO());
         this.listaDaos.set('PedidoProduto', new PedidoProdutoDAO());
         this.listaDaos.set('PagamentoCartoes', new PagamentoCartoesDAO());
+        this.listaDaos.set('CupomCliente', new CupomClienteDAO());
     }
     private definirRegras() {
         this.listaRegras = new Map<string, IStrategy[]>();

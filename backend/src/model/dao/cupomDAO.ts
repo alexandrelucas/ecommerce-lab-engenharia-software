@@ -7,11 +7,12 @@ import Cupom from "../entidade/cupom.model";
 export default class CupomDAO implements IDAO {
     tabela: string = 'cupons';
 
-    async salvar(entidade: Cupom): Promise<entidadeDominioModel> {
-        if(entidade.hasId()) return null!;
+    async salvar(entidade: any): Promise<entidadeDominioModel> {
+        // if(entidade.hasId()) return null!;
         try {            
             delete entidade.id;
             delete entidade.clienteId;
+            entidade.validade = entidade.validade.toUTCString();
             let colunas = Object.keys(entidade).map((e) => `"${e}"`).reduce((prev, cur) => `${prev} , ${cur}`);
             let valores = Object.values(entidade).map((v) => `'${v}'`).reduce((prev, cur) => `${prev} , ${cur}`);
             
