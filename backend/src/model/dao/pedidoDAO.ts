@@ -87,7 +87,7 @@ export default class PedidoDAO implements IDAO {
             let queryAtualizaStatusPedido = `UPDATE pedidos SET status = ${entidade.status} WHERE id = ${entidade.id}`;
 
 
-            if(entidade.status == 4) {
+            if(entidade.status == 4 || entidade.status == 3 || entidade.status == 2) {
                 let query = `UPDATE "pedidosProdutos" SET status = ${entidade.status} WHERE "pedidoId" = '${entidade.id}' ;`;
                 await PgDatabase.query(query);
             }
