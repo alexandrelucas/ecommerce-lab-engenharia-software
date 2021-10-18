@@ -1,7 +1,9 @@
 import PgDatabase from "../../db.config";
+import Endereco from "../entidade/endereco.model";
 import EntidadeDominio from "../entidade/entidadeDominio.model";
 import Estoque from "../entidade/estoque.model";
 import Pedido from "../entidade/pedido.model";
+import EnderecoDAO from "./enderecoDAO";
 import EstoqueDAO from "./estoqueDAO";
 import IDAO from "./IDAO";
 import PagamentoDAO from "./pagamentoDAO";
@@ -111,15 +113,15 @@ export default class PedidoDAO implements IDAO {
         
         let query;
         if(pedidoId) {
-            query = `SELECT p.id, p.codigo, p.status, p."valorFrete", p.transportadora, p."pagamentoId", pagamentos.status as "statusPagamento", p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
+            query = `SELECT p.id, p.codigo, p.status, p."valorFrete", p.transportadora, p."enderecoId", p."pagamentoId", pagamentos.status as "statusPagamento", p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
             pedidos as p INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."id" = '${pedidoId}';`;
         } else if (clienteId) {
-            query = `SELECT p.id, p.codigo, p.status, p."valorFrete", p.transportadora, p."pagamentoId", pagamentos.status as "statusPagamento", p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
+            query = `SELECT p.id, p.codigo, p.status, p."valorFrete", p.transportadora, p."enderecoId", p."pagamentoId", pagamentos.status as "statusPagamento", p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
             pedidos as p INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."clienteId" = '${clienteId}' ORDER BY id DESC;`;
         }
         else{
             // query = `SELECT * FROM ${this.tabela}`;
-            query = `SELECT p.id, p.codigo, p.status, p."valorFrete", p.transportadora, p."pagamentoId", pagamentos.status as "statusPagamento" , p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
+            query = `SELECT p.id, p.codigo, p.status, p."valorFrete", p.transportadora, p."enderecoId", p."pagamentoId", pagamentos.status as "statusPagamento" , p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
             pedidos as p INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId";`;
         }
 
@@ -135,8 +137,10 @@ export default class PedidoDAO implements IDAO {
             INNER JOIN pais ON pais.id = p."paisId" WHERE pp."pedidoId" = ${p.id};`;
 
             let produtos = await PgDatabase.query(produtoQuery);
+            let endereco = await new EnderecoDAO().consultar(new Endereco(p.enderecoId));
 
             p.produtos = produtos.rows;
+            p.enderecoEntrega = endereco[0];
             }
         }
 

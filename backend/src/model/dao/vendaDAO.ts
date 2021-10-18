@@ -58,7 +58,10 @@ export default class VendaDAO implements IDAO {
     async consultar(entidade: EntidadeDominio): Promise<EntidadeDominio[]> {
         try {
             
-            let vendas = await PgDatabase.query('SELECT * FROM vendas;');              
+            let vendas = await PgDatabase.query(`SELECT v.id, v."pedidoId", p."codigo", p."valorTotal", c.nome as "clienteNome", c.cpf, pag."dataPagamento" FROM vendas as v
+            INNER JOIN pedidos as p ON p.id = v."pedidoId"
+            INNER JOIN clientes as c ON c.id = p."clienteId"
+            INNER JOIN pagamentos as pag ON pag.id = p."pagamentoId";`);              
             let result:Array<EntidadeDominio> = vendas.rows;
             return result ?? [];    
         } catch(err: any) {
