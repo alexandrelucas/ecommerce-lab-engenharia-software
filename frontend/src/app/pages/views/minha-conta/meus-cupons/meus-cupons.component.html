@@ -22,8 +22,8 @@
       </ng-container>
 
       <ng-container matColumnDef="usado">
-        <th mat-header-cell *matHeaderCellDef> Disponível </th>
-        <td mat-cell *matCellDef="let element"> {{element.usado}} </td>
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let element"> {{ element.usado == false ? 'Cupom disponível' : 'Cupom já utilizado' }} </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

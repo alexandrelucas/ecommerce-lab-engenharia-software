@@ -11,7 +11,18 @@ import { SandBoxService } from 'src/app/shared/services/carrinho.service';
 export class TrocasComponent implements OnInit {
   
   public dataSource: MatTableDataSource<any>;
-  public statusTroca = { status : 5 }
+  public statusTroca = { 
+    status : 5,
+    cupom: {
+      clienteId: 0,
+      cupom: {
+        tipoCupom: "Troca",      
+        codigo: "VINOTROCA2021",
+        valorDesconto: 0
+      }
+    }  
+  }
+  public listaTrocas = []
   displayedColumns: string[] = ['codigo', 'produto','produtoId', 'data', 'status', 'acoes'];
   
   constructor(
@@ -23,9 +34,10 @@ export class TrocasComponent implements OnInit {
   }
 
   getSolicitacoesTroca(){
-    this.servico.getListaTrocas().subscribe((ret:any) => {
+    this.servico.getListaTrocas().subscribe((ret:any) => {      
       console.log(ret)
       if(ret.status == 0){
+        this.listaTrocas = ret.produtos;
         this.dataSource = new MatTableDataSource(ret.produtos);
       }      
     })
@@ -40,13 +52,23 @@ export class TrocasComponent implements OnInit {
   
   getStatusNome(status: number) {
     return StatusPedidoNome[status];
-  }  
+  }
 
   setStatusTroca(idPedido, idProduto, status){
     this.statusTroca.status = status;
     this.servico.setStatusTrocaProduto(idPedido, idProduto, this.statusTroca).subscribe((ret:any) => {
       if(ret.status == 0){
         this.getSolicitacoesTroca();
+
+        if(status == 7){          
+          let troca =  this.listaTrocas.filter(lt => lt.idProduto = idProduto)[0];          
+          this.statusTroca.cupom.cupom.valorDesconto = troca.valor;
+          this.statusTroca.cupom.clienteId = troca.clienteId;
+
+          this.servico.gerarCupomCliente(this.statusTroca.cupom).subscribe((ret:any) => {
+            console.log(ret)
+          });
+        }
       }
     });    
   }
