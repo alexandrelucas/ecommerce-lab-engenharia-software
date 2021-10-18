@@ -34,7 +34,7 @@ export class PedidosComponent implements OnInit {
     this.servico.getListaPedidos().subscribe((result:any) => {
       console.log(result)
       this.dataSource = new MatTableDataSource(result.pedidos);
-    });
+    })
   } 
 
   applyFilter(event: Event) {
