@@ -107,7 +107,7 @@
             <td>{{ itens.quantidade }}</td>
             <td>{{ itens.valor | currency:'BRL' }}</td>
             <td>
-              <button class="btn btn-dark btn-sm mr-2" matTooltip="Solicitar Troca" *ngIf="itensCompra.status == 4"
+              <button class="btn btn-dark btn-sm mr-2" matTooltip="Solicitar Troca" *ngIf="itens.status == 4"
                 (click)="showModalTrocaProduto(modalTrocaProduto, itens, itensCompra)"><i class="fas fa-exchange-alt"></i>
               </button>
             </td>

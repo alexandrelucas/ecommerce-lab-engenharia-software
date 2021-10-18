@@ -27,8 +27,9 @@ export class VendasComponent implements OnInit {
 
   getListaVendas(){
     this.servico.getListaVendas().subscribe((result:any) => {
-      console.log(result)
-      this.listaVendas = result.vendas;      
+      console.log(result.vendas)
+      this.listaVendas = result.vendas;
+      //this.dataSource = new MatTableDataSource(result.vendas);
       this.carregarListaPedidos();
     });
   }
@@ -37,7 +38,8 @@ export class VendasComponent implements OnInit {
     this.servico.getListaPedidos().subscribe((result:any) => {
       console.log(result.pedidos)
       this.listaPedidos = result.pedidos;
-      this.carregarProdutos();
+      //this.carregarProdutos();
+      this.carregaDataSource();
     });
   }
 
@@ -45,7 +47,7 @@ export class VendasComponent implements OnInit {
     this.servico.getListaProdutos().subscribe((result:any) => {
       console.log(result.produtos)
       this.listaProdutos = result.produtos;
-      this.carregaDataSource();
+      
     });
   }
 
@@ -59,12 +61,12 @@ export class VendasComponent implements OnInit {
     let tabela = this.listaVendas;
     tabela.forEach( venda => {
       venda.pedido = []
-      venda.pedido.push(this.listaPedidos.filter(p => p.id == venda.pedidoId)[0])
+      venda.pedido.push(this.listaPedidos.filter(p => p.id == venda.pedidoId)[0]);
       
-      venda.pedido.produto = []
-      venda.pedido.forEach(ped => {
-        venda.pedido.produto.push(this.listaProdutos.filter(pro => pro.id == ped.produtoId)[0])
-      })      
+      // venda.pedido.produto = []
+      // venda.pedido.forEach(ped => {
+      //   venda.pedido.produto.push(this.listaProdutos.filter(pro => pro.id == ped.produtoId)[0])
+      // })
     });
     console.log(tabela)
     this.dataSource = new MatTableDataSource(tabela);
