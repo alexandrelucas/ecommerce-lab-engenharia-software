@@ -1,0 +1,14 @@
+::ng-deep.detalhesPedidoCliente > .modal-dialog{
+    max-width: 800px;
+    .mat-stepper-horizontal {
+        margin-top: 8px;
+    }
+    
+    .mat-form-field {
+        margin-top: 16px;
+    }
+    
+}
+::ng-deep.modal-produtos > .modal-dialog {    
+    max-width: 800px !important;
+  }

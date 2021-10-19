@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatHorizontalStepper } from '@angular/material/stepper';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StatusPedidoNome } from 'src/app/shared/models/pedido.model';
 import { SandBoxService } from 'src/app/shared/services/carrinho.service';
+import { DetalhesPedidoComponent } from 'src/app/pages/views/minha-conta/minhas-compras/detalhes-pedido/detalhes-pedido.component';
 
 @Component({
   selector: 'app-minhas-compras',
@@ -12,15 +12,13 @@ import { SandBoxService } from 'src/app/shared/services/carrinho.service';
   styleUrls: ['./minhas-compras.component.scss']
 })
 export class MinhasComprasComponent implements OnInit, AfterViewInit {
-  
-  @ViewChild('stepper') stepper: MatHorizontalStepper;
+    
   @ViewChild(MatPaginator) paginator: MatPaginator;
   public itensCompra = [];
   public compraSelecionada: Compra;
   public itemSelecionado: Produto;
   public storage: Storage;
-  public listaPedidos = []
-  public statusTroca = { status : 0 }
+  public listaPedidos = []  
   displayedColumns: string[] = ['codigo', 'status', 'data', 'quantidade', 'valorFrete','valorTotal', 'acao'];
   dataSource = new MatTableDataSource<Compra>();
 
@@ -45,36 +43,24 @@ export class MinhasComprasComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-    this.stepper.selectedIndex = 1;
   }
 
-  showDetalheCompra(content, compra){    
-    this.itensCompra = this.listaPedidos.filter(pedido => pedido.codigo == compra.codigo )[0]    
-    console.log(this.itensCompra)
-    this.modalService.open(content, {
-      windowClass: 'modal-produtos'
-    })
-  }
-  
-  showModalTrocaProduto(content, produto, itensCompra){
-    this.itemSelecionado = produto;
-    this.itemSelecionado.idPedido = itensCompra.id;
-    this.itemSelecionado.idCodPedido = itensCompra.codigo;
+  showDetalheCompra(compra){
+    //console.log(compra)
+    //console.log(this.listaPedidos)
+    const modalRef = this.modalService.open(DetalhesPedidoComponent, {
+      windowClass: 'detalhesPedidoCliente'
+    });
+    this.itensCompra = this.listaPedidos.filter(pedido => pedido.codigo == compra.codigo )[0];
+    modalRef.componentInstance.itensCompra = this.itensCompra;
     
-    this.modalService.open(content, {
-      windowClass: 'modal-troca'
-    });
+
+    // this.modalService.open(content, {
+    //   windowClass: 'modal-produtos'
+    // })
   }
 
-  confirmaTrocaProduto(){    
-    this.statusTroca.status = 5;    
-    this.servico.setStatusTrocaProduto(this.itemSelecionado.idPedido, this.itemSelecionado.id, this.statusTroca).subscribe((ret:any) => {
-      console.log(ret)
-      if(ret.status == 0){
-        this.itemSelecionado.status = 5;
-      }
-    });
-  }
+  
 
   showModalCancelaCompra(content, pedido){
     this.compraSelecionada = pedido;

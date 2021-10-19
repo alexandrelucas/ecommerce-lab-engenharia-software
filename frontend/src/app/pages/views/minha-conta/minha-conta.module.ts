@@ -20,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MeusCuponsComponent } from './meus-cupons/meus-cupons.component';
 import { MatStepperModule } from '@angular/material/stepper';
+import { DetalhesPedidoComponent } from './minhas-compras/detalhes-pedido/detalhes-pedido.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { MatStepperModule } from '@angular/material/stepper';
     AlterarSenhaComponent,
     ConfirmacaoDialog,
     MinhasComprasComponent,
-    MeusCuponsComponent
+    MeusCuponsComponent,
+    DetalhesPedidoComponent
   ],
   imports: [
     CommonModule,
