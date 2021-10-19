@@ -4,7 +4,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { AvisoDialog } from 'src/app/shared/dialogs/aviso/aviso-dialog';
 import { ConfirmacaoDialog } from 'src/app/shared/dialogs/confirm/confirmacao-dialog';
 import { Endereco } from 'src/app/shared/models/endereco.model';
-import { listaPaises } from 'src/app/shared/models/paises.model';
 import { SandBoxService } from 'src/app/shared/services/carrinho.service';
 import { ClienteService } from 'src/app/shared/services/cliente.service';
 
@@ -18,7 +17,7 @@ export class MeuEnderecoComponent implements OnInit {
   @Input('endereco') endereco: Endereco;
   @Output() deleteEvent = new EventEmitter();
   
-  public countryList: Array<String>;
+  public listaPaises: [];
   public meuEnderecoForm: FormGroup;
   public storage;
   public tipoEndereco = []
@@ -31,7 +30,6 @@ export class MeuEnderecoComponent implements OnInit {
     private dialog: MatDialog,
     private servico: SandBoxService
   ) {
-    this.countryList = listaPaises;
     this.storage = window.localStorage;
   }
 
@@ -39,6 +37,7 @@ export class MeuEnderecoComponent implements OnInit {
     this.clienteId = JSON.parse(this.storage.getItem('clienteId'))[0];
     this.getTipoEndereco();
     this.getTipoLogradouro();
+    this.getListaPais();
 
     this.meuEnderecoForm = this.formBuilder.group({
       id: [this.endereco.id],
@@ -59,9 +58,15 @@ export class MeuEnderecoComponent implements OnInit {
     
   }
 
+  getListaPais() {
+    this.servico.getListaPaises().subscribe((result: any) => {
+      this.listaPaises = result.paises;
+    });
+  }
+
   getTipoEndereco(){
-    this.servico.getTipoTelefone().subscribe( (result:any) => {      
-      this.tipoEndereco = result.tipoLogradouro;
+    this.servico.getTipoEndereco().subscribe( (result:any) => {      
+      this.tipoEndereco = result.tipoEndereco;
     });
   }
   getTipoLogradouro(){

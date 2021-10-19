@@ -59,17 +59,22 @@ export default class CupomDAO implements IDAO {
         
         let query;
         if(clienteId) {
-            query = `SELECT * FROM cupons INNER JOIN "cuponsCliente" ON "clienteId"='${clienteId}';`;
+            query = `SELECT * FROM cupons INNER JOIN "cuponsCliente" ON "cuponsCliente"."cupomId" = cupons.id WHERE "clienteId"='${clienteId}';`;
+            let cupons = PgDatabase.query(query);
+            let result:Array<EntidadeDominio> = (await cupons).rows;
+            return result ?? [];
         }
         else if(!cupomCodigo){
             query = `SELECT * FROM ${this.tabela};`; 
+            let cupons = PgDatabase.query(query);
+            let result:Array<EntidadeDominio> = (await cupons).rows;
+            return result ?? [];
         }else{
             query = `SELECT * FROM ${this.tabela} WHERE codigo = '${cupomCodigo}' AND validade >= DATE(NOW());`;
+            let cupons = PgDatabase.query(query);
+            let result:Array<EntidadeDominio> = (await cupons).rows;
+            return result ?? [];
         }
-
-        let cupons = PgDatabase.query(query);
-        let result:Array<EntidadeDominio> = (await cupons).rows;
-        return result ?? [];
     }
 
 }

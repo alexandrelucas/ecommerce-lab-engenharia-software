@@ -79,12 +79,14 @@
 }
 .btn-carrinho{
     position: fixed;
-    bottom: 100px;
-    right: 35px;
-    width: 50px;
-    height: 50px !important;
+    bottom: 80px;
+    right: 45px;
+    width: 64px;
+    height: 64px !important;
+    padding-right: 16px;
     z-index: 10;
     border-radius: 50%;
+    font-size: 20pt;
 }
 ::ng-deep .modal-carrinho > .modal-dialog{
     margin-right: 30px !important;

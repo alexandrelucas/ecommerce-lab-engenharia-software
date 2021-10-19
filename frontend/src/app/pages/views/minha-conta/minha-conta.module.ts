@@ -19,6 +19,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MeusCuponsComponent } from './meus-cupons/meus-cupons.component';
+import { MatStepperModule } from '@angular/material/stepper';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { MeusCuponsComponent } from './meus-cupons/meus-cupons.component';
     MatTableModule,
     MatFormFieldModule,
     MatPaginatorModule,
+    MatStepperModule,
     MatInputModule,
     MatIconModule,
     MatTooltipModule,

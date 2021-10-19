@@ -157,7 +157,7 @@
             <label [for]="endereco.logradouro" style="width: 100%;" id="{{  'endereco_' + endereco.id }}">
                 <div class="card mt-1" style="width: 100%;">
                     <div class="card-body">                  
-                        <h3 class="card-title mb-2"><strong>Endereço de {{ endereco.tipoEndereco }}</strong></h3>
+                        <h3 class="card-title mb-2"><strong>Endereço de {{ endereco.descricao }}</strong></h3>
                         <div class="d-flex align-items-center ">
                             <input class="mr-3" [id]="endereco.logradouro" type="radio" value="{{ endereco.id }}" [(ngModel)]="enderecoTroca">
                             <div>

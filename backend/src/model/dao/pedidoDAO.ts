@@ -136,12 +136,13 @@ export default class PedidoDAO implements IDAO {
             FROM produtos as p 
             INNER JOIN "pedidosProdutos" as pp 
             ON p.id = pp."produtoId" INNER JOIN categorias as c ON c.id = p."categoriaId"
-            INNER JOIN pais ON pais.id = p."paisId" WHERE pp."pedidoId" = ${p.id} ORDER BY pp.codigo;`;
+            INNER JOIN pais ON pais.id = p."paisId" WHERE pp."pedidoId" = ${p.id} ORDER BY pp.valor DESC;`;
 
             let produtos = await PgDatabase.query(produtoQuery);
             let endereco = await new EnderecoDAO().consultar(new Endereco(p.enderecoId));
             let cartoes = await new PagamentoCartoesDAO().consultar({id: p.pagamentoId} as EntidadeDominio);
 
+            p.quantidade = produtos.rows.map(p => p.quantidade).reduce((p,c) => p + c);
             p.produtos = produtos.rows;
             p.enderecoEntrega = endereco[0];
             p.cartoesUsados = cartoes;

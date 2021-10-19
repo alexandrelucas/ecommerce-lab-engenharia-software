@@ -56,7 +56,7 @@
       </div>      
         <div class="form-group col-md-8">
           <select class="form-control" id="pais" name="pais" [ngClass]="aplicaCssErro('paisId','meuEnderecoForm')">
-            <option [selected]="country == endereco.paisId ? true : false" *ngFor="let country of countryList" [value]="country">{{country}}</option>
+            <option *ngFor="let pais of listaPaises" [value]="pais.id" [selected]="pais.id == endereco.paisId ? true : false">{{pais.descricao}}</option>
           </select>
       </div>
     </div>
@@ -77,6 +77,6 @@
   </form>
 <div class="d-flex justify-content-end">
     <button type="button" class="btn btn-outline-danger mr-2" (click)="onDelete()">Excluir</button>
-    <button type="button" class="btn btn-primary" (click)="onUpdate()" [disabled]="meuEnderecoForm.invalid" *ngIf="endereco?.cep != undefined">Alterar</button>
-    <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="meuEnderecoForm.invalid" *ngIf="endereco?.cep == undefined">Cadastrar</button>
+    <button type="button" class="btn btn-dark" (click)="onUpdate()" [disabled]="meuEnderecoForm.invalid" *ngIf="endereco?.cep != undefined">Alterar</button>
+    <button type="button" class="btn btn-dark" (click)="onSubmit()" [disabled]="meuEnderecoForm.invalid" *ngIf="endereco?.cep == undefined">Cadastrar</button>
 </div>              

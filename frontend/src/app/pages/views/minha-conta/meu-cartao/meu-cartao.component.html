@@ -32,6 +32,6 @@
 </form>
 <div class="d-flex justify-content-end">
     <button type="button" class="btn btn-outline-danger mr-2" (click)="onDelete()">Excluir</button>
-    <button type="button" class="btn btn-primary" (click)="onUpdate()" [disabled]="meuCartaoForm.invalid" *ngIf="meuCartaoForm.get('bandeira').value != 'novo'">Alterar</button>
-    <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="meuCartaoForm.invalid" *ngIf="meuCartaoForm.get('bandeira').value == 'novo'">Cadastrar</button>
+    <button type="button" class="btn btn-dark" (click)="onUpdate()" [disabled]="meuCartaoForm.invalid" *ngIf="meuCartaoForm.get('bandeira').value != 'novo'">Alterar</button>
+    <button type="button" class="btn btn-dark" (click)="onSubmit()" [disabled]="meuCartaoForm.invalid" *ngIf="meuCartaoForm.get('bandeira').value == 'novo'">Cadastrar</button>
 </div>

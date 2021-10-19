@@ -81,7 +81,7 @@
 
 <!-- MODAL - CARRINHO DE COMPRAS -->
 <div *ngIf="carrinho?.listaCompras.length">
-  <button class="btn btn-secondary btn-carrinho" (click)="showCarrinho(modalData)">+</button>
+  <button class="btn btn-secondary btn-carrinho" (click)="showCarrinho(modalData)"><span class="fas fa-shopping-cart"></span></button>
 </div>
 
 <ng-template #modalData let-modal class="modal-carrinho">

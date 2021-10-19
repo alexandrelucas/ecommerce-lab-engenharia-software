@@ -61,7 +61,7 @@ export class MinhaContaComponent implements OnInit {
 
   getTipoTelefone(){
     this.servico.getTipoTelefone().subscribe( (result:any) => {      
-      this.tiposTelefone = result.tipoLogradouro;
+      this.tiposTelefone = result.tipoTelefone;
     });
   }
 

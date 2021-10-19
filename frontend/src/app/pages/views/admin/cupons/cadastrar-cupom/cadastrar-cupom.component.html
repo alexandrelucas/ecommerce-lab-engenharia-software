@@ -1,16 +1,16 @@
 <div class="modal-header">
-    <p class="modal-title m-0" id="modal-basic-title"><span class="fas fa-tags mr-2"></span>Cadastrar Novo Cupom:</p>    
+    <p class="modal-title m-0" id="modal-basic-title"><span class="fas fa-tags mr-2"></span> {{cupom.id ? 'Alterar'  : 'Cadastrar'}} cupom:</p>    
   </div>
   <div class="modal-body">
     <form class="px-4" [formGroup]="cupomForm">
         <div class="row mb-4">
-          <input class="form-control" formControlName="codigo" placeholder="Código do Cupom"/> 
+          <input class="form-control" formControlName="codigo" placeholder="Código do cupom"/> 
         </div>
         <div class="row mb-4">
           <input class="form-control" formControlName="valorDesconto" placeholder="Valor"/> 
         </div>
         <div class="row mb-4">
-          <input class="form-control" formControlName="tipoCupom" placeholder="Tipo de Cupom"/> 
+          <input class="form-control" formControlName="tipoCupom" placeholder="Tipo de cupom"/> 
         </div>
         <div class="row mb-4">
           <input class="form-control" formControlName="validade" placeholder="Válido até.."/> 
@@ -22,5 +22,5 @@
           </div>
         </div>
     </form>
-    <button class="ml-4 btn btn-dark" (click)="closeModal()">Cadastrar</button>
+    <button class="ml-4 btn btn-dark" (click)="closeModal()">{{ cupom.id ? 'Alterar' : 'Cadastrar' }}</button>
   </div>

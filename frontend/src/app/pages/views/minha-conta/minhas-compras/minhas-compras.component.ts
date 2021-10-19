@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatHorizontalStepper } from '@angular/material/stepper';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StatusPedidoNome } from 'src/app/shared/models/pedido.model';
@@ -12,6 +13,7 @@ import { SandBoxService } from 'src/app/shared/services/carrinho.service';
 })
 export class MinhasComprasComponent implements OnInit, AfterViewInit {
   
+  @ViewChild('stepper') stepper: MatHorizontalStepper;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   public itensCompra = [];
   public compraSelecionada: Compra;
@@ -33,8 +35,6 @@ export class MinhasComprasComponent implements OnInit, AfterViewInit {
     let id = parseInt(JSON.parse(this.storage.getItem('clienteId'))[0]);
     this.servico.getPedidosMinhasCompras(id).subscribe((listaPedidos: any) => {
       this.listaPedidos = listaPedidos.pedidos;
-      console.log(this.listaPedidos)
-
       this.dataSource = new MatTableDataSource(listaPedidos.pedidos);
     });
   }
@@ -45,12 +45,12 @@ export class MinhasComprasComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.stepper.selectedIndex = 1;
   }
 
   showDetalheCompra(content, compra){    
     this.itensCompra = this.listaPedidos.filter(pedido => pedido.codigo == compra.codigo )[0]    
     console.log(this.itensCompra)
-
     this.modalService.open(content, {
       windowClass: 'modal-produtos'
     })
@@ -98,7 +98,7 @@ export class MinhasComprasComponent implements OnInit, AfterViewInit {
 export interface Compra {
   id: number;
   numeroPedido: string;
-  status: string;
+  status: number;
   valorTotal: number;  
   data: string;
   metodoPagamento: string;

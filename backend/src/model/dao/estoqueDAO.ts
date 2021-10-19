@@ -66,7 +66,7 @@ export default class EstoqueDAO implements IDAO {
             FROM estoque
             INNER JOIN produtos ON produtos.id = estoque."produtoId"
             INNER JOIN pais ON produtos."paisId" = pais.id
-            INNER JOIN categorias ON produtos."categoriaId" = categorias.id WHERE estoque."quantidade" > 0;`;
+            INNER JOIN categorias ON produtos."categoriaId" = categorias.id WHERE estoque."quantidade" > 0 ORDER BY "dataEntrada" DESC;`;
         }
 
         let cupons = PgDatabase.query(query);

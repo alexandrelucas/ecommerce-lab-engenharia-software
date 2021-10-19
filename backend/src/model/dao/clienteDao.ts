@@ -67,11 +67,9 @@ export default class ClienteDAO implements IDAO {
         } else {
             query = entidade.hasId() ? `SELECT ${colunas} FROM ${this.tabela} WHERE id=${entidade.id}` : `SELECT ${colunas} FROM ${this.tabela} order by id`; 
         }
-        console.log(query)
 
         try {
             let listaClientes = await PgDatabase.query(query);              
-            console.log(listaClientes);
             let result:Array<EntidadeDominio> = listaClientes.rows;
             return result ?? [];    
         } catch(err: any) {

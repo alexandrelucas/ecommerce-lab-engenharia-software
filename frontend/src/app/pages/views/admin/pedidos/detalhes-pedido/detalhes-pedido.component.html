@@ -43,7 +43,7 @@
       </div>
     </div>    
 
-    <div>
+    <div *ngIf="statusPedido.status >= 1">
       <h3>Status do Pedido:</h3>
       <mat-horizontal-stepper labelPosition="bottom" #stepper>
         <mat-step label="Pagamento realizado">
