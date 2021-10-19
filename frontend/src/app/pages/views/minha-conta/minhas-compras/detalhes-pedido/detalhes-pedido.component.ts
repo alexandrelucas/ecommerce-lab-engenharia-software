@@ -27,7 +27,7 @@ export class DetalhesPedidoComponent implements OnInit {
   
   ngAfterViewInit() {    
     setTimeout(() => {
-      for(let i = 1; i < this.itensCompra.status; i++){
+      for(let i = 0; i <= this.itensCompra.status; i++){
         this.stepper.selectedIndex = i;
       }
     }, 0);

@@ -49,7 +49,10 @@ export class PedidosComponent implements OnInit {
         .map(key => StatusPedido[key]);
   }
 
-  getStatusNome(status: number) {
+  getStatus(status: number, statusCancelamento: number) {
+    if((statusCancelamento != 0 && statusCancelamento != 13)) {
+      return StatusPedidoNome[statusCancelamento];
+    } else 
     return StatusPedidoNome[status];
   }
 

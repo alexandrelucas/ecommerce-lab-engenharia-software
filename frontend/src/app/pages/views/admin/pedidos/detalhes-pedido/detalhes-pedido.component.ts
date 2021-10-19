@@ -16,7 +16,7 @@ import { MatHorizontalStepper } from '@angular/material/stepper';
 })
 export class DetalhesPedidoComponent implements OnInit {
 
-  @ViewChild('stepper') private stepper: MatHorizontalStepper;
+  @ViewChild('stepper') stepper: MatHorizontalStepper;
   @Input() pedido: any;
   produtosLista: Array<Produto>;
   public listaProdutos = []
@@ -38,11 +38,12 @@ export class DetalhesPedidoComponent implements OnInit {
   ngAfterViewInit() {
     this.statusPedido.status = this.pedido.status;
     setTimeout(() => {
-      for(let i = 1; i < this.pedido.status; i++){
+      for(let i = 0; i <= this.pedido.status; i++){
         this.stepper.selectedIndex = i;
       }
     }, 0);
   }
+
 
   getListaPaises(){
     this.servico.getListaPaises().subscribe((result:any) => {
@@ -75,8 +76,20 @@ export class DetalhesPedidoComponent implements OnInit {
     })
   }
 
+  setNextStatus() {
+    console.log(this.stepper.selectedIndex);
+    this.stepper.selectedIndex;
+    this.stepper.next();
+  }
+
   closeModal(){
     this.pedido.status = this.statusPedido.status;
     this.activeModal.close(this.pedido);
+  }
+
+  autorizaCancelamento(status: number) {
+    this.servico.setStatusPedido(this.pedido.id, {'status':status}).subscribe((ret:any) => {
+      this.pedido.statusCancelamento = status;
+    })
   }
 }

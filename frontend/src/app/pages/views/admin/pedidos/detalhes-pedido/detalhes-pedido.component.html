@@ -43,9 +43,20 @@
       </div>
     </div>    
 
-    <div *ngIf="statusPedido.status >= 1">
+    <div *ngIf="statusPedido.status > 0">
       <h3>Status do Pedido:</h3>
       <mat-horizontal-stepper labelPosition="bottom" #stepper>
+        <mat-step label="Em Processamento" state="edit"></mat-step>
+        <mat-step label="Pagamento realizado"></mat-step>
+        <mat-step label="Em transporte"></mat-step>        
+        <mat-step label="Em rota entrega"></mat-step>        
+        <mat-step label="Entregue"></mat-step>
+
+        <ng-template matStepperIcon="edit">
+          <mat-icon>done</mat-icon>
+        </ng-template>
+      </mat-horizontal-stepper>
+      <!-- <mat-horizontal-stepper labelPosition="bottom" #stepper>
         <mat-step label="Pagamento realizado">
           <div>
             <button class="btn btn-dark btn-sm" matStepperNext (click)="setStatusPedido(statusPedido.status = 2)">Aprovar</button>
@@ -68,9 +79,13 @@
         <ng-template matStepperIcon="edit">
           <mat-icon>done</mat-icon>
         </ng-template>
-      </mat-horizontal-stepper>
+      </mat-horizontal-stepper> -->
     </div>
-
+    <div class="d-flex justify-content-end" >
+      <button class="btn btn-dark btn-sm" *ngIf="pedido.status != 4 && pedido.statusCancelamento != 10 && pedido.statusCancelamento != 12" (click)="setNextStatus()">Atualizar status</button>
+      <button class="btn btn-dark btn-sm mr-2" *ngIf="pedido.statusCancelamento == 12" (click)="autorizaCancelamento(10)">Autorizar cancelamento</button>
+      <button class="btn btn-dark btn-sm" *ngIf="pedido.statusCancelamento == 12" (click)="autorizaCancelamento(13)">Revogar cancelamento</button>
+    </div>
   </div>
   <div class="modal-footer">    
     <div class="row">

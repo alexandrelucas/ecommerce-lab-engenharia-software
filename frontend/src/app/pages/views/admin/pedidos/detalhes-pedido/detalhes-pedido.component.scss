@@ -8,3 +8,7 @@
         margin-top: 16px;
     }
 }
+
+::ng-deep .mat-horizontal-stepper-header{
+    pointer-events: none !important;
+}

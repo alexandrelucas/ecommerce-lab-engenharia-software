@@ -72,11 +72,20 @@ export class MinhasComprasComponent implements OnInit, AfterViewInit {
 
   confirmaCancelarCompra(){
     console.log(this.compraSelecionada);
-    //ELEMENT_DATA_COMPRA.filter(compra => compra.id == this.compraSelecionada.id)[0].status = "Cancelamento Solicitado"
-    this.modalService.dismissAll();    
+    this.servico.setStatusPedido(this.compraSelecionada.id, {status: 12}).subscribe( (r:any) => {
+      this.modalService.dismissAll();
+      this.carregarPedidos();
+    });
   }
 
-  getStatusNome(status: number) {
+  // getStatusNome(status: number) {
+  //   return StatusPedidoNome[status];
+  // }
+
+  getStatus(status: number, statusCancelamento: number) {
+    if((statusCancelamento != 0 && statusCancelamento != 13)) {
+      return StatusPedidoNome[statusCancelamento];
+    } else 
     return StatusPedidoNome[status];
   }
 }

@@ -27,12 +27,3 @@ th.mat-header-cell{
 .mat-cell {
   text-align: center;
 }
-
-::ng-deep .mat-horizontal-stepper-header{
-  pointer-events: none !important;
-}
-
-.title {
-  font-weight: bold;
-  font-size: 12pt;
-}

@@ -12,3 +12,12 @@
 ::ng-deep.modal-produtos > .modal-dialog {    
     max-width: 800px !important;
   }
+
+::ng-deep .mat-horizontal-stepper-header{
+    pointer-events: none !important;
+}
+  
+.title {
+  font-weight: bold;
+  font-size: 12pt;
+}

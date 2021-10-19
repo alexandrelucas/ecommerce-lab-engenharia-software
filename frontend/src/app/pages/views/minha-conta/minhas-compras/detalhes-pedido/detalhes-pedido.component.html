@@ -3,7 +3,7 @@
     <div class="modal-header">
         <div class="d-flex align-items-center">
             <mat-icon class="mr-2">assignment</mat-icon>
-            <p class="modal-title p-0 m-0"><strong>{{ 'Pedido: #' + itensCompra.codigo }}</strong></p>
+            <p class="modal-title p-0 m-0"><strong>{{ 'Pedido: #' + itensCompra.codigo }} <span style="color: red;" *ngIf="itensCompra.statusCancelamento == 10"><strong>Cancelado</strong></span></strong></p>
         </div>
     </div>
     <div class="modal-body">
@@ -41,12 +41,13 @@
                   <td>
                     <p style="text-align: center;">{{ item.quantidade }}</p>
                   </td>
-                  <td>{{ getStatusNome(item.status) }}</td>
+                  <td>{{ itensCompra.statusCancelamento == 10 ? 'Cancelado' :  getStatusNome(item.status) }}</td>
                   <td>
                     <button class="btn btn-success btn-sm mr-2" *ngIf="item.status == 4"
                   (click)="showModalTrocaProduto(modalTrocaProduto, item, itensCompra)"><i class="fas fa-exchange-alt"></i>
                 </button>
-                    <p *ngIf="item.status == 7" style="color: red; text-decoration: none;">Troca Efetuada</p>
+                    <p *ngIf="item.status == 7" style="color: red; text-decoration: none;">Cupom de troca gerado</p>
+                    <p *ngIf="item.status == 7" style="color: red; text-decoration: none;"></p>
                   </td>          
                 </tr>
               </tbody>
@@ -71,7 +72,7 @@
       <div>
         <h3 class="title">Status do Pedido:</h3>
         <mat-horizontal-stepper labelPosition="bottom" #stepper>
-          <mat-step label="Em Processamento" state="phone"></mat-step>
+          <mat-step label="Em Processamento" state="edit"></mat-step>
           <mat-step label="Pagamento realizado"></mat-step>
           <mat-step label="Em transporte"></mat-step>        
           <mat-step label="Em rota entrega"></mat-step>        
