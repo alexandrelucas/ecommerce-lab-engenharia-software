@@ -57,6 +57,11 @@ export class DetalhesPedidoComponent implements OnInit {
     return StatusPedidoNome[status];
   }
 
+  onLiberarBotaoTroca(status, statusCancelamento) {
+    if(status == 4 && statusCancelamento != 10) return true;
+    return false;
+  }
+
   closeModal(){    
     this.activeModal.close(true);
   }

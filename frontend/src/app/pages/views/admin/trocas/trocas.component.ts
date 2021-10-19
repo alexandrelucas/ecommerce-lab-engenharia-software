@@ -64,6 +64,7 @@ export class TrocasComponent implements OnInit {
           let troca =  this.listaTrocas.filter(lt => lt.idProduto = idProduto)[0];          
           this.statusTroca.cupom.cupom.valorDesconto = troca.valor;
           this.statusTroca.cupom.clienteId = troca.clienteId;
+          this.statusTroca.cupom.cupom.codigo = `VINO${troca.codigo}2021`;
 
           this.servico.gerarCupomCliente(this.statusTroca.cupom).subscribe((ret:any) => {
             console.log(ret)

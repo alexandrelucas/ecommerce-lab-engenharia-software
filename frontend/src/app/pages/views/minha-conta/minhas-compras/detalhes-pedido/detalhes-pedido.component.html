@@ -43,7 +43,8 @@
                   </td>
                   <td>{{ itensCompra.statusCancelamento == 10 ? 'Cancelado' :  getStatusNome(item.status) }}</td>
                   <td>
-                    <button class="btn btn-success btn-sm mr-2" *ngIf="item.status == 4"
+                    {{item.statusCancelamento}}
+                    <button class="btn btn-success btn-sm mr-2" *ngIf="itensCompra.status == 4 && itensCompra.statusCancelamento != 10 && !(item.status >= 5)"
                   (click)="showModalTrocaProduto(modalTrocaProduto, item, itensCompra)"><i class="fas fa-exchange-alt"></i>
                 </button>
                     <p *ngIf="item.status == 7" style="color: red; text-decoration: none;">Cupom de troca gerado</p>

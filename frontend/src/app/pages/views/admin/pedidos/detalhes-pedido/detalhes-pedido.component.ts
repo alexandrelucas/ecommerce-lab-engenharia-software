@@ -5,6 +5,7 @@ import { SandBoxService } from 'src/app/shared/services/carrinho.service';
 import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { MatHorizontalStepper } from '@angular/material/stepper';
+import Cupom from 'src/app/shared/models/cupom.model';
 
 @Component({
   selector: 'app-detalhes-pedido',
@@ -77,9 +78,9 @@ export class DetalhesPedidoComponent implements OnInit {
   }
 
   setNextStatus() {
-    console.log(this.stepper.selectedIndex);
-    this.stepper.selectedIndex;
-    this.stepper.next();
+    this.servico.setStatusPedido(this.pedido.id, {'status': this.stepper.selectedIndex + 1}).subscribe((ret:any) => {
+      this.stepper.next();
+    })
   }
 
   closeModal(){
@@ -90,6 +91,21 @@ export class DetalhesPedidoComponent implements OnInit {
   autorizaCancelamento(status: number) {
     this.servico.setStatusPedido(this.pedido.id, {'status':status}).subscribe((ret:any) => {
       this.pedido.statusCancelamento = status;
+
+      if(this.pedido.status >= 1){        
+        
+        let cupom: any;
+
+        cupom.valorDesconto = this.pedido.valorSubTotal;
+        cupom.codigo = `VINO${this.pedido.codigo}2021`;
+        cupom.clienteId = this.pedido.enderecoEntrega.clienteId;
+
+        console.log(cupom);
+
+        this.servico.gerarCupomCliente(cupom).subscribe((ret:any) => {
+          console.log('Cupom gerado ou nao');
+        });
+      }
     })
   }
 }
