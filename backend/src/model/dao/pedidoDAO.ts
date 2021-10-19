@@ -80,11 +80,13 @@ export default class PedidoDAO implements IDAO {
         if(!entidade.id) return {error: 'Sem o id do pedido'} as EntidadeDominio;
         try {
 
+            let campo = ((entidade.status ?? 0)) >= 10 && ((entidade.status ?? 0) <= 13) ? '"statusCancelamento"' : 'status';
+
             if(entidade.status == 0 || entidade.status == 1) {
                 return {error: `status ${entidade.status} somente para autorização de venda.`} as EntidadeDominio;
-            }
+            } 
 
-            let queryAtualizaStatusPedido = `UPDATE pedidos SET status = ${entidade.status} WHERE id = ${entidade.id}`;
+            let queryAtualizaStatusPedido = `UPDATE pedidos SET ${campo} = ${entidade.status} WHERE id = ${entidade.id}`;
 
 
             if(entidade.status == 4 || entidade.status == 3 || entidade.status == 2) {
@@ -115,15 +117,15 @@ export default class PedidoDAO implements IDAO {
         
         let query;
         if(pedidoId) {
-            query = `SELECT p.id, p.codigo, p.status, p."valorFrete", p.transportadora, p."enderecoId", p."pagamentoId", pagamentos.status as "statusPagamento", p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
+            query = `SELECT p.id, p.codigo, p.status, p."statusCancelamento" ,p."valorFrete", p.transportadora, p."enderecoId", p."pagamentoId", pagamentos.status as "statusPagamento", p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
             pedidos as p INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."id" = '${pedidoId}';`;
         } else if (clienteId) {
-            query = `SELECT p.id, p.codigo, p.status, p."valorFrete", p.transportadora, p."enderecoId", p."pagamentoId", pagamentos.status as "statusPagamento", p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
+            query = `SELECT p.id, p.codigo, p.status, p."statusCancelamento", p."valorFrete", p.transportadora, p."enderecoId", p."pagamentoId", pagamentos.status as "statusPagamento", p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
             pedidos as p INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."clienteId" = '${clienteId}' ORDER BY id DESC;`;
         }
         else{
             // query = `SELECT * FROM ${this.tabela}`;
-            query = `SELECT p.id, p.codigo, p.status, p."valorFrete", p.transportadora, p."enderecoId", p."pagamentoId", pagamentos.status as "statusPagamento" , p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
+            query = `SELECT p.id, p.codigo, p.status, p."statusCancelamento", p."valorFrete", p.transportadora, p."enderecoId", p."pagamentoId", pagamentos.status as "statusPagamento" , p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
             pedidos as p INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId";`;
         }
 
