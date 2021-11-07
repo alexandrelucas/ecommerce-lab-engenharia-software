@@ -21,9 +21,10 @@ import { VendasComponent } from './vendas/vendas.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatIconModule } from '@angular/material/icon';
 import { TrocasComponent } from './trocas/trocas.component';
+import { ProdutosComponent } from './produtos/produtos.component';
 
 @NgModule({
-  declarations: [AdminComponent, ListaClienteComponent, DashboardComponent, CuponsComponent, ConfiguracoesComponent, PedidosComponent, DetalhesPedidoComponent, CadastrarCupomComponent, EstoqueComponent, VendasComponent, TrocasComponent],
+  declarations: [AdminComponent, ListaClienteComponent, DashboardComponent, CuponsComponent, ConfiguracoesComponent, PedidosComponent, DetalhesPedidoComponent, CadastrarCupomComponent, EstoqueComponent, VendasComponent, TrocasComponent, ProdutosComponent],
   imports: [
     CommonModule,
     AdminRoutingModule,

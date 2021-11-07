@@ -1,0 +1,66 @@
+<div class="card-header">
+    <div class="d-flex justify-content-between">
+        <h2>Produtos</h2>
+        <button class="btn btn-dark">Adicionar</button>
+    </div>
+</div>
+<div class="card-body">
+    <div class="container">
+        <div class="row">
+          
+          <table mat-table [dataSource]="dataSource">
+            
+            <ng-container matColumnDef="codigo">
+              <th mat-header-cell *matHeaderCellDef> No. </th>
+              <td mat-cell *matCellDef="let element"> {{element.codigo}} </td>
+            </ng-container>
+  
+            <ng-container matColumnDef="titulo">
+              <th mat-header-cell *matHeaderCellDef> Título </th>
+              <td mat-cell *matCellDef="let element"> {{element.titulo}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="quantidadeML">
+                <th mat-header-cell *matHeaderCellDef> Volume </th>
+                <td mat-cell *matCellDef="let element"> {{element.quantidadeML}} </td>
+              </ng-container>
+  
+            <ng-container matColumnDef="tipo">
+              <th mat-header-cell *matHeaderCellDef> Tipo </th>              
+              <td mat-cell *matCellDef="let element">{{ element.tipo }}</td>
+            </ng-container>
+              
+            <ng-container matColumnDef="categoriaId">
+              <th mat-header-cell *matHeaderCellDef> Categoria </th>
+              <td mat-cell *matCellDef="let element"> {{ getCategoriaNome(element.categoriaId) }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="tempoGuarda">
+              <th mat-header-cell *matHeaderCellDef> Tempo de Guarda </th>
+              <td mat-cell *matCellDef="let element"> {{element.tempoGuarda}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="paisId">
+                <th mat-header-cell *matHeaderCellDef> País </th>
+                <td mat-cell *matCellDef="let element"> {{ getPaisNome(element.paisId) }} </td>
+              </ng-container>
+              
+            <ng-container matColumnDef="acoes">
+                <th mat-header-cell *matHeaderCellDef> Ações </th>
+                <td mat-cell *matCellDef="let element">
+                  <button class="btn btn-dark btn-sm mr-2">
+                    <i class="fas fa-pen"></i>
+                  </button>
+                  <button class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </ng-container>
+  
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      
+          </table>
+          </div>
+      </div>
+</div>

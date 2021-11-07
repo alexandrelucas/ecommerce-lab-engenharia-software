@@ -22,7 +22,8 @@ export class PagamentoComponent implements OnInit {
     "pagamento": [],
     "enderecoId": undefined,
     "clienteId": undefined,
-    "produtos": []
+    "produtos": [],
+    "cupons": []
   }
 
   constructor(
@@ -50,11 +51,13 @@ export class PagamentoComponent implements OnInit {
 
   preparaPedido(){
     this.pedido.valorFrete = this.carrinhoCompra.valorFrete;
-    this.pedido.transportadora = this.carrinhoCompra.listaFrete[0].name;
+    this.pedido.transportadora = this.carrinhoCompra.frete.transportadora;
+    this.pedido.valorFrete = this.carrinhoCompra.frete.valorFrete;
     this.pedido.valorSubTotal = this.carrinhoCompra.valorCompras;
     this.pedido.valorTotal = this.carrinhoCompra.valorTotal;    
     this.pedido.enderecoId = this.carrinhoCompra.enderecoEntrega.id;
-    this.pedido.clienteId = this.carrinhoCompra.clienteId;    
+    this.pedido.clienteId = this.carrinhoCompra.clienteId;
+    this.pedido.cupons = this.carrinhoCompra.cupons;    
     this.carrinhoCompra.listaCompras.forEach(prd => {
       this.pedido.produtos.push({id: prd.id, quantidade: prd.qtd, valor: prd.precoPor})
     });
