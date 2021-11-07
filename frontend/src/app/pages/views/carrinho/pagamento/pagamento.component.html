@@ -1,92 +1,128 @@
 <div class="row w-100">
-    <div class="col-md-12">
-      <h1 class="mt-4 mb-4">Resumo do pedido</h1>
+  <div class="col-md-12">
+    <h1 class="mt-4 mb-4">Resumo do pedido</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Produto</th>
+          <th></th>
+          <th>Quantidade</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of carrinhoCompra.listaCompras">
+          <td class="car-imagem">
+            <img src="{{ item.imagem }}" width="50px" height="50px" />
+          </td>
+          <td>
+            <p>
+              <strong>{{ "Vinho " + item.titulo }}</strong>
+            </p>
+            <p>{{ item.pais }}</p>
+            <p>{{ item.classificacao + " - " + item.quantidadeML + "ml" }}</p>
+          </td>
+          <td>
+            <p>{{ item.qtd }}</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <div class="row">
+      <div class="col-md-12 d-flex align-items-center">
+      <mat-icon class="mr-2">location_on</mat-icon>
+      <h2 class="p-0 m-0">Informações de Entrega</h2>
+      </div>
+    </div>    
+    <div class="row d-flex">
+        <div class="card" style="width: 60%;">
+            <div class="card-body">
+                <div>
+                  <p><b>Endereço de Entrega:</b></p>
+                  <p>{{ 
+                    carrinhoCompra.enderecoEntrega?.logradouro + ", " + 
+                    carrinhoCompra.enderecoEntrega?.numero + " - " + 
+                    carrinhoCompra.enderecoEntrega?.bairro + ", " + 
+                    carrinhoCompra.enderecoEntrega?.cidade + " - " + 
+                    carrinhoCompra.enderecoEntrega?.cep }}</p>
+                </div>
+                <div style="margin-top: 30px;">
+                  <p><b>Transportadora:</b></p>
+                  <p>{{ carrinhoCompra.frete?.transportadora + " - " + 'Entrega em até 6 dias úteis.' }}</p>
+                </div>
+            </div>
+        </div>
     </div>
   </div>
-<div class="row">
-    <div class="col-md-12">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Produto</th>
-            <th></th>
-            <th>Quantidade</th>
-          </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let item of carrinho.listaCompras">
-                <td class="car-imagem"><img src="{{ item.imagem }}" width="50px" height="50px"></td>
-                <td>
-                    <p><strong>{{ 'Vinho ' + item.titulo }}</strong></p>
-                    <p>{{ item.pais }}</p>
-                    <p>{{ item.classificacao + ' - ' + item.quantidadeML + 'ml' }}</p>
-                  </td>
-                <td><p>{{ item.qtd }}</p></td>
-            </tr>
-        </tbody>
-      </table>
+  <div class="col-md-6">    
+    <div>
+      <p><b>Lançamentos</b></p>
     </div>
+    <div class="row">
+      <div class="d-flex justify-content-between">
+        <p class="resumo-pgto">Subtotal:</p>
+        <p>{{ carrinhoCompra.valorCompras | currency: "BRL" }}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="d-flex justify-content-between">
+        <p class="resumo-pgto">Subtotal:</p>
+        <p>{{ carrinhoCompra.frete?.valorFrete | currency: "BRL" }}</p>
+      </div>
+    </div>   
+
+    <div>
+      <div>
+        <p><b>Forma de Pagamento</b></p>
+      </div>
+      <div class="row">
+        <div class="d-flex justify-content-between">
+          <p class="resumo-pgto">Cartão Principal:</p>
+          <p>{{ carrinhoCompra.pagamento?.cartaoPrincipal.valorAPagar | currency: "BRL" }}</p>
+        </div>
+      </div>
+      <div class="row" *ngIf="carrinhoCompra.pagamento?.doisCartoes">
+        <div class="d-flex justify-content-between">
+          <p class="resumo-pgto">Cartão Adicional:</p>
+          <p>{{ carrinhoCompra.pagamento?.segundoCartao.valorAPagar | currency: "BRL" }}</p>
+        </div>
+      </div>
+    </div>
+    
+    <div>
+      <p><b>Descontos</b></p>
+    </div>    
+    <div class="row">
+      <div class="d-flex justify-content-between" *ngFor="let cp of carrinhoCompra.cupons">
+        <p class="resumo-pgto">{{ 'Cupom: ' + cp.codigoCupom }}</p>
+        <p>{{'- ' }}{{ cp.valorCupomDesconto | currency: 'BRL' }}</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="d-flex justify-content-between">
+        <strong><p>Total do Pedido:</p></strong>
+        <strong
+          ><p>{{ carrinhoCompra.valorTotal | currency: "BRL" }}</p></strong
+        >
+      </div>
+    </div>
+    <div class="row mt-2 mb-5"></div>
+  </div>
+  <div class="row">
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-dark btnFinalizar" (click)="onSubmitPedido()">
+        Finalizar Pedido
+      </button>
+    </div>
+  </div>
 </div>
-<div class="row">
-    <div class="col-md-6"></div>
-     <div class="col-md-6">
-           <div class="row">
-               <div class="d-flex justify-content-between">
-                 <p>Método de Pagamento: </p>
-                 <p>Crédito (1x)</p>
-               </div>
-             </div>
-             <div class="row">
-               <div class="d-flex justify-content-between">
-                 <p>Endereço de Entrega: </p>
-                 {{ carrinho.enderecoEntrega?.logradouro + ', ' + carrinho.enderecoEntrega?.numero}}
-               </div>
-           </div>
-           <div *ngIf="carrinho.pagamento?.segundoCartao.valorAPagar">
-             <div class="row">
-                 <div class="d-flex justify-content-between">
-                     <p>Cartão Principal: </p>
-                     <p>{{ carrinho.pagamento?.cartaoPrincipal.valorAPagar | currency: 'BRL' }}</p>
-                 </div>
-             </div>
-             <div class="row">
-                 <div class="d-flex justify-content-between">
-                     <p>Cartão Adicional: </p>
-                     <p>{{ carrinho.pagamento?.segundoCartao.valorAPagar | currency: 'BRL' }}</p>
-                 </div>
-             </div>
-           </div>
-           <div class="row">
-               <div class="d-flex justify-content-between">
-                 <p>Subtotal: </p>
-                 <p>{{ carrinho.valorCompras | currency: 'BRL' }}</p>
-               </div>
-           </div>
-           <div class="row">
-               <div class="d-flex justify-content-between">
-                 <p>Entrega por: </p>
-                 <p>Sedex - 12 dias úteis</p>
-               </div>
-           </div>
-           <div class="row">
-               <div class="d-flex justify-content-between">
-                 <p>Desconto: </p>
-                 {{ carrinho.cupomDesconto | currency: 'BRL'}}
-               </div> 
-           </div>
-           <div class="row">
-               <div class="d-flex justify-content-between">
-                 <strong><p>Total do Pedido: </p></strong>
-                 <strong><p>{{carrinho.valorTotal | currency: 'BRL'}} </p></strong>
-               </div> 
-           </div>
-           <div class="row mt-2 mb-5"></div>
-     </div>
-     <div class="row">
-         <div class="d-flex justify-content-end">
-             <button class="btn btn-dark btnFinalizar" (click)="onSubmitPedido()">Finalizar Pedido</button>
-         </div>
-     </div>
-</div>
- 
-      

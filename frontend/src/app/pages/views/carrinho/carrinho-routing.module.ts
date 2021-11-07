@@ -6,9 +6,11 @@ import { CarrinhoDashComponent } from './dash/carrinho-dash.component';
 import { EnderecoCartaoComponent } from './endereco-cartao/endereco-cartao.component';
 
 const routes: Routes = [
-  { path: '', component: CarrinhoDashComponent },
-  { path: 'identificacao', component: IdentificacaoComponent },
-  { path: 'pagamento', component: EnderecoCartaoComponent },  
+  { path: '', component: CarrinhoDashComponent,
+    children:[
+      { path: 'identificacao', component: IdentificacaoComponent },
+      { path: 'pagamento', component: EnderecoCartaoComponent }
+  ]}
 ];
 
 @NgModule({

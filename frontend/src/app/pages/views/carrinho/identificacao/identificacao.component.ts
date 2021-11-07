@@ -1,10 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { Cartao } from 'src/app/shared/models/cartao.model';
 import { Endereco } from 'src/app/shared/models/endereco.model';
 import { ClienteService } from 'src/app/shared/services/cliente.service';
 import { CarrinhoService } from '../carrinho.service';
+import { CarrinhoCupom } from 'src/app/shared/models/carrinhoCupom.model';
+import { CarrinhoFrete } from 'src/app/shared/models/carrinhoFrete.model';
+import { CarrinhoPagamento } from 'src/app/shared/models/carrinhoPagamento.model';
 
 @Component({
   selector: 'app-identificacao',
@@ -18,26 +21,7 @@ export class IdentificacaoComponent implements OnInit {
   public loginForm: FormGroup;
   public storage;
   public showLoad: boolean;
-  public carrinho = {
-    valorTotal: 0,
-    valorCompras: 0,
-    valorFrete: 0,
-    cupomDesconto: 0,
-    listaFrete: [],
-    infoCupom: '',
-    cupom: '',
-    listaCompras: [],
-    enderecos: [],
-    enderecoEntrega: new Endereco(),
-    cartoes: [],
-    cartaoPagamento: new Cartao(),
-    pagamento: {
-      metodo: '',
-      qtdParcelas: null,
-      valorParcela: 0
-    },
-    clienteId: null
-  }
+  public carrinhoCompra;
 
   constructor(
     private cliente: ClienteService,
@@ -61,7 +45,7 @@ export class IdentificacaoComponent implements OnInit {
 
   loadDadosCarrinho(){
     this.carrinhoService.getLista().subscribe( ret => {
-      this.carrinho = ret;
+      this.carrinhoCompra = ret;
     });
   }
 
@@ -78,9 +62,9 @@ export class IdentificacaoComponent implements OnInit {
       this.cliente.login(this.loginForm.get('email').value, this.loginForm.get('senha').value).subscribe((res: any) => {        
         if(res.result) {
           this.storage.setItem('clienteId', JSON.stringify([...res.result.toString()]))
-          this.carrinho.clienteId = res.result;
+          this.carrinhoCompra.clienteId = res.result;
           this.carrinhoService.setAutenticado(true);
-          this.carrinhoService.setLista(this.carrinho);
+          this.carrinhoService.setLista(this.carrinhoCompra);
           this.step.next();
         } else {
           console.log("erro login")

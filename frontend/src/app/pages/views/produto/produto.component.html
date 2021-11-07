@@ -64,7 +64,7 @@
     <div class="produtoImagem">
       <img [src]="produto.imagem">
     </div>
-    <div class="titulo"><img src="https://www.countryflags.io/{{produto.paisSigla}}/flat/24.png"><h4>{{produto.titulo}}</h4></div>
+    <div class="titulo"><img src="https://www.worldometers.info/img/flags/{{ getCountryFlag(produto.paisSigla) }}-flag.gif" width="35px" height="20px"><h4>{{produto.titulo}}</h4></div>
     <p class="descricao">
       {{produto.classificacao}}
     </p>
@@ -80,7 +80,7 @@
 </section>
 
 <!-- MODAL - CARRINHO DE COMPRAS -->
-<div *ngIf="carrinho?.listaCompras.length">
+<div *ngIf="carrinhoCompra?.listaCompras?.length">
   <button class="btn btn-secondary btn-carrinho" (click)="showCarrinho(modalData)"><span class="fas fa-shopping-cart"></span></button>
 </div>
 
@@ -103,7 +103,7 @@
         <p></p>
       </div>
     </div>
-    <div *ngFor="let item of carrinho.listaCompras">
+    <div *ngFor="let item of carrinhoCompra.listaCompras">
       <div class="row m-1">
         <div class="col-md-6 p-0">
           <p>{{ item.titulo }}</p>
@@ -129,7 +129,7 @@
         <strong>Total</strong>
       </div>
       <div class="col-md-2 p-0 m-0 text-right">
-        {{ carrinho.valorCompras | currency: 'BRL' }}
+        {{ carrinhoCompra.valorCompras | currency: 'BRL' }}
       </div>
     </div>
   </div>

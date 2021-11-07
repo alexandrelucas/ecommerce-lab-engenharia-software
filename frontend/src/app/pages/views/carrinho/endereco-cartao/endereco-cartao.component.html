@@ -11,23 +11,23 @@
                 <div class="card" style="width: 100%;">
                     <div class="card-body">
                         <h3 class="card-title mb-2"><strong>Endereço Principal</strong></h3>              
-                        <div *ngIf="carrinho.enderecos.length">
-                            <h5 class="card-text mb-0">{{ carrinho.enderecoEntrega.logradouro + ', ' + carrinho.enderecoEntrega.numero }}</h5>
-                            <h5 class="card-text mb-0">{{ carrinho.enderecoEntrega.bairro }}</h5>
-                            <h5 class="card-text mb-3">{{ 'CEP ' + carrinho.enderecoEntrega.cep + ' - ' + carrinho.enderecoEntrega.cidade + ' - ' + carrinho.enderecoEntrega.uf }}</h5>
+                        <div *ngIf="carrinhoCompra.enderecos?.length">
+                            <h5 class="card-text mb-0">{{ carrinhoCompra.enderecoEntrega?.logradouro + ', ' + carrinhoCompra.enderecoEntrega?.numero }}</h5>
+                            <h5 class="card-text mb-0">{{ carrinhoCompra.enderecoEntrega?.bairro }}</h5>
+                            <h5 class="card-text mb-3">{{ 'CEP ' + carrinhoCompra.enderecoEntrega?.cep + ' - ' + carrinhoCompra.enderecoEntrega?.cidade + ' - ' + carrinhoCompra.enderecoEntrega?.uf }}</h5>
                             <div>
                                 <button class="btn btn-dark btn-sm mr-2" (click)="showModalEndereco(true)">Editar</button>
                                 <button class="btn btn-dark btn-sm btn-pre-cadastro" (click)="showModalTroca(modalTrocaEndereco)">Selecionar outro</button>
                             </div>
                         </div>
-                        <div *ngIf="!carrinho.enderecos.length">
+                        <div *ngIf="!carrinhoCompra.enderecos?.length">
                             <button class="btn btn-dark btn-sm mr-2 mt-3" (click)="showModalEndereco(false)">Cadastrar</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="row mt-5">
+            <div class="row mt-4">
                 <div class="col-md-12 d-flex align-items-center">
                 <mat-icon class="mr-2">credit_card</mat-icon>
                 <h2 class="p-0 m-0">Pagamento</h2>
@@ -37,27 +37,52 @@
                 <div class="card" style="width: 100%;">
                     <div class="card-body">
                         <h3 class="card-title mb-2"><strong>Cartão Principal</strong></h3>              
-                        <div *ngIf="carrinho.cartoes.length">
-                            <h5 class="card-text mb-0">{{ carrinho.cartaoPagamento.nomeTitular }}</h5>
-                            <h5 class="card-text mb-0">{{ carrinho.cartaoPagamento.numero }}</h5>
-                            <h5 class="card-text mb-0">{{ carrinho.cartaoPagamento.dataValidade }}</h5>
-                            <h5 class="card-text mb-3">{{ getCardFlag(carrinho.cartaoPagamento.numero) | uppercase }}</h5>
+                        <div *ngIf="carrinhoCompra.cartoes?.length">
+                            <h5 class="card-text mb-0">{{ carrinhoCompra.cartaoPagamento?.nomeTitular }}</h5>
+                            <h5 class="card-text mb-0">{{ carrinhoCompra.cartaoPagamento?.numero }}</h5>
+                            <h5 class="card-text mb-0">{{ carrinhoCompra.cartaoPagamento?.dataValidade }}</h5>
+                            <h5 class="card-text mb-3">{{ getCardFlag(carrinhoCompra.cartaoPagamento?.numero) | uppercase }}</h5>
                             <div>
                                 <button class="btn btn-dark btn-sm mr-2" (click)="showModalCartao(true)">Editar</button>
                                 <button class="btn btn-dark btn-sm btn-pre-cadastro" (click)="showModalTroca(modalTrocaCartao)">Selecionar outro</button>
                             </div>
                         </div>
-                        <div *ngIf="!carrinho.cartoes.length">
+                        <div *ngIf="!carrinhoCompra.cartoes?.length">
                             <button class="btn btn-dark btn-sm mr-2 mt-3" (click)="showModalCartao(false)">Cadastrar</button>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="row mt-4">
+                <div class="col-md-12 d-flex align-items-center">
+                <mat-icon class="mr-2">card_giftcard</mat-icon>
+                <h2 class="p-0 m-0">Cupom</h2>
+                </div>
+            </div>    
+            <div class="row d-flex justify-content-center">
+                <div class="card" style="width: 100%;">
+                    <div class="card-body">
+                        <form [formGroup]="cupomForm" class="mt-4">                            
+                            <div class="form-row">
+                                <div class="form-group col-md-8">
+                                    <input type="text" class="form-control form-control-sm" formControlName="cupom" aria-describedby="cupom" placeholder="código">
+                                    <small class="form-text text-muted" *ngIf="cupomForm.get('cupom').value">{{ infoCupom }}</small>
+                                </div>
+                                <div class="form-group col-md-2">              
+                                    <button class="btn btn-dark btn-sm" (click)="validaCupom(cupomForm.get('cupom').value)">Aplicar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <div class="barra"></div>
 
-        <div class="col-md-4">
+        <div class="col-md-4">            
             <div class="row">
                 <div class="col-md-12 d-flex align-items-center">
                 <mat-icon class="mr-2">monetization_on</mat-icon>
@@ -76,14 +101,15 @@
                         <div class="col-sm-9">
                             <select class="custom-select mr-sm-2" id="add-cartao-combo" [(ngModel)]="pagamento.segundoCartao.idCartao">
                                 <option value=0 selected>Selecione</option>
-                                <option value="{{ cartao.id }}" *ngFor="let cartao of carrinho.cartoes">{{ cartao.numero }}</option>
+                                <option value="{{ cartao.id }}" *ngFor="let cartao of carrinhoCompra.cartoes | slice:1; let i = index">{{ cartao.numero }}</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group row" *ngIf="cartaoAdicional">
                         <label class="col-sm-3 col-form-label">Valor</label>                                                        
                         <div class="col-sm-9" style="display: flex;">
-                            <input class="form-control form-control-sm" type="text" [(ngModel)]="pagamento.segundoCartao.valorAPagar" >
+                            <input class="form-control form-control-sm" type="text" [disabled]="!pagamento.segundoCartao.idCartao"
+                            [(ngModel)]="pagamento.segundoCartao.valorAPagar" mask="separator.2">
                             <button id="confirma-adicional"style="float: right;" (click)="addSegundoCartao()">Confirma</button>
                         </div>
                         <div style="display: flex; justify-content: flex-end;">
@@ -92,50 +118,61 @@
                     </div>
                 </div>
 
+
+                <div *ngIf="setCartaoAdd && cartaoAdicional">
+                    <p><b>Cartões</b></p>
+                </div>
                 <div *ngIf="setCartaoAdd && cartaoAdicional">
                     <div class="row">
                         <div class="d-flex justify-content-between">
-                            <p>Cartão Principal: </p>
+                            <p class="resumo-pgto">Cartão Principal: </p>
                             <p>{{ pagamento.cartaoPrincipal.valorAPagar | currency: 'BRL' }}</p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="d-flex justify-content-between">
-                            <p>Cartão Adicional: </p>
+                            <p class="resumo-pgto">Cartão Adicional: </p>
                             <p>{{ pagamento.segundoCartao.valorAPagar | currency: 'BRL' }}</p>
                         </div>
                     </div>
                 </div>
+
+                <div>
+                    <p><b>Lançamentos</b></p>
+                </div>                
                 <div class="row">
                     <div class="d-flex justify-content-between">
-                        <p>Subtotal: </p>
-                        <p>{{ carrinho.valorCompras | currency: 'BRL' }}</p>
+                        <p class="resumo-pgto">Subtotal: </p>
+                        <p>{{ carrinhoCompra.valorCompras | currency: 'BRL' }}</p>
                     </div>
                 </div>
-                <div class="row" *ngIf="carrinho.valorFrete != 0">
+                <div class="row" *ngIf="carrinhoCompra.frete?.valorFrete != 0">
                     <div class="d-flex justify-content-between">
-                        <p>Frete</p>
-                        <p>{{ carrinho.valorFrete | currency: 'BRL' }}</p>
+                        <p class="resumo-pgto">Frete</p>
+                        <p>{{ carrinhoCompra.frete?.valorFrete | currency: 'BRL' }}</p>
                     </div> 
                 </div>
-                <div class="row" *ngIf="carrinho.cupomDesconto">
-                    <div class="d-flex justify-content-between">
-                        <p>Desconto</p>
-                        <p>{{ '-' + carrinho.cupomDesconto | currency: 'BRL' }}</p>
+                <div class="row" *ngIf="carrinhoCompra.cupons?.length">
+                    <div>
+                        <p><b>Descontos</b></p>
+                    </div>
+                    <div class="d-flex justify-content-between" *ngFor="let cp of carrinhoCompra.cupons">
+                        <p class="resumo-pgto">{{ 'Cupom: ' + cp.codigoCupom }}</p>
+                        <p>{{'- ' }}{{ cp.valorCupomDesconto | currency: 'BRL' }}</p>
                     </div> 
                 </div>               
                 <div class="row">
                     <div class="d-flex justify-content-between">
                         <strong><p>Total</p></strong>
                         <strong>                                 
-                            <p>{{ carrinho.valorTotal | currency: 'BRL' }}</p>
+                            <p>{{ updateValorCompras() | currency: 'BRL' }}</p>
                         </strong>
                     </div> 
                 </div>
             </div>
             <div class="btn-avancar mt-5">
                 <button type="button" class="btn btn-dark btn-sm" matStepperNext (click)="setCarrinho()"
-                    [disabled]="carrinho.enderecoEntrega?.id == undefined || carrinho.cartaoPagamento?.id == undefined">
+                    [disabled]="carrinhoCompra.enderecoEntrega?.id == undefined || carrinhoCompra.cartaoPagamento?.id == undefined">
                     CONFIRMAR PAGAMENTO
                 </button>
             </div>
@@ -153,7 +190,7 @@
         </div>
     </div>
     <div class="modal-body">        
-        <div *ngFor="let endereco of carrinho.enderecos">
+        <div *ngFor="let endereco of carrinhoCompra.enderecos">
             <label [for]="endereco.logradouro" style="width: 100%;" id="{{  'endereco_' + endereco.id }}">
                 <div class="card mt-1" style="width: 100%;">
                     <div class="card-body">                  
@@ -187,7 +224,7 @@
         </div>
     </div>
     <div class="modal-body">        
-        <div *ngFor="let cartao of carrinho.cartoes">
+        <div *ngFor="let cartao of carrinhoCompra.cartoes">
             <label [for]="cartao.id" style="width: 100%;" id="{{  'cartao_' + cartao.id }}">
             <div class="card mt-1" style="width: 100%;">
                 <div class="card-body">                  

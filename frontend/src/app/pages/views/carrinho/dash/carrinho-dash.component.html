@@ -2,7 +2,7 @@
     <mat-horizontal-stepper labelPosition="bottom" #stepper>
         <mat-step>
             <ng-template matStepLabel>Carrinho</ng-template>
-            <app-carrinho></app-carrinho>
+            <app-carrinho (status)="setStep($event)"></app-carrinho>
         </mat-step>
         <mat-step>
             <ng-template matStepLabel>Identificação</ng-template>

@@ -18,7 +18,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of carrinho.listaCompras">
+        <tr *ngFor="let item of carrinhoCompra.listaCompras">
           <td class="car-imagem"><img src="{{ item.imagem }}" width="50px" height="50px"></td>
           <td>
             <p><strong>{{ 'Vinho ' + item.titulo }}</strong></p>
@@ -55,24 +55,9 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-md-4">      
-    <form [formGroup]="cupomForm" class="mt-4">
-      <div class="d-flex align-items-center mb-1">
-        <mat-icon>card_giftcard</mat-icon>
-        <label class="p-0 mb-0 ml-2">Cupom de desconto</label>
-      </div>        
-      <div class="form-row">
-        <div class="form-group col-md-8">
-          <input type="text" class="form-control" formControlName="cupom" aria-describedby="cupom" placeholder="código">
-          <small class="form-text text-muted" *ngIf="cupomForm.get('cupom').value">{{ carrinho?.infoCupom }}</small>
-        </div>
-        <div class="form-group col-md-2">              
-          <button class="btn"  [ngClass]="setCupom ? 'btn-danger' : 'btn-dark'" (click)="validaCupom()">{{setCupom ? 'Remover' : 'Aplicar'}}</button>
-        </div>
-      </div>
-    </form>
+  <div class="col-md-3">
   </div>
-  <div class="col-md-5">
+  <div class="col-md-6">
     <form [formGroup]="carrinhoForm" class="mt-4 ml-4">
       <div class="d-flex align-items-center mb-1">
         <mat-icon> local_shipping</mat-icon>
@@ -87,11 +72,11 @@
         </div>
       </div>
     </form>
-    <fieldset class="form-group" *ngIf="carrinho?.listaFrete?.length">
+    <fieldset class="form-group" *ngIf="carrinhoCompra?.listaFrete?.length">
       <legend class="col-form-label col-sm-2 m-0 p-0 pt-0">FRETE</legend>
-      <div class="row col-sm-10" *ngFor="let frete of carrinho.listaFrete; let i = index">
+      <div class="row col-sm-10" *ngFor="let frete of carrinhoCompra.listaFrete; let i = index">
         <div class="form-check">
-          <input class="form-check-input" type="radio" [value]="frete.price" [(ngModel)]="carrinho.valorFrete">
+          <input class="form-check-input" type="radio" [value]="frete" (click)="setFrete(frete)" [(ngModel)]="freteSelecionado">
           <div class="d-flex justify-content-between">
             <label>
               <strong>{{ frete.company.name }}</strong>{{ ' (' + frete.name + ') - até ' + frete.delivery_time + ' dias úteis.' }}
@@ -111,18 +96,12 @@
         <p>{{ updateValorCompras() | currency: 'BRL' }}</p>
       </div>
     </div>
-    <div class="row" *ngIf="carrinho.valorFrete != 0">
+    <div class="row" *ngIf="carrinhoCompra.frete?.valorFrete != 0">      
       <div class="d-flex justify-content-between">
         <p>Frete</p>
-        <p>{{ carrinho.valorFrete | currency: 'BRL' }}</p>
+        <p>{{ carrinhoCompra.frete?.valorFrete | currency: 'BRL' }}</p>
       </div> 
-    </div>
-    <div class="row" *ngIf="carrinho.cupomDesconto">
-      <div class="d-flex justify-content-between">
-        <p>Desconto</p>
-        <p>{{ '-' + carrinho.cupomDesconto | currency: 'BRL' }}</p>
-      </div> 
-    </div>
+    </div>    
     <div class="row">
       <div class="d-flex justify-content-between">
         <strong><p>Total</p></strong>

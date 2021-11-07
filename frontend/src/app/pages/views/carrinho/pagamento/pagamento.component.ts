@@ -12,7 +12,7 @@ import { ResultadoComponent } from './resultado/resultado.component';
 })
 export class PagamentoComponent implements OnInit {
 
-  public carrinho;
+  public carrinhoCompra;
   public storage: Storage;
   public pedido = {
     "valorFrete": undefined,
@@ -36,32 +36,33 @@ export class PagamentoComponent implements OnInit {
 
   ngOnInit(): void {
     this.carrinhoService.getLista().subscribe( ret => {
-      this.carrinho = ret;      
+      this.carrinhoCompra = ret;
+      console.log(ret)
     })
   }
 
   onSubmitPedido() {
     this.preparaPedido();
 
-    let dadosCarrinho = [this.carrinho];
+    let dadosCarrinho = [this.carrinhoCompra];
     this.storage.setItem('listaPedidos', JSON.stringify(dadosCarrinho));    
   }
 
   preparaPedido(){
-    this.pedido.valorFrete = this.carrinho.valorFrete;
-    this.pedido.transportadora = this.carrinho.listaFrete[0].name;
-    this.pedido.valorSubTotal = this.carrinho.valorCompras;
-    this.pedido.valorTotal = this.carrinho.valorTotal;    
-    this.pedido.enderecoId = this.carrinho.enderecoEntrega.id;
-    this.pedido.clienteId = this.carrinho.clienteId;    
-    this.carrinho.listaCompras.forEach(prd => {
+    this.pedido.valorFrete = this.carrinhoCompra.valorFrete;
+    this.pedido.transportadora = this.carrinhoCompra.listaFrete[0].name;
+    this.pedido.valorSubTotal = this.carrinhoCompra.valorCompras;
+    this.pedido.valorTotal = this.carrinhoCompra.valorTotal;    
+    this.pedido.enderecoId = this.carrinhoCompra.enderecoEntrega.id;
+    this.pedido.clienteId = this.carrinhoCompra.clienteId;    
+    this.carrinhoCompra.listaCompras.forEach(prd => {
       this.pedido.produtos.push({id: prd.id, quantidade: prd.qtd, valor: prd.precoPor})
     });
-    if(!this.carrinho.pagamento.doisCartoes){      
-      this.pedido.pagamento.push({ cartaoId: this.carrinho.pagamento.cartaoPrincipal.idCartao, valor: this.carrinho.pagamento.cartaoPrincipal.valorAPagar});      
+    if(!this.carrinhoCompra.pagamento.doisCartoes){      
+      this.pedido.pagamento.push({ cartaoId: this.carrinhoCompra.pagamento.cartaoPrincipal.idCartao, valor: this.carrinhoCompra.pagamento.cartaoPrincipal.valorAPagar});      
     }else{
-      this.pedido.pagamento.push({ cartaoId: this.carrinho.pagamento.cartaoPrincipal.idCartao, valor: this.carrinho.pagamento.cartaoPrincipal.valorAPagar});      
-      this.pedido.pagamento.push({ cartaoId: this.carrinho.pagamento.segundoCartao.idCartao, valor: this.carrinho.pagamento.segundoCartao.valorAPagar});      
+      this.pedido.pagamento.push({ cartaoId: this.carrinhoCompra.pagamento.cartaoPrincipal.idCartao, valor: this.carrinhoCompra.pagamento.cartaoPrincipal.valorAPagar});      
+      this.pedido.pagamento.push({ cartaoId: this.carrinhoCompra.pagamento.segundoCartao.idCartao, valor: this.carrinhoCompra.pagamento.segundoCartao.valorAPagar});      
     }
 
     this.gravarPedido();
@@ -69,12 +70,12 @@ export class PagamentoComponent implements OnInit {
 
   gravarPedido(){
     this.servico.setPedido(this.pedido).subscribe((ret:any) => {      
-      this.carrinho.status = 0;
-      this.carrinho.numeroPedido = ret.message;
+      this.carrinhoCompra.status = 0;
+      this.carrinhoCompra.numeroPedido = ret.message;
       
       let modalRef = this.modalService.open(ResultadoComponent);      
-      modalRef.componentInstance.numeroPedido = this.carrinho.numeroPedido;
-      modalRef.componentInstance.status = this.carrinho.status;
+      modalRef.componentInstance.numeroPedido = this.carrinhoCompra.numeroPedido;
+      modalRef.componentInstance.status = this.carrinhoCompra.status;
       modalRef.result.then(r => this.route.navigate(['/home/minha-conta#pedidos']));
     })
   }

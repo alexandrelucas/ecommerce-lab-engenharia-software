@@ -1,4 +1,4 @@
-import { AfterViewChecked, ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, ChangeDetectionStrategy, Component, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { MatHorizontalStepper, MatStepper } from '@angular/material/stepper';
 import { CarrinhoService } from '../carrinho.service';
 
@@ -11,7 +11,7 @@ import { CarrinhoService } from '../carrinho.service';
 export class CarrinhoDashComponent implements OnInit {
 
   @ViewChild('stepper') private myStepper: MatHorizontalStepper;
-
+  
   constructor(
     private carrinhoService: CarrinhoService
   ) {}
@@ -21,5 +21,9 @@ export class CarrinhoDashComponent implements OnInit {
 
   ngAfterViewInit() {
     this.carrinhoService.setControlStepper(this.myStepper)
+  }
+
+  setStep(event){    
+    this.myStepper.selectedIndex = 2;
   }
 }
