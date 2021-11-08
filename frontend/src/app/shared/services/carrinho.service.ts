@@ -29,6 +29,16 @@ export class SandBoxService {
   getListaCategorias(){
     return this.http.get(this.baseUrl + `/produto/categoria/`);
   }
+  deleteProduto(idProduto){    
+    return this.http.delete(this.baseUrl + `/produto/${idProduto}`);
+  }
+  setProduto(produto){    
+    delete produto.id;
+    return this.http.post(this.baseUrl + `/produto/`, produto);
+  }
+  updateProduto(idProduto, produto){    
+    return this.http.put(this.baseUrl + `/produto/${idProduto}`, produto);
+  }
 
   /* ESTOQUE */
   getEstoqueProduto(idProduto){

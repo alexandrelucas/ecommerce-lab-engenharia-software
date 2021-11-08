@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AdminComponent } from './admin.component';
 import { AdminRoutingModule } from './admin-routing.module';
 import { ListaClienteComponent } from './lista-cliente/lista-cliente.component';
-import {MatTableModule} from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -22,9 +22,14 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatIconModule } from '@angular/material/icon';
 import { TrocasComponent } from './trocas/trocas.component';
 import { ProdutosComponent } from './produtos/produtos.component';
+import { CadastroProdutoComponent } from './produtos/dialog/cadastro-produto.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSelectModule } from '@angular/material/select';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @NgModule({
-  declarations: [AdminComponent, ListaClienteComponent, DashboardComponent, CuponsComponent, ConfiguracoesComponent, PedidosComponent, DetalhesPedidoComponent, CadastrarCupomComponent, EstoqueComponent, VendasComponent, TrocasComponent, ProdutosComponent],
+  declarations: [AdminComponent, ListaClienteComponent, DashboardComponent, CuponsComponent, ConfiguracoesComponent, PedidosComponent, DetalhesPedidoComponent, CadastrarCupomComponent, EstoqueComponent, VendasComponent, TrocasComponent, ProdutosComponent, CadastroProdutoComponent],
   imports: [
     CommonModule,
     AdminRoutingModule,
@@ -36,8 +41,12 @@ import { ProdutosComponent } from './produtos/produtos.component';
     NgxMaskModule.forRoot(),
     FormsModule,
     MatStepperModule,
+    MatDatepickerModule,    
+    MatSelectModule,
+    MatNativeDateModule,
     MatIconModule,
     ReactiveFormsModule,
-  ]
+  ],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'es-ES' }]
 })
 export class AdminModule { }

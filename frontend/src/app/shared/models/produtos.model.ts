@@ -207,5 +207,6 @@ export let listaProdutos: Array<Produto> =[
       teorAlcolico?: number; 
       paisCodigo?: string; 
       pais?: string; 
-      descricao?: string; 
+      descricao?: string;
+      inativado?: boolean; 
   }

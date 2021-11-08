@@ -21,8 +21,7 @@ export class DetalhesPedidoComponent implements OnInit {
   @Input() pedido: any;
   produtosLista: Array<Produto>;
   public listaProdutos = []
-  public paises = []
-  public categorias = []
+  public paises = []  
   public statusPedido = { status : 0}
 
   constructor(

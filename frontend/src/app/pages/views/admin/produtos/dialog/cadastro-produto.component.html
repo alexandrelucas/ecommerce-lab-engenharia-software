@@ -1,0 +1,54 @@
+<div class="modal-header">
+    <p class="modal-title m-0" id="modal-basic-title"><span class="fas fa-tags mr-2"></span> {{selectProduto?.id ? 'Alterar'  : 'Cadastrar'}} produto:</p>
+</div>
+<div class="modal-body">
+    <form class="px-4" [formGroup]="produtoForm">
+        <div class="row mb-4">
+            <input class="form-control form-control-sm" formControlName="codigo" placeholder="Código do Vinho"/> 
+        </div>
+        <div class="row mb-4">            
+            <select class="custom-select mr-sm-2 form-control-sm" formControlName="tipo">
+                <option value="0">Selecione o tipo</option>
+                <option value="Tinto">Tinto</option>
+                <option value="Branco">Branco</option>
+            </select>
+        </div>
+        <div class="row mb-4">
+            <input class="form-control form-control-sm" formControlName="titulo" placeholder="Título"/> 
+        </div>        
+        <div class="row mb-4">
+            <select class="custom-select mr-sm-2 form-control-sm" formControlName="paisId">
+                <option value="0">Selecione o país</option>
+                <option value="{{ tp.id }}" *ngFor="let tp of paises">{{ tp.descricao }}</option>
+            </select>
+        </div>       
+        <div class="row mb-4">
+            <select class="custom-select mr-sm-2 form-control-sm" formControlName="categoriaId">
+                <option value="0">Selecione a categoria</option>
+                <option value="{{ tp.id }}" *ngFor="let tp of categorias">{{ tp.descricao }}</option>
+            </select>
+        </div>
+        <div class="row mb-4">
+            <input class="form-control form-control-sm" formControlName="quantidadeML" placeholder="Volume ML"/> 
+        </div>
+        <div class="row mb-4">
+            <input class="form-control form-control-sm" formControlName="teorAlcoolico" placeholder="Teor Alcoolico"/> 
+        </div>
+        <div class="row mb-4">
+            <input class="form-control form-control-sm" formControlName="precoDe" placeholder="Preço De"/> 
+        </div>
+        <div class="row mb-4">
+            <input class="form-control form-control-sm" formControlName="precoPor" placeholder="Preço Por"/> 
+        </div>
+        <div class="row mb-4">
+            <input class="form-control form-control-sm" formControlName="tempoGuarda" placeholder="Tempo de guarda"/> 
+        </div>
+        <div class="row mb-4">
+            <textarea class="form-control form-control-sm" formControlName="descricao" placeholder="Descrição Produto"></textarea>            
+        </div>
+        <div class="row mb-4">
+            <textarea class="form-control form-control-sm" formControlName="imagem" placeholder="URL imagem"></textarea>            
+        </div>
+    </form>
+    <button class="ml-4 btn btn-dark btn-sm" (click)="closeModal()">{{ selectProduto?.id ? 'Alterar' : 'Cadastrar' }}</button>
+</div>
