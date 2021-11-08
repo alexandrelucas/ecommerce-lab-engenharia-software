@@ -33,7 +33,7 @@ export class EnderecoComponent implements OnInit, OnChanges {
 
   getTipoEndereco(){
     this.servico.getTipoEndereco().subscribe( (result:any) => {
-      this.tipoEndereco = result.tipoLogradouro;
+      this.tipoEndereco = result.tipoEndereco;
     });
   }
   getTipoLogradouro(){

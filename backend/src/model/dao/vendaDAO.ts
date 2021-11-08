@@ -1,14 +1,15 @@
 import PgDatabase from "../../db.config";
 import EntidadeDominio from "../entidade/entidadeDominio.model";
+import Estoque from "../entidade/estoque.model";
 import Pedido from "../entidade/pedido.model";
 import Venda from "../entidade/venda.model";
+import EstoqueDAO from "./estoqueDAO";
 import IDAO from "./IDAO";
 import PedidoDAO from "./pedidoDAO";
 
 export default class VendaDAO implements IDAO {
     tabela: string = 'vendas';
     async salvar(entidade: Venda): Promise<EntidadeDominio> {
-
         if(!entidade.pedidoId) return {error: 'Sem o id do pedido'} as EntidadeDominio;
         try {
 
@@ -37,7 +38,28 @@ export default class VendaDAO implements IDAO {
 
                 if(result.rowCount > 0) {
                     entidade.id = result.rows[0].id;
-                } 
+                }
+
+                // Dar baixa no estoque
+                let prodQuery = `SELECT * FROM "pedidosProdutos" WHERE "pedidoId" = '${entidade.pedidoId}';`;
+                let pedidoProdutos = (await PgDatabase.query(prodQuery)).rows;
+
+                for(const p of pedidoProdutos ?? []) {
+                    // Dar baixa no estoque;
+                    let estoqueDAO = new EstoqueDAO();
+                    let consultarEstoque = await (await estoqueDAO.consultar(new Estoque(null!, p.produtoId))) as Estoque[];
+                    let quantidadeBaixada = consultarEstoque[0].quantidade! - p.quantidade;
+                    await estoqueDAO.alterar({produtoId: p.id, quantidade: quantidadeBaixada} as Estoque);
+                }
+
+
+                // let estoqueDAO = new EstoqueDAO();
+                // let consultarEstoque = await (await estoqueDAO.consultar(new Estoque(null!, p.id))) as Estoque[];
+                // let quantidadeBaixada = consultarEstoque[0].quantidade! - p.quantidade;
+                // await estoqueDAO.alterar({produtoId: p.id, quantidade: quantidadeBaixada} as Estoque);
+
+
+                
             } else {
                 return {error: 'Pagamento não aprovado!'} as EntidadeDominio;
             }

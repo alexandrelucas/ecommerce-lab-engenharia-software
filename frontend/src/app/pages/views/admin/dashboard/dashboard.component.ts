@@ -1,8 +1,10 @@
+import { CurrencyPipe } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 import * as moment from 'moment';
+import DashboardDados from 'src/app/shared/models/dashboard.model';
 import { SandBoxService } from 'src/app/shared/services/carrinho.service';
 
 @Component({
@@ -16,8 +18,8 @@ export class DashboardComponent implements OnInit {
       
   public paises = [];
   public categorias = [];
-  public tempoGuarda = [2, 3, 4, 5, 6]
-  public tipo = ['Tinto', 'Branco']
+  public tempoGuarda = [2, 3, 4, 5, 6];
+  public tipo = ['Tinto', 'Branco'];
 
   filtroPais = new FormControl();
   filtroCategoria = new FormControl();
@@ -68,11 +70,40 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.getDadosDashBoard();
     this.getListaPaises();
     this.getListaCategorias(); 
     this.gerarGraficoVendas();
     this.gerarGraficoPesquisa();    
-  } 
+  }
+
+
+  getDadosDashBoard() {
+    this.servicoService.getDashboard().subscribe((result: any) => {
+      if(result.result) {
+        const currencyFormat = Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'});
+
+        // Pedidos recebidos
+        this.cards[0].valorIni = result.result.totalPedidos;
+        this.cards[0].valorFin = result.result.totalPedidosConcluidos;
+
+        // Vendas Totais
+        this.cards[1].valorIni = `${result.result.numeroVendas}`; 
+        this.cards[1].valorFin = `${result.result.numeroVendasMes}`; 
+        
+        
+        // Receita
+        let receitaVendas = currencyFormat.format(result.result.receitaVendas);
+        this.cards[2].valorIni = receitaVendas;
+        this.cards[2].valorFin = `${result.result.receitaVendasMes}`; 
+        
+        // Lucro Total
+        let lucroFormat = currencyFormat.format(result.result.lucros);
+        this.cards[3].valorIni = lucroFormat; 
+        this.cards[3].valorFin = `${result.result.lucrosMes}`; 
+      }
+    });
+  }
 
   getListaPaises(){
     this.servicoService.getListaPaises().subscribe((result:any) => {
@@ -153,7 +184,10 @@ export class DashboardComponent implements OnInit {
       dataFim : moment(this.range.value.end).format('YYYY-MM-DD'),
     }
 
-    console.log(filtro)
+    console.log(filtro);
+    this.servicoService.filtrarGrafico(filtro).subscribe((result: any) => {
+      console.log(result);
+    });
   }
 }
 

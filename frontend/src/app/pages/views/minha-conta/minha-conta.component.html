@@ -13,22 +13,22 @@
                 <h1>{{ dadosCliente?.nome }} •</h1>
               </li>
               <li class="nav-item" [ngClass]="cardAtivo == 1 ? 'active' : ''">
-                <a class="nav-link" (click)="cardAtivo = 1">Meus Dados<span class="sr-only">(current)</span></a>
+                <a class="nav-link" (click)="cardAtivo = 1">Dados<span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item" [ngClass]="cardAtivo == 2 ? 'active' : ''">
-                <a class="nav-link" (click)="cardAtivo = 2">Endereço</a>
+                <a class="nav-link" (click)="cardAtivo = 2">Endereços</a>
               </li>
               <li class="nav-item" [ngClass]="cardAtivo == 3 ? 'active' : ''">
-                <a class="nav-link" (click)="cardAtivo = 3">Método de Pagamento</a>
+                <a class="nav-link" (click)="cardAtivo = 3">Forma de pagamento</a>
               </li>
               <li class="nav-item" [ngClass]="cardAtivo == 4 ? 'active' : ''">
-                <a class="nav-link" (click)="cardAtivo = 4">Meus Pedidos</a>
+                <a class="nav-link" (click)="cardAtivo = 4">Pedidos</a>
               </li>
               <li class="nav-item" [ngClass]="cardAtivo == 5 ? 'active' : ''">
-                <a class="nav-link" (click)="cardAtivo = 5">Meus Cupons</a>
+                <a class="nav-link" (click)="cardAtivo = 5">Cupons</a>
               </li>
               <li class="nav-item" [ngClass]="cardAtivo == 6 ? 'active' : ''">
-                <a class="nav-link" (click)="cardAtivo = 6">Configurações da Conta</a>
+                <a class="nav-link" (click)="cardAtivo = 6">Configurações</a>
               </li>
             </ul>
           </div>

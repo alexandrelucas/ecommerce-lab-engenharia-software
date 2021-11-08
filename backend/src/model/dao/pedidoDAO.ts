@@ -58,13 +58,12 @@ export default class PedidoDAO implements IDAO {
                     let query = `INSERT INTO public."pedidosProdutos"(
                         "pedidoId", "produtoId", valor, quantidade)
                         VALUES ('${pedidoId}', '${p.id}', '${p.valor}', '${p.quantidade}');`;
-                    let consulta = await PgDatabase.query(query);
+                    let consulta = await PgDatabase.query(query);                    
+                }
 
-                    // Dar baixa no estoque;
-                    let estoqueDAO = new EstoqueDAO();
-                    let consultarEstoque = await (await estoqueDAO.consultar(new Estoque(null!, p.id))) as Estoque[];
-                    let quantidadeBaixada = consultarEstoque[0].quantidade! - p.quantidade;
-                    await estoqueDAO.alterar({produtoId: p.id, quantidade: quantidadeBaixada} as Estoque);
+                for(const c of entidade.coupons ?? []) {
+                    let query = `INSERT INTO public."pedidosCupons" ("cupomId", "pedidoId") VALUES ('${c.id}', ${pedidoId})`;
+                    let consulta = await PgDatabase.query(query);
                 }
 
             } catch (e: any) {
@@ -117,15 +116,15 @@ export default class PedidoDAO implements IDAO {
         
         let query;
         if(pedidoId) {
-            query = `SELECT p.id, p.codigo, p.status, p."statusCancelamento" ,p."valorFrete", p.transportadora, p."enderecoId", p."pagamentoId", pagamentos.status as "statusPagamento", p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
+            query = `SELECT p.id, p.codigo, p.status, p."statusCancelamento" ,p."valorFrete", p.transportadora, p."enderecoId", p."pagamentoId", pagamentos.status as "statusPagamento", p."valorSubTotal", p."valorTotal", p.data FROM 
             pedidos as p INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."id" = '${pedidoId}';`;
         } else if (clienteId) {
-            query = `SELECT p.id, p.codigo, p.status, p."statusCancelamento", p."valorFrete", p.transportadora, p."enderecoId", p."pagamentoId", pagamentos.status as "statusPagamento", p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
+            query = `SELECT p.id, p.codigo, p.status, p."statusCancelamento", p."valorFrete", p.transportadora, p."enderecoId", p."pagamentoId", pagamentos.status as "statusPagamento", p."valorSubTotal", p."valorTotal", p.data FROM 
             pedidos as p INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."clienteId" = '${clienteId}' ORDER BY id DESC;`;
         }
         else{
             // query = `SELECT * FROM ${this.tabela}`;
-            query = `SELECT p.id, p.codigo, p.status, p."statusCancelamento", p."valorFrete", p.transportadora, p."enderecoId", p."pagamentoId", pagamentos.status as "statusPagamento" , p."valorSubTotal", p."valorTotal", p."cupomId", p.data FROM 
+            query = `SELECT p.id, p.codigo, p.status, p."statusCancelamento", p."valorFrete", p.transportadora, p."enderecoId", p."pagamentoId", pagamentos.status as "statusPagamento" , p."valorSubTotal", p."valorTotal", p.data FROM 
             pedidos as p INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId";`;
         }
 

@@ -64,7 +64,7 @@ export class CadastroComponent implements OnInit {
 
   getTipoTelefone(){
     this.servico.getTipoTelefone().subscribe( (result:any) => {
-      this.tipoTelefone = result.tipoLogradouro;
+      this.tipoTelefone = result.tipoTelefone;
     });
   }
  

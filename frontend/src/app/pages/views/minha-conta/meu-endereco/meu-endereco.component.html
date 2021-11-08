@@ -15,8 +15,7 @@
     </div>
     <div class="form-row">
       <div class="form-group col-md-2">        
-        <select class="form-control" id="tipoLogradouro" name="tipoLogradouro" formControlName="tipoLogradouroId" [ngClass]="aplicaCssErro('tipoLogradouroId','meuEnderecoForm')">
-          <option value="0">Selecione</option>            
+        <select class="form-control" id="tipoLogradouro" name="tipoLogradouro" formControlName="tipoLogradouroId" [ngClass]="aplicaCssErro('tipoLogradouroId','meuEnderecoForm')">         
           <option value="{{ tp.id }}" *ngFor="let tp of tipoLogradouro" >{{ tp.descricao }}</option>
         </select>
         <div class="invalid-feedback">
@@ -55,8 +54,8 @@
       </div>
       </div>      
         <div class="form-group col-md-8">
-          <select class="form-control" id="pais" name="pais" [ngClass]="aplicaCssErro('paisId','meuEnderecoForm')">
-            <option *ngFor="let pais of listaPaises" [value]="pais.id" [selected]="pais.id == endereco.paisId ? true : false">{{pais.descricao}}</option>
+          <select class="form-control" id="paisId" name="paisId" formControlName="paisId" [ngClass]="aplicaCssErro('paisId','meuEnderecoForm')">
+            <option *ngFor="let pais of listaPaises" [value]="pais.id">{{pais.descricao}}</option>
           </select>
       </div>
     </div>
@@ -77,6 +76,6 @@
   </form>
 <div class="d-flex justify-content-end">
     <button type="button" class="btn btn-outline-danger mr-2" (click)="onDelete()">Excluir</button>
-    <button type="button" class="btn btn-dark" (click)="onUpdate()" [disabled]="meuEnderecoForm.invalid" *ngIf="endereco?.cep != undefined">Alterar</button>
-    <button type="button" class="btn btn-dark" (click)="onSubmit()" [disabled]="meuEnderecoForm.invalid" *ngIf="endereco?.cep == undefined">Cadastrar</button>
+    <button type="button" class="btn btn-dark" (click)="onUpdate()" [disabled]="onValidate()" *ngIf="endereco?.cep != undefined">Alterar</button>
+    <button type="button" class="btn btn-dark" (click)="onSubmit()" [disabled]="onValidate()" *ngIf="endereco?.cep == undefined">Cadastrar</button>
 </div>              

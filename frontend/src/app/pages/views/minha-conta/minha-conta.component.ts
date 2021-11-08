@@ -128,7 +128,7 @@ export class MinhaContaComponent implements OnInit {
 
   addEndereco(){
     let index = this.dadosCliente.endereco.length;
-    this.dadosCliente.endereco.push(new Endereco(index, 'Novo Endereço', 'Brasil'));
+    this.dadosCliente.endereco.push(new Endereco(index, 'Novo Endereço', '2'));
   }
   
   /** PERFIL */

@@ -129,4 +129,14 @@ export class SandBoxService {
 
     return this.http.post(this.baseUrl + `/troca/gerarCupom`, cupom);
   }
+
+
+  /** DASHBOARD - GRAFICO */
+  getDashboard() {
+    return this.http.get(this.baseUrl + `/dashboard`);
+  }
+
+  filtrarGrafico(filtro: any) {
+    return this.http.put(this.baseUrl + '/dashboard/filtro', filtro);
+  }
 }

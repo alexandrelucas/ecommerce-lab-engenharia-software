@@ -35,10 +35,10 @@ export class MeuEnderecoComponent implements OnInit {
 
   ngOnInit(): void {
     this.clienteId = JSON.parse(this.storage.getItem('clienteId'))[0];
+    this.getListaPais();
     this.getTipoEndereco();
     this.getTipoLogradouro();
-    this.getListaPais();
-
+    
     this.meuEnderecoForm = this.formBuilder.group({
       id: [this.endereco.id],
       cep: [this.endereco.cep ?? '', [Validators.required]],
@@ -48,10 +48,10 @@ export class MeuEnderecoComponent implements OnInit {
       bairro: [this.endereco.bairro ?? '', Validators.required],
       cidade: [this.endereco.cidade ?? '', Validators.required],
       uf: [this.endereco.uf ?? '', Validators.required],
-      paisId: [this.endereco.paisId ?? 'Brasil', Validators.required],
+      paisId: [this.endereco.paisId ?? '2', Validators.required],
       descricaoEndereco: [this.endereco.descricaoEndereco ?? '', Validators.required],
-      tipoEnderecoId: [this.endereco.tipoEnderecoId ?? '0', Validators.required],
-      tipoLogradouroId: [this.endereco.tipoLogradouroId ?? '0', Validators.required],
+      tipoEnderecoId: [this.endereco.tipoEnderecoId ?? '2', Validators.required],
+      tipoLogradouroId: [this.endereco.tipoLogradouroId ?? '5', Validators.required],
       clienteId: [this.clienteId]
     });
 
@@ -130,9 +130,14 @@ export class MeuEnderecoComponent implements OnInit {
     });
   }
 
+  onValidate() {
+    return this.meuEnderecoForm.invalid;
+  }
+
   onSubmit() {
     this.clienteService.setEndereco(this.clienteId, this.meuEnderecoForm.value).subscribe( result => {
-      console.log(result)
+      // console.log(result)
+      this.endereco = this.meuEnderecoForm.value;
       this.showModalSucesso('Info', 'Endereço criado com sucesso!');
     });
   }
