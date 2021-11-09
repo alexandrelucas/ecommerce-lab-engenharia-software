@@ -190,14 +190,14 @@ export class DashboardComponent implements OnInit {
     let dInicio = moment(this.range.value.start)
     let dFim = moment(this.range.value.end)        
     let meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
-    let intervalo = dFim.diff(dInicio, 'days')    
+    let intervalo = dFim.diff(dInicio, 'days')
     let eixoXX = []
     if(intervalo > 40){
       eixoX.forEach(eixo => {        
         eixoXX.push(meses[parseInt(eixo)])
       })
+      eixoX = eixoXX;
     }
-    eixoX = eixoXX;
     
     //AJUSTA OBJETO DE DADOS PARA O PONTOS DO GRAFICO
     let dados:any = []
