@@ -37,6 +37,7 @@ export class CadastroProdutoComponent implements OnInit {
 
   carregaForm(){
     this.produtoForm = this.formBuilder.group({
+      id: [this.selectProduto?.id ?? -1],
       categoriaId: [this.selectProduto?.categoriaId ?? 0],
       titulo: [this.selectProduto?.titulo ?? ''],
       codigo: [this.selectProduto?.codigo ?? ''],
@@ -60,8 +61,7 @@ export class CadastroProdutoComponent implements OnInit {
 
   getProduto(){
     this.servicoService.getProduto(this.produto).subscribe((result:any) => {
-      this.selectProduto = result.produto;
-      console.log(result.produto)
+      this.selectProduto = result.produto;      
       this.carregaForm();
     })
   }
@@ -79,6 +79,6 @@ export class CadastroProdutoComponent implements OnInit {
   }
 
   closeModal(){
-    this.activeModal.close(this.selectProduto);
+    this.activeModal.close(this.produtoForm.value);
   }
 }

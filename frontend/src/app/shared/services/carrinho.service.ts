@@ -36,7 +36,7 @@ export class SandBoxService {
     delete produto.id;
     return this.http.post(this.baseUrl + `/produto/`, produto);
   }
-  updateProduto(idProduto, produto){    
+  updateProduto(idProduto, produto){
     return this.http.put(this.baseUrl + `/produto/${idProduto}`, produto);
   }
 

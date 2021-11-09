@@ -67,8 +67,19 @@ export class ProdutosComponent implements OnInit {
     const modalRef = this.modalService.open(CadastroProdutoComponent);    
     modalRef.componentInstance.produto = produto;
     
-    modalRef.result.then(result => {      
-      console.log(result);
+    modalRef.result.then((result:any) => {
+      if(result.id == -1){
+        //SET PRODUTO
+        this.servicoService.setProduto(result).subscribe((result:any) => {
+          console.log('Criado com sucesso')
+          this.carregaListaProdutos();
+        });
+      }else{
+        //UPDATE PRODUTO
+        this.servicoService.updateProduto(result.id, result).subscribe((result:any) => {          
+          this.carregaListaProdutos();
+        });
+      }
     });
   }
 
@@ -80,11 +91,15 @@ export class ProdutosComponent implements OnInit {
     });
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
   deleteProduto(){
-    this.modalService.dismissAll();
-    console.log(this.produtoSelecionado)
-    // this.servicoService.deleteProduto(this.produtoSelecionado.id).subscribe((result:any) => {
-      
-    // });
+    this.modalService.dismissAll();    
+    this.servicoService.deleteProduto(this.produtoSelecionado.id).subscribe((result:any) => {      
+      this.carregaListaProdutos();
+    });
   }
 }
