@@ -51,7 +51,7 @@ export default class DashboardDAO implements IDAO {
             let dataFim = new Date(entidade.dataFim);
             let query; 
             let queryData;
-            let selectedDate;
+            let selectedDate: any;
             let fluxoData = this.validaDatas(dataInicio, dataFim);
 
             let listaPaises: any[] = entidade.pais;
@@ -105,7 +105,18 @@ export default class DashboardDAO implements IDAO {
                 console.log(queryTest);
 
                 let consulta = fluxoData != -1 ?  await PgDatabase.query(queryTest, [entidade.dataInicio, entidade.dataFim]) : await PgDatabase.query(queryTest);
-                return {resultado: consulta.rows};
+
+
+                const grupos = consulta.rows.reduce((groups, item) => {
+
+                    const dateType = item[selectedDate];
+                    const group = (groups[dateType] || []);
+                    group.push(item);
+                    groups[dateType] = group;
+                    return groups;
+                  }, {});
+
+                return grupos;
         } else {
             return {error: 'Faltando dados do input'} as EntidadeDominio;   
         }
