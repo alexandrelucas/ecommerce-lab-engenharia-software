@@ -169,8 +169,7 @@ export class DashboardComponent implements OnInit {
     
     //GET DADOS DB
     this.servicoService.filtrarGrafico(filtros).subscribe((result: any) => {
-      this.preparaDadosDB(result, filtros);
-      console.log(result.result)
+      this.preparaDadosDB(result, filtros);      
     });
   }
 
@@ -199,8 +198,7 @@ export class DashboardComponent implements OnInit {
       });
 
       dados = dadosFiltrados;
-    }
-    console.log(dados);
+    }    
 
     //ATUALIZA GRAFICO    
     this.updateChart(this.chart, eixoX, dados)
