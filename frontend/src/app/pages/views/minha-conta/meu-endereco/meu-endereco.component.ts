@@ -126,7 +126,7 @@ export class MeuEnderecoComponent implements OnInit {
   onUpdate() {
     this.clienteService.updateEndereco(this.meuEnderecoForm.value, this.meuEnderecoForm.get('id').value).subscribe( (result: any) => {      
       console.log(result)
-      this.showModalSucesso('Info', result.message);
+      this.showModalSucesso('Info', 'Alteração realizada com sucesso!');
     });
   }
 
