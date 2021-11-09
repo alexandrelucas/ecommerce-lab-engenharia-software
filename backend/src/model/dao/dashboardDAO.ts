@@ -111,7 +111,7 @@ export default class DashboardDAO implements IDAO {
                 GROUP BY ${selectedDate}, pais, completo
                 ORDER BY ${selectedDate}, pais`;
 
-                console.log(queryTest);
+                // console.log(queryTest);
 
                 let consulta = fluxoData != -1 ?  await PgDatabase.query(queryTest, [entidade.dataInicio, entidade.dataFim]) : await PgDatabase.query(queryTest);
 
