@@ -47,7 +47,9 @@ export class SandBoxService {
   getEstoque(){
     return this.http.get(this.baseUrl + `/estoque`);
   }  
-  
+  darBaixaEstoque(produtoId, quantidade){    
+    return this.http.put(this.baseUrl + `/estoque/${produtoId}`, quantidade);
+  }
 
   /* CUPOM */
   getCupom(){

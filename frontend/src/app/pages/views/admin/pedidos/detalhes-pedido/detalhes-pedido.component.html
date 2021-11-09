@@ -82,8 +82,8 @@
       </mat-horizontal-stepper> -->
     </div>
     <div class="d-flex justify-content-end" >
-      <button class="btn btn-dark btn-sm" *ngIf="pedido.status != 4 && pedido.statusCancelamento != 10 && pedido.statusCancelamento != 12" (click)="setNextStatus()">Atualizar status</button>
-      <button class="btn btn-dark btn-sm mr-2" *ngIf="pedido.statusCancelamento == 12" (click)="autorizaCancelamento(10)">Autorizar cancelamento</button>
+      <button class="btn btn-dark btn-sm" *ngIf="pedido.status != 4 && pedido.statusCancelamento != 10 && pedido.statusCancelamento != 12" (click)="setNextStatus()">Atualizar status</button>      
+      <button class="btn btn-dark btn-sm mr-2" *ngIf="pedido.statusCancelamento == 12" (click)="showModalDevolverEstoque(modalDevolverEstoque, element)">Autorizar cancelamento</button>
       <button class="btn btn-dark btn-sm" *ngIf="pedido.statusCancelamento == 12" (click)="autorizaCancelamento(13)">Revogar cancelamento</button>
     </div>
   </div>
@@ -92,3 +92,24 @@
       <button class="btn btn-dark btn-sm" (click)="closeModal()">Fechar</button>
     </div>
   </div>
+
+
+<!-- MODAL DEVOLVER NO ESTOQUE -->
+<ng-template #modalDevolverEstoque let-modal class="modal-cancela">
+  <div class="modal-header">
+    <div class="d-flex align-items-center">
+        <mat-icon class="mr-2">assignment</mat-icon>
+        <p class="modal-title p-0 m-0"><strong>{{ 'Pedido:' }}</strong></p>
+    </div>
+  </div>
+  <div class="modal-body">
+    <p>{{ 'Deseja devolver esse produto no estoque? '}}</p>
+    <div *ngFor="let item of produtoSelecionado">
+      <p><strong>{{ '# Qtd: ' + item.quantidade + ' - ' }}</strong>{{ item.titulo }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger btn-sm" (click)="modal.close(); setDevolverProduto(0)">Não devolver</button>
+    <button type="button" class="btn btn-dark btn-sm" (click)="modal.close(); setDevolverProduto(1)">Devolver</button>
+  </div>
+</ng-template> 

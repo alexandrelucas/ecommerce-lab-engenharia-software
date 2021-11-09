@@ -3,7 +3,7 @@ import { Pedido, StatusPedido, StatusPedidoNome } from 'src/app/shared/models/pe
 import { Produto } from 'src/app/shared/models/produtos.model';
 import { SandBoxService } from 'src/app/shared/services/carrinho.service';
 import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import Cupom from 'src/app/shared/models/cupom.model';
 
@@ -23,10 +23,12 @@ export class DetalhesPedidoComponent implements OnInit {
   public listaProdutos = []
   public paises = []  
   public statusPedido = { status : 0}
+  public produtoSelecionado;
 
   constructor(
     private servico: SandBoxService,
-    private activeModal: NgbActiveModal
+    private activeModal: NgbActiveModal,
+    private modalService: NgbModal,
   ) { }
 
   ngOnInit(): void {
@@ -98,13 +100,40 @@ export class DetalhesPedidoComponent implements OnInit {
         cupom.valorDesconto = this.pedido.valorSubTotal;
         cupom.codigo = `VINO${this.pedido.codigo}2021`;
         cupom.clienteId = this.pedido.enderecoEntrega.clienteId;
-
-        console.log(cupom);
-
+        
         this.servico.gerarCupomCliente(cupom).subscribe((ret:any) => {
           console.log('Cupom gerado ou nao');
         });
       }
+    })
+  }
+
+  showModalDevolverEstoque(content, produto){
+    this.produtoSelecionado = this.pedido.produtos;
+
+    this.modalService.open(content, {
+      windowClass: 'modal-compra'
+    });
+  }
+  
+  setDevolverProduto(devolver){
+    if(devolver){      
+      this.produtoSelecionado.forEach(p => {
+        this.getProduto(p.id, p.quantidade);
+      });
+    }
+    this.autorizaCancelamento(10);
+  }
+
+  getProduto(produtoId, quantidadeComprada){    
+    this.servico.getEstoqueProduto(produtoId).subscribe((result:any) => {
+      this.setDevolver(produtoId, result.produto?.quantidade + quantidadeComprada)
+    })
+  }
+
+  setDevolver(produtoId, quantidade){    
+    this.servico.darBaixaEstoque(produtoId, {'quantidade': quantidade}).subscribe((result:any) => {
+      console.log(result);
     })
   }
 }
