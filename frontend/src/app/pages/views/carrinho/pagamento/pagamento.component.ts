@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CarrinhoCompra } from 'src/app/shared/models/carrinhoCompra.model';
 import { SandBoxService } from 'src/app/shared/services/carrinho.service';
 import { CarrinhoService } from '../carrinho.service';
 import { ResultadoComponent } from './resultado/resultado.component';
@@ -36,9 +37,12 @@ export class PagamentoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.carregaCarrinho();
+  }
+
+  carregaCarrinho(){
     this.carrinhoService.getLista().subscribe( ret => {
-      this.carrinhoCompra = ret;
-      console.log(ret)
+      this.carrinhoCompra = ret;      
     })
   }
 
@@ -72,14 +76,24 @@ export class PagamentoComponent implements OnInit {
   } 
 
   gravarPedido(){
-    this.servico.setPedido(this.pedido).subscribe((ret:any) => {      
+    this.servico.setPedido(this.pedido).subscribe((ret:any) => {
       this.carrinhoCompra.status = 0;
       this.carrinhoCompra.numeroPedido = ret.message;
       
-      let modalRef = this.modalService.open(ResultadoComponent);      
+      
+
+      let modalRef = this.modalService.open(ResultadoComponent);
       modalRef.componentInstance.numeroPedido = this.carrinhoCompra.numeroPedido;
       modalRef.componentInstance.status = this.carrinhoCompra.status;
-      modalRef.result.then(r => this.route.navigate(['/home/minha-conta#pedidos']));
+      modalRef.result.then(r => {
+        this.reset();
+        this.route.navigate(['/home/minha-conta#pedidos'])
+      });
     })
+  }
+
+  reset(){
+    this.carrinhoCompra = new CarrinhoCompra();
+    this.carrinhoService.setLista(this.carrinhoCompra);
   }
 }

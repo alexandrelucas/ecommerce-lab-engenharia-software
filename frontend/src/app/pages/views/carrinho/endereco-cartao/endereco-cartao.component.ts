@@ -166,7 +166,10 @@ export class EnderecoCartaoComponent implements OnInit {
 
   updateValorCompras(){    
     this.getTotalCupons();
-    this.carrinhoCompra.valorTotal = (this.carrinhoCompra.valorCompras + parseFloat(this.carrinhoCompra.frete?.valorFrete)) - this.carrinhoCompra.valorDescontos;    
+    let valorCompras = this.carrinhoCompra.valorCompras;
+    let valorFrete = parseFloat(this.carrinhoCompra.frete?.valorFrete);
+    let valorDescontos = this.carrinhoCompra.valorDescontos
+    this.carrinhoCompra.valorTotal = ((valorCompras + valorFrete) - valorDescontos) > 0 ? ((valorCompras + valorFrete) - valorDescontos) : 0;    
     return this.carrinhoCompra.valorTotal;
   }
   getTotalCupons(){
