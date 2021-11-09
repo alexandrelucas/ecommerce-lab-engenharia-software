@@ -30,12 +30,12 @@ export class DashboardComponent implements OnInit {
     { icon: 'fas fa-coins', background: 'D', title: 'Lucro total', valorIni: 'R$ 6.562,00', subTitle: 'Este mês', valorFin: 'R$ 542' },
   ]
   public cores = [
-    { borderColor: '#FFCC00', backgroundColor: '#FFCC00'},
-    { borderColor: 'rgb(255, 99, 132)', backgroundColor: 'rgb(255, 99, 132)'},
-    { borderColor: 'rgb(255, 205, 86)', backgroundColor: 'rgb(255, 205, 86)'},
-    { borderColor: 'rgb(54, 162, 235)', backgroundColor: 'rgb(54, 162, 235)'},
-    { borderColor: 'purple', backgroundColor: 'purple'},
-    { borderColor: 'yellow', backgroundColor: 'yellow'}              
+    { borderColor: '#00BFFF', backgroundColor: '#00BFFF'}, //AR
+    { borderColor: '#20c997', backgroundColor: '#20c997'}, //BR
+    { borderColor: '#FF8C00', backgroundColor: '#FF8C00'}, //ES
+    { borderColor: '#00008B', backgroundColor: '#00008B'}, //FR
+    { borderColor: '#FF0000', backgroundColor: '#FF0000'}, //IT
+    { borderColor: '#006400', backgroundColor: '#006400'}  //PT             
   ]
 
   filtroPais = new FormControl();
@@ -169,7 +169,8 @@ export class DashboardComponent implements OnInit {
     
     //GET DADOS DB
     this.servicoService.filtrarGrafico(filtros).subscribe((result: any) => {
-      this.preparaDadosDB(result, filtros);    
+      this.preparaDadosDB(result, filtros);
+      console.log(result.result)
     });
   }
 
@@ -190,15 +191,18 @@ export class DashboardComponent implements OnInit {
       dados.push({ label : p.descricao, borderColor : p.borderColor, backgroundColor : p.backgroundColor, data : p.data })
     });
 
-    //EXECUTA FILTRO DE PAISES SELECIONADOS
+    //EXECUTA FILTRO DE PAISES SELECIONADOS    
     if(filtro.pais.length){
-      const paisesFiltrados = new Set(dados);      
-      filtro.pais.filter((name) => {      
-        return paisesFiltrados.has(name);
+      const dadosFiltrados = []
+      dados.forEach(d => {
+        filtro.pais.findIndex(f => this.getPaisNome(f) == d.label) != -1 ? dadosFiltrados.push(d) : 0
       });
-    }
 
-    //ATUALIZA GRAFICO
+      dados = dadosFiltrados;
+    }
+    console.log(dados);
+
+    //ATUALIZA GRAFICO    
     this.updateChart(this.chart, eixoX, dados)
   }
 
