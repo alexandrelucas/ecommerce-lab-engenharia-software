@@ -39,7 +39,7 @@ export class ProdutoComponent implements OnInit {
       if(ret){
         this.carrinhoCompra = ret;
       }
-    });        
+    });
     this.getEstoque();    
   }
 
@@ -57,12 +57,16 @@ export class ProdutoComponent implements OnInit {
     });
   }
 
-  addCarrinho(item){
-    let existsItem = this.carrinhoCompra.listaCompras.filter(i => i.id === item.id)[0];
+  addCarrinho(item){    
+    if(!this.carrinhoCompra.listaCompras){
+      this.carrinhoCompra.listaCompras = [];
+    }
+
+    let existsItem = this.carrinhoCompra.listaCompras?.filter(i => i.id === item.id)[0];
     if(existsItem){
       existsItem.qtd++;
     }else{
-      this.carrinhoCompra.listaCompras.push(new Carrinho(item.id, item.codigo, item.titulo, item.imagem, item.precoDe, item.precoPor, item.quantidadeML,
+      this.carrinhoCompra.listaCompras?.push(new Carrinho(item.id, item.codigo, item.titulo, item.imagem, item.precoDe, item.precoPor, item.quantidadeML,
         item.tempoGuarda, item.categoria, item.tipo, item.teorAlcoolico, item.paisSigla, item.pais, item.descricao, 1, 0, ''));
     }
 

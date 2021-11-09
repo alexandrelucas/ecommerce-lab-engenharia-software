@@ -43,6 +43,9 @@ export class CarrinhoComponent implements OnInit {
   getListaCarrinho(){
     this.carrinhoService.getLista().subscribe((lista:CarrinhoCompra) => {      
       this.carrinhoCompra = lista;      
+      if(!this.carrinhoCompra.frete){
+        this.carrinhoCompra.frete = new CarrinhoFrete();
+      }   
     });
   }
 
@@ -80,9 +83,7 @@ export class CarrinhoComponent implements OnInit {
 
   updateValorTotal(){
     if(this.carrinhoCompra){
-      if(!this.carrinhoCompra.frete){
-        this.carrinhoCompra.frete = new CarrinhoFrete();
-      }      
+         
       let valorFrete = parseFloat(this.carrinhoCompra.frete?.valorFrete.toString())      
       let total = this.carrinhoCompra.valorCompras + valorFrete;
       this.carrinhoCompra.valorTotal = total > 0 ? total : 0;
@@ -107,9 +108,7 @@ export class CarrinhoComponent implements OnInit {
     this.carrinhoCompra.frete = new CarrinhoFrete();      
     this.carrinhoCompra.frete.transportadora = frete.company.name;
     this.carrinhoCompra.frete.valorFrete = frete.price;    
-  }
-
-  
+  } 
 
   continuarCompra(){
     this.carrinhoService.setLista(this.carrinhoCompra);
@@ -126,11 +125,9 @@ export class CarrinhoComponent implements OnInit {
   }
 
   validaBtn(){
-    return false;
-
     if(this.carrinhoCompra){
       let infoEstoque = this.carrinhoCompra.listaCompras.filter(c => c.infoEstoque != '').length;      
-      let frete = this.carrinhoCompra.frete == undefined;
+      let frete = this.carrinhoCompra.frete?.transportadora == undefined;
 
       return infoEstoque || frete ? true : false;
     }

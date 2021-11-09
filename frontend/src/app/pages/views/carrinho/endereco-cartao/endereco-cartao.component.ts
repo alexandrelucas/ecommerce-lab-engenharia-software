@@ -166,7 +166,10 @@ export class EnderecoCartaoComponent implements OnInit {
 
   updateValorCompras(){    
     this.getTotalCupons();
-    this.carrinhoCompra.valorTotal = (this.carrinhoCompra.valorCompras + parseFloat(this.carrinhoCompra.frete?.valorFrete)) - this.carrinhoCompra.valorDescontos;    
+    let valorCompras = this.carrinhoCompra.valorCompras;
+    let valorFrete = parseFloat(this.carrinhoCompra.frete?.valorFrete);
+    let valorDescontos = this.carrinhoCompra.valorDescontos
+    this.carrinhoCompra.valorTotal = ((valorCompras + valorFrete) - valorDescontos) > 0 ? ((valorCompras + valorFrete) - valorDescontos) : 0;    
     return this.carrinhoCompra.valorTotal;
   }
   getTotalCupons(){
@@ -193,8 +196,7 @@ export class EnderecoCartaoComponent implements OnInit {
         });
         this.carrinhoCompra.enderecos.push(result);
       }else{        
-        this.cliente.updateEndereco(result, this.carrinhoCompra.clienteId).subscribe( (res: any) => {      
-          console.log(res)
+        this.cliente.updateEndereco(result, this.carrinhoCompra.clienteId).subscribe( (res: any) => {
         });
 
         this.carrinhoCompra.enderecos[this.carrinhoCompra.enderecos.findIndex( e => e.id == result.id)] = result;
@@ -223,8 +225,7 @@ export class EnderecoCartaoComponent implements OnInit {
         });
         this.carrinhoCompra.cartoes.push(result);
       }else{
-        this.cliente.updateCartao(result, this.carrinhoCompra.clienteId).subscribe( (res: any) => {      
-          console.log(res)
+        this.cliente.updateCartao(result, this.carrinhoCompra.clienteId).subscribe( (res: any) => {
         });
 
         this.carrinhoCompra.cartoes[this.carrinhoCompra.cartoes.findIndex( c => c.id == result.id)] = result;
@@ -233,8 +234,7 @@ export class EnderecoCartaoComponent implements OnInit {
 
       if(!this.carrinhoCompra.cartaoPagamento){
         this.carrinhoCompra.cartaoPagamento = result;
-      }
-      console.log(this.carrinhoCompra);
+      }      
     });
   }
 
@@ -254,13 +254,11 @@ export class EnderecoCartaoComponent implements OnInit {
     this.carrinhoCompra.cartaoPagamento = this.carrinhoCompra.cartoes[idx];
   }
 
-  setCarrinho(){
-    console.log(this.pagamento)
+  setCarrinho(){    
     if(!this.carrinhoCompra.pagamento){
       this.carrinhoCompra.pagamento = {}
     }
       
-    console.log(this.carrinhoCompra)
     if(this.pagamento.doisCartoes){
       this.carrinhoCompra.pagamento = this.pagamento;
       this.carrinhoCompra.pagamento.segundoCartao.idCartao = parseInt(this.carrinhoCompra.pagamento.segundoCartao.idCartao);      
@@ -302,13 +300,11 @@ export class EnderecoCartaoComponent implements OnInit {
     if(this.pagamento.segundoCartao.valorAPagar < 10){
       return this.pagamento.obs = 'O valor não pode ser menor que R$ 10,00';
     }
-    console.log(this.carrinhoCompra)
 
     this.pagamento.obs = null;
     this.setCartaoAdd = true;
     this.pagamento.doisCartoes = true;
     this.pagamento.cartaoPrincipal.valorAPagar = this.carrinhoCompra.valorTotal - this.pagamento.segundoCartao.valorAPagar; 
-    this.pagamento.cartaoPrincipal.idCartao = this.carrinhoCompra.cartaoPagamento.id;    
-    console.log(this.pagamento);
+    this.pagamento.cartaoPrincipal.idCartao = this.carrinhoCompra.cartaoPagamento.id;
   }
 }
