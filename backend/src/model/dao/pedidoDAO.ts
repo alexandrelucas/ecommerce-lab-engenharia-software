@@ -130,7 +130,6 @@ export default class PedidoDAO implements IDAO {
 
         let pedidos = await PgDatabase.query(query);
 
-
         if(pedidos.rowCount > 0) {
             for(const p of pedidos.rows) {
                let produtoQuery = `SELECT p.id, p.codigo, pp.status, pp.quantidade, pp.valor, p.titulo, p.descricao, p.imagem, p."quantidadeML", p."tempoGuarda", p."teorAlcoolico", p.tipo, p.peso, c.descricao as "categoria", pais.sigla as "paisSigla", pais.descricao as "pais" 
@@ -143,7 +142,7 @@ export default class PedidoDAO implements IDAO {
             let endereco = await new EnderecoDAO().consultar(new Endereco(p.enderecoId));
             let cartoes = await new PagamentoCartoesDAO().consultar({id: p.pagamentoId} as EntidadeDominio);
 
-            p.quantidade = produtos.rows.map(p => p.quantidade).reduce((p,c) => p + c);
+            p.quantidade = produtos.rows.map(p => p.quantidade).reduce((p,c) => p + c, 0);
             p.produtos = produtos.rows;
             p.enderecoEntrega = endereco[0];
             p.cartoesUsados = cartoes;
