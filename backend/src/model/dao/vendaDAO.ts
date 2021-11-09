@@ -1,8 +1,12 @@
 import PgDatabase from "../../db.config";
+import Cupom from "../entidade/cupom.model";
+import CupomCliente from "../entidade/cupomCliente.model";
 import EntidadeDominio from "../entidade/entidadeDominio.model";
 import Estoque from "../entidade/estoque.model";
 import Pedido from "../entidade/pedido.model";
 import Venda from "../entidade/venda.model";
+import CupomClienteDAO from "./cupomClienteDAO";
+import CupomDAO from "./cupomDAO";
 import EstoqueDAO from "./estoqueDAO";
 import IDAO from "./IDAO";
 import PedidoDAO from "./pedidoDAO";
@@ -12,11 +16,11 @@ export default class VendaDAO implements IDAO {
     async salvar(entidade: Venda): Promise<EntidadeDominio> {
         if(!entidade.pedidoId) return {error: 'Sem o id do pedido'} as EntidadeDominio;
         try {
-
             if(await this.consultarPedidoExistente(entidade.pedidoId)) return {error: 'Pedido já consta como vendido!'} as EntidadeDominio;
 
             let pedidoDAO = new PedidoDAO();
             let pedido = (await pedidoDAO.consultar(new Pedido(entidade.pedidoId)))[0] as Pedido;
+
             
             if(!pedido) return {error: 'Pedido inválido!'} as EntidadeDominio;
 
@@ -30,6 +34,7 @@ export default class VendaDAO implements IDAO {
 
             // Pagamento aprovado! Registrar venda
             if(resultPagamento.rowCount > 0 && resultPedido.rowCount > 0){
+                
                 query = `INSERT INTO vendas("pedidoId", valor) VALUES ('${pedido.id}', '${pedido.valorTotal}') RETURNING id;`;
 
                 let result = await PgDatabase.query(query);
@@ -50,22 +55,23 @@ export default class VendaDAO implements IDAO {
                     await estoqueDAO.alterar({produtoId: p.id, quantidade: quantidadeBaixada} as Estoque);
                 }
 
-                // Gerar cupom excedente caso haja algum;
-                let cuponsQuery = 
-                `SELECT SUM("valorDesconto") FROM cupons 
-                INNER JOIN "pedidosCupons" ON "pedidosCupons"."cupomId" = cupons.id 
-                WHERE "pedidoId" = ${entidade.pedidoId};`;
-
-                let consulta = await PgDatabase.query(cuponsQuery);
-
-                let descontos = consulta.rows[0].sum;
-
-               if(descontos > pedido.valorSubTotal!) {
+               if(Math.sign(pedido.valorTotal!) == -1) {
                    // gerar Cupom
-                   
-               }
+                   let valorCupom = Math.abs(pedido.valorTotal!);
+                   let cupomDAO = new CupomClienteDAO();
 
-                
+                   let dados = {
+                    "clienteId": pedido.clienteId!,
+                    "cupom": {
+                        "tipoCupom": "EXCEDENTE",
+                        "valorDesconto": valorCupom,
+                        "codigo": `VINOEX-${pedido.codigo}${pedido.clienteId}`
+                    }
+                   };
+
+                   let cupom = Object.assign(new CupomCliente(), dados);
+                   await cupomDAO.salvar(Object.assign(new CupomCliente(), cupom));
+               }
             } else {
                 return {error: 'Pagamento não aprovado!'} as EntidadeDominio;
             }

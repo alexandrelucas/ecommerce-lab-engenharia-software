@@ -68,7 +68,6 @@ export default class CupomDAO implements IDAO {
             return result ?? [];
         } else {
             if(!cupomCodigo) {
-                console.log('entrou aqui!!!');
                 query = clienteId ? 
                 `SELECT * FROM cupons INNER JOIN "cuponsCliente" ON "cuponsCliente"."cupomId" = cupons.id WHERE "clienteId" = '${clienteId}'` 
                 : `SELECT * FROM ${this.tabela};`; 

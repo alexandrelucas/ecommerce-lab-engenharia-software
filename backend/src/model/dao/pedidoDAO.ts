@@ -120,7 +120,7 @@ export default class PedidoDAO implements IDAO {
         
         let query;
         if(pedidoId) {
-            query = `SELECT p.id, p.codigo, p.status, p."statusCancelamento" ,p."valorFrete", p.transportadora, p."enderecoId", p."pagamentoId", pagamentos.status as "statusPagamento", p."valorSubTotal", p."valorTotal", p.data FROM 
+            query = `SELECT p."clienteId", p.id, p.codigo, p.status, p."statusCancelamento" ,p."valorFrete", p.transportadora, p."enderecoId", p."pagamentoId", pagamentos.status as "statusPagamento", p."valorSubTotal", p."valorTotal", p.data FROM 
             pedidos as p INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."id" = '${pedidoId}';`;
         } else if (clienteId) {
             query = `SELECT p.id, p.codigo, p.status, p."statusCancelamento", p."valorFrete", p.transportadora, p."enderecoId", p."pagamentoId", pagamentos.status as "statusPagamento", p."valorSubTotal", p."valorTotal", p.data FROM 

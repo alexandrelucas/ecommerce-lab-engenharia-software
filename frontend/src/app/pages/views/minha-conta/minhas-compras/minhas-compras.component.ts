@@ -88,6 +88,11 @@ export class MinhasComprasComponent implements OnInit, AfterViewInit {
     } else 
     return StatusPedidoNome[status];
   }
+
+  getValor(valor) {
+    return Math.sign(valor) == -1 ? 0 : valor;
+  }
+
 }
 
 export interface Compra {

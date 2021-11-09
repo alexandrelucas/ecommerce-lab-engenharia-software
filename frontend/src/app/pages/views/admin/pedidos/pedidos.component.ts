@@ -56,6 +56,10 @@ export class PedidosComponent implements OnInit {
     return StatusPedidoNome[status];
   }
 
+  getValor(valor) {
+    return Math.sign(valor) == -1 ? 0 : valor;
+  }
+
   getNomeProdutos(produtosLista: Array<Produto>) {
     return produtosLista.map(p => p.titulo).reduce((p, n) => `${p}, ${n}`);
   }
