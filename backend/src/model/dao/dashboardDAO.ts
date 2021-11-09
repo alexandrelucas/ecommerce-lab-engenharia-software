@@ -75,7 +75,7 @@ export default class DashboardDAO implements IDAO {
                         break;
 
                     }
-                let consulta = await PgDatabase.query(query, [entidade.dataInicio, entidade.dataFim]);
+                let consulta = fluxoData != -1 ?  await PgDatabase.query(query, [entidade.dataInicio, entidade.dataFim]) : await PgDatabase.query(query);
                 return {resultado: consulta.rows};
         } else {
             return {error: 'Faltando dados do input'} as EntidadeDominio;   
