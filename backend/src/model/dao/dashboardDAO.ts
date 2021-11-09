@@ -30,18 +30,27 @@ export default class DashboardDAO implements IDAO {
 
         query = 'SELECT COUNT(*) FROM vendas;';
         let numVendas = (await PgDatabase.query(query)).rows[0].count;
+        
+        query = `SELECT COUNT(*) FROM vendas 
+        INNER JOIN pedidos ON pedidos.id = vendas."pedidoId" 
+        WHERE pedidos.data > now() - interval '30' day;`;
+        
+        let numVendasMes = (await PgDatabase.query(query)).rows[0].count;
 
         query = 'SELECT SUM(valor) FROM vendas;';
         let receitaVendas = (await PgDatabase.query(query)).rows[0].sum;
+        
+        query = `SELECT SUM(valor) FROM vendas INNER JOIN pedidos ON pedidos.id = vendas."pedidoId" WHERE pedidos.data > now() - interval '30' day;`;
+        let receitaVendasMes = (await PgDatabase.query(query)).rows[0].sum;
 
         objetoFinal.totalPedidos = parseInt(numPedidos);
         objetoFinal.totalPedidosConcluidos = parseInt(numPedidosConcluidos);
         objetoFinal.numeroVendas = parseInt(numVendas);
-        objetoFinal.numeroVendasMes = '-';
-        objetoFinal.receitaVendas = parseInt(receitaVendas ?? 0);
-        objetoFinal.receitaVendasMes = '-';
+        objetoFinal.numeroVendasMes = parseInt(numVendasMes);
+        objetoFinal.receitaVendas = parseFloat(receitaVendas ?? 0.0);
+        objetoFinal.receitaVendasMes = parseFloat(receitaVendasMes ?? 0.0);
         objetoFinal.lucros = (receitaVendas * 0.32);
-        objetoFinal.lucrosMes = '-';
+        objetoFinal.lucrosMes = receitaVendasMes * 0.32;
         return objetoFinal as EntidadeDominio;
     }
 

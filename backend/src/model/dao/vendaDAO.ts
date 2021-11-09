@@ -18,8 +18,6 @@ export default class VendaDAO implements IDAO {
             let pedidoDAO = new PedidoDAO();
             let pedido = (await pedidoDAO.consultar(new Pedido(entidade.pedidoId)))[0] as Pedido;
             
-            console.log(pedido.pagamentoId);
-
             if(!pedido) return {error: 'Pedido inválido!'} as EntidadeDominio;
 
             let query = `UPDATE pagamentos SET status=1 WHERE id = '${pedido.pagamentoId}';`;
@@ -52,12 +50,20 @@ export default class VendaDAO implements IDAO {
                     await estoqueDAO.alterar({produtoId: p.id, quantidade: quantidadeBaixada} as Estoque);
                 }
 
+                // Gerar cupom excedente caso haja algum;
+                let cuponsQuery = 
+                `SELECT SUM("valorDesconto") FROM cupons 
+                INNER JOIN "pedidosCupons" ON "pedidosCupons"."cupomId" = cupons.id 
+                WHERE "pedidoId" = ${entidade.pedidoId};`;
 
-                // let estoqueDAO = new EstoqueDAO();
-                // let consultarEstoque = await (await estoqueDAO.consultar(new Estoque(null!, p.id))) as Estoque[];
-                // let quantidadeBaixada = consultarEstoque[0].quantidade! - p.quantidade;
-                // await estoqueDAO.alterar({produtoId: p.id, quantidade: quantidadeBaixada} as Estoque);
+                let consulta = await PgDatabase.query(cuponsQuery);
 
+                let descontos = consulta.rows[0].sum;
+
+               if(descontos > pedido.valorSubTotal!) {
+                   // gerar Cupom
+                   
+               }
 
                 
             } else {

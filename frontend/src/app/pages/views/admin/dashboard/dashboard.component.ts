@@ -76,13 +76,15 @@ export class DashboardComponent implements OnInit {
         
         // Receita
         let receitaVendas = currencyFormat.format(result.result.receitaVendas);
+        let receitaVendasMes = currencyFormat.format(result.result.receitaVendasMes);
         this.cards[2].valorIni = receitaVendas;
-        this.cards[2].valorFin = `${result.result.receitaVendasMes}`; 
+        this.cards[2].valorFin = receitaVendasMes; 
         
         // Lucro Total
         let lucroFormat = currencyFormat.format(result.result.lucros);
+        let lucroMesFormat = currencyFormat.format(result.result.lucrosMes);
         this.cards[3].valorIni = lucroFormat; 
-        this.cards[3].valorFin = `${result.result.lucrosMes}`; 
+        this.cards[3].valorFin = lucroMesFormat; 
       }
     });
   }

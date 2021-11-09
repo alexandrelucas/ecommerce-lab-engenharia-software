@@ -58,9 +58,8 @@ export class CuponsComponent implements OnInit {
     })
   }
 
-  gravarListaCupons() {
-    //this.storage.setItem('cuponsCadastrados', JSON.stringify(this.listaCupons));
-    this.service.setCupom(this.listaCupons[0]).subscribe( (ret:any) => {
+  gravarListaCupons(cupom) {
+    this.service.setCupom(cupom).subscribe( (ret:any) => {
       this.carregarListaCupons();
     });
   }
@@ -78,13 +77,15 @@ export class CuponsComponent implements OnInit {
     // if(!cupom) {
     //   cupomResult.id = this.listaCupons.length + 1;
     // }
+
+    console.log(cupomResult);
+
     this.listaCupons.push(await cupomResult);
-    console.log(cupomResult)
 
     if(cupomResult.id){
       this.updateCupom(cupomResult);
     }else{
-      this.gravarListaCupons();
+      this.gravarListaCupons(cupomResult);
     }
     
     this.carregarListaCupons();

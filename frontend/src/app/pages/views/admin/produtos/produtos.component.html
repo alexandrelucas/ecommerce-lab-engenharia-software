@@ -68,8 +68,11 @@
                   <button class="btn btn-dark btn-sm mr-2" (click)="showCadastroModal(element.id)">
                     <i class="fas fa-pen"></i>
                   </button>
-                  <button class="btn btn-danger btn-sm" (click)="showModalExcluiProduto(modalExcluiProduto, element)">
+                  <button class="btn btn-danger btn-sm mr-2" (click)="showModalExcluiProduto(modalExcluiProduto, element)">
                     <i class="fas fa-trash"></i>
+                  </button>
+                  <button class="btn btn-success btn-sm" (click)="addEstoqueModal(element)">
+                    <i class="fas fa-plus"></i>
                   </button>
                 </td>
               </ng-container>
@@ -89,7 +92,7 @@
     <div class="modal-header">
       <div class="d-flex align-items-center">
           <mat-icon class="mr-2">assignment</mat-icon>
-          <p class="modal-title p-0 m-0"><strong>{{ 'Pedido: #' + produtoSelecionado.codigo }}</strong></p>
+          <p class="modal-title p-0 m-0"><strong>{{ 'Produto: #' + produtoSelecionado.codigo }}</strong></p>
       </div>
     </div>
     <div class="modal-body">

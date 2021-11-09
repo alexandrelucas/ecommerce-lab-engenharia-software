@@ -27,7 +27,8 @@ export default class Pedido extends EntidadeDominio{
     status?: number;
     valorFrete?: number;
     transportadora?: string;
-    valorTotal?: string;
+    valorSubTotal?: number;
+    valorTotal?: number;
     cupomId?: number;
     pagamentoId?: number;
     data?: Date;

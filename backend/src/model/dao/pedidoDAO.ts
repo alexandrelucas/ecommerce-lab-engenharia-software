@@ -1,10 +1,8 @@
 import PgDatabase from "../../db.config";
 import Endereco from "../entidade/endereco.model";
 import EntidadeDominio from "../entidade/entidadeDominio.model";
-import Estoque from "../entidade/estoque.model";
 import Pedido from "../entidade/pedido.model";
 import EnderecoDAO from "./enderecoDAO";
-import EstoqueDAO from "./estoqueDAO";
 import IDAO from "./IDAO";
 import PagamentoCartoesDAO from "./pagamentoCartoesDAO";
 import PagamentoDAO from "./pagamentoDAO";
@@ -25,8 +23,9 @@ export default class PedidoDAO implements IDAO {
                 entidade.status = 0;
 
             try {
-                let query = `INSERT INTO pedidos (codigo, status, "valorFrete", transportadora, "valorSubTotal", "valorTotal", 
-                ${entidade.cupomId ? "cupomId," : ''} "pagamentoId", data, "enderecoId", "clienteId") 
+                let query = 
+                `INSERT INTO pedidos (codigo, status, "valorFrete", transportadora, "valorSubTotal", "valorTotal", 
+                "pagamentoId", data, "enderecoId", "clienteId") 
                 VALUES ('${entidade.codigo}', '${entidade.status}', '${entidade.valorFrete}', '${entidade.transportadora}',
                 '${entidade.valorSubTotal}',
                 '${entidade.valorTotal}', ${entidade.cupomId ? entidade.cupomId : ''} '${pagamento.id}',
@@ -61,9 +60,14 @@ export default class PedidoDAO implements IDAO {
                     let consulta = await PgDatabase.query(query);                    
                 }
 
-                for(const c of entidade.coupons ?? []) {
+                
+
+                for(const c of entidade.cupons ?? []) {
                     let query = `INSERT INTO public."pedidosCupons" ("cupomId", "pedidoId") VALUES ('${c.id}', ${pedidoId})`;
-                    let consulta = await PgDatabase.query(query);
+                    await PgDatabase.query(query);
+                    
+                    query = `UPDATE public."cuponsCliente" SET usado = true WHERE "cupomId" = '${c.id}' AND "clienteId" = '${entidade.clienteId}'`;
+                    await PgDatabase.query(query);
                 }
 
             } catch (e: any) {

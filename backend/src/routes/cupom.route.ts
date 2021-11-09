@@ -7,16 +7,21 @@ const CupomRouter = express.Router();
 // Validar cupom
 CupomRouter.get('/validar', async (req, res) => {
     let codigo = req.query.codigo;
+    let clienteId = req.query.clienteId;
 
-    try {
-        let cupom = (await fachada.consultar(new Cupom(null!, codigo?.toString())) as Array<Cupom>)[0];
-        res.status(200).json({status: cupom ? 0 : 1, message: cupom ? 'Cupom válido' : 'Cupom inválido', cupom});
-    } catch(e: any) {
-        res.status(500).json({
-            status: -1,
-            message: e.toString(),
-        })
-    }
+    if(codigo || clienteId) {
+        try {
+            let cupom = (await fachada.consultar(new Cupom(null!, codigo?.toString(), clienteId ? parseInt(clienteId.toString()) : undefined)) as Array<Cupom>)[0];
+            res.status(200).json({status: cupom ? 0 : 1, message: cupom ? 'Cupom válido' : 'Cupom inválido', cupom});
+        } catch(e: any) {
+            res.status(500).json({
+                status: -1,
+                message: e.toString(),
+            })
+        }
+    } else
+    res.status(400).json({status: 1, message: 'Requisição inválida'});
+    
 });
 
 // Lista todos os cupoms

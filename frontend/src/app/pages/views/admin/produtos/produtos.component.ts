@@ -4,6 +4,7 @@ import { SandBoxService } from 'src/app/shared/services/carrinho.service';
 import { Produto } from 'src/app/shared/models/produtos.model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CadastroProdutoComponent } from './dialog/cadastro-produto.component';
+import { EstoqueDialogComponent } from './estoque-dialog/estoque-dialog.component';
 
 @Component({
   selector: 'app-produtos',
@@ -81,6 +82,10 @@ export class ProdutosComponent implements OnInit {
         });
       }
     });
+  }
+
+  addEstoqueModal(produto) {
+    this.modalService.open(EstoqueDialogComponent);
   }
 
   showModalExcluiProduto(content, produto){

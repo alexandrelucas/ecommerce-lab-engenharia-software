@@ -27,9 +27,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { EstoqueDialogComponent } from './produtos/estoque-dialog/estoque-dialog.component';
 
 @NgModule({
-  declarations: [AdminComponent, ListaClienteComponent, DashboardComponent, CuponsComponent, ConfiguracoesComponent, PedidosComponent, DetalhesPedidoComponent, CadastrarCupomComponent, EstoqueComponent, VendasComponent, TrocasComponent, ProdutosComponent, CadastroProdutoComponent],
+  declarations: [AdminComponent, ListaClienteComponent, DashboardComponent, CuponsComponent, ConfiguracoesComponent, PedidosComponent, DetalhesPedidoComponent, CadastrarCupomComponent, EstoqueComponent, VendasComponent, TrocasComponent, ProdutosComponent, CadastroProdutoComponent, EstoqueDialogComponent],
   imports: [
     CommonModule,
     AdminRoutingModule,
