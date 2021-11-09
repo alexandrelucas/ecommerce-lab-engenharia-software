@@ -52,24 +52,65 @@ export default class DashboardDAO implements IDAO {
             let dataFim = new Date(entidade.dataFim);
             let query; 
             let fluxoData = this.validaDatas(dataInicio, dataFim);
-            console.log(fluxoData);
+
+            let listaPaises: any[] = entidade.pais;
+            let listaTipos: any[] = entidade.tipo;
+            let listaTempoGuarda: any[] = entidade.tempoGuarda;
+            let listaCategoria: any[] = entidade.categoria;
+            
+            let filtroPais = listaPaises.map( (v) => `AND produtos."paisId" = '${v}' `).reduce( (accum, curr) => accum + curr , '');
+            let filtroTipo = listaTipos.map( (v) => `AND produtos."tipo" = '${v}' `).reduce( (accum, curr) => accum + curr ,'');
+            let filtroTempoGuarda = listaTempoGuarda.map( (v) => `AND produtos."tempoGuarda" = '${v}' `).reduce( (accum, curr) => accum + curr ,'');
+            let filtroCategoria = listaCategoria.map( (v) => `AND produtos."categoriaId" = '${v}' `).reduce( (accum, curr) => accum + curr ,'');
             
             switch(fluxoData) {
                 case 1:
-                    query = `SELECT produtos.id, produtos.titulo, DATE_PART('day', pedidos.data) AS dia, to_char(pedidos.data, 'DD/TMMonth/YYYY') AS completo, categorias.descricao, SUM("pedidosProdutos".quantidade) AS total FROM "pedidosProdutos" INNER JOIN produtos ON "pedidosProdutos"."produtoId" = produtos.id INNER JOIN pedidos ON "pedidosProdutos"."pedidoId" = pedidos.id INNER JOIN categorias ON produtos."categoriaId" = categorias.id WHERE pedidos.data between $1 and $2 GROUP BY dia, completo, produtos.titulo, produtos.id, categorias.descricao ORDER BY dia, produtos.titulo`;
+                    query = 
+                    `SELECT produtos.id, produtos.titulo, DATE_PART('day', pedidos.data) AS dia,
+                     to_char(pedidos.data, 'DD/TMMonth/YYYY') AS completo, categorias.descricao,
+                     SUM("pedidosProdutos".quantidade) AS total 
+                     FROM "pedidosProdutos" 
+                     INNER JOIN produtos ON "pedidosProdutos"."produtoId" = produtos.id 
+                     INNER JOIN pedidos ON "pedidosProdutos"."pedidoId" = pedidos.id 
+                     INNER JOIN categorias ON produtos."categoriaId" = categorias.id 
+                     WHERE pedidos.data between $1 and $2 ${filtroPais} ${filtroTipo} ${filtroCategoria} ${filtroTempoGuarda}
+                     GROUP BY dia, completo, produtos.titulo, produtos.id, categorias.descricao 
+                     ORDER BY dia, produtos.titulo`;
+                     console.log(query);
                     break;
                 case 2:
-                    query = `SELECT produtos.id, produtos.titulo, DATE_PART('month', pedidos.data) AS mes, to_char(pedidos.data, 'TMMonth/YYYY') AS completo, categorias.descricao, SUM("pedidosProdutos".quantidade) AS total FROM "pedidosProdutos" INNER JOIN produtos ON "pedidosProdutos"."produtoId" = produtos.id INNER JOIN pedidos ON "pedidosProdutos"."pedidoId" = pedidos.id INNER JOIN categorias ON produtos."categoriaId" = categorias.id WHERE pedidos.data between $1 and $2 GROUP BY mes, completo, produtos.titulo, produtos.id, categorias.descricao ORDER BY mes, produtos.titulo`;
+                    query = 
+                    `SELECT produtos.id, produtos.titulo, DATE_PART('month', pedidos.data) AS mes,
+                     to_char(pedidos.data, 'TMMonth/YYYY') AS completo, categorias.descricao, 
+                     SUM("pedidosProdutos".quantidade) AS total 
+                     FROM "pedidosProdutos" 
+                     INNER JOIN produtos ON "pedidosProdutos"."produtoId" = produtos.id 
+                     INNER JOIN pedidos ON "pedidosProdutos"."pedidoId" = pedidos.id 
+                     INNER JOIN categorias ON produtos."categoriaId" = categorias.id 
+                     WHERE pedidos.data between $1 and $2 ${filtroPais} ${filtroTipo} ${filtroCategoria} ${filtroTempoGuarda}
+                     GROUP BY mes, completo, produtos.titulo, produtos.id, categorias.descricao 
+                     ORDER BY mes, produtos.titulo`;
                     break;
                 case 3:
-                    query = `SELECT produtos.id, produtos.titulo, DATE_PART('year', pedidos.data) AS completo, categorias.descricao, SUM("pedidosProdutos".quantidade) AS total FROM "pedidosProdutos" INNER JOIN produtos ON "pedidosProdutos"."produtoId" = produtos.id INNER JOIN pedidos ON "pedidosProdutos"."pedidoId" = pedidos.id INNER JOIN categorias ON produtos."categoriaId" = categorias.id WHERE pedidos.data between $1 and $2 GROUP BY completo, produtos.titulo, produtos.id, categorias.descricao ORDER BY completo, produtos.titulo`;
+                    query = 
+                    `SELECT produtos.id, produtos.titulo, DATE_PART('year', pedidos.data) AS completo,
+                     categorias.descricao, SUM("pedidosProdutos".quantidade) AS total 
+                     FROM "pedidosProdutos" 
+                     INNER JOIN produtos ON "pedidosProdutos"."produtoId" = produtos.id 
+                     INNER JOIN pedidos ON "pedidosProdutos"."pedidoId" = pedidos.id 
+                     INNER JOIN categorias ON produtos."categoriaId" = categorias.id 
+                     WHERE pedidos.data between $1 and $2 ${filtroPais} ${filtroTipo} ${filtroCategoria} ${filtroTempoGuarda}
+                     GROUP BY completo, produtos.titulo, produtos.id, categorias.descricao 
+                     ORDER BY completo, produtos.titulo`;
                     break;
                 default:
-                    query = `SELECT produtos.id, produtos.titulo, DATE_PART('month', pedidos.data) AS mes, to_char(pedidos.data, 'TMMonth/YYYY') AS completo, categorias.descricao, SUM("pedidosProdutos".quantidade) AS total 
+                    query = 
+                    `SELECT produtos.id, produtos.titulo, DATE_PART('month', pedidos.data) AS mes,
+                    to_char(pedidos.data, 'TMMonth/YYYY') AS completo, categorias.descricao, SUM("pedidosProdutos".quantidade) AS total 
                     FROM "pedidosProdutos"
                     INNER JOIN produtos ON "pedidosProdutos"."produtoId" = produtos.id 
                     INNER JOIN pedidos ON "pedidosProdutos"."pedidoId" = pedidos.id 
-                    INNER JOIN categorias ON produtos."categoriaId" = categorias.id 
+                    INNER JOIN categorias ON produtos."categoriaId" = categorias.id
                     GROUP BY mes, completo, produtos.titulo, produtos.id, categorias.descricao 
                     ORDER BY mes, produtos.titulo`;
                         break;
