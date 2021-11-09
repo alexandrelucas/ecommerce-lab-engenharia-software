@@ -58,10 +58,10 @@ export default class DashboardDAO implements IDAO {
             let listaTempoGuarda: any[] = entidade.tempoGuarda;
             let listaCategoria: any[] = entidade.categoria;
             
-            let filtroPais = listaPaises.map( (v) => `AND produtos."paisId" = '${v}' `).reduce( (accum, curr) => accum + curr , '');
-            let filtroTipo = listaTipos.map( (v) => `AND produtos."tipo" = '${v}' `).reduce( (accum, curr) => accum + curr ,'');
-            let filtroTempoGuarda = listaTempoGuarda.map( (v) => `AND produtos."tempoGuarda" = '${v}' `).reduce( (accum, curr) => accum + curr ,'');
-            let filtroCategoria = listaCategoria.map( (v) => `AND produtos."categoriaId" = '${v}' `).reduce( (accum, curr) => accum + curr ,'');
+            let filtroPais = listaPaises.map( (v, index) => (index != 0 ? 'OR' : 'AND') + ` produtos."paisId" = '${v}' `).reduce( (accum, curr) => accum + curr , '');
+            let filtroTipo = listaTipos.map( (v, index ) => (index != 0 ? 'OR' : 'AND') + ` produtos."tipo" = '${v}' `).reduce( (accum, curr) => accum + curr ,'');
+            let filtroTempoGuarda = listaTempoGuarda.map( (v, index) => (index != 0 ? 'OR' : 'AND') + ` produtos."tempoGuarda" = '${v}' `).reduce( (accum, curr) => accum + curr ,'');
+            let filtroCategoria = listaCategoria.map( (v, index) => (index != 0 ? 'OR' : 'AND') + ` produtos."categoriaId" = '${v}' `).reduce( (accum, curr) => accum + curr ,'');
             
             switch(fluxoData) {
                 case 1:
