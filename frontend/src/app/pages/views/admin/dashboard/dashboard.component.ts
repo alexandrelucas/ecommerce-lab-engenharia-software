@@ -167,14 +167,14 @@ export class DashboardComponent implements OnInit {
       tipo : this.filtroTipo.value ?? [],
       dataInicio : moment(this.range.value.start).format('YYYY-MM-DD').replace('Invalid date', ''),
       dataFim : moment(this.range.value.end).format('YYYY-MM-DD').replace('Invalid date', ''),
-    }    
-    
+    }
+      
     //GET DADOS DB
     this.servicoService.filtrarGrafico(filtros).subscribe((result: any) => {
       this.preparaDadosDB(result, filtros);      
     });
   }
-
+  
   //AJUSTA RETORNO DO DB E MONTA DADOS PARA O GRAFICO
   preparaDadosDB(resultDB, filtro){
     let eixoX = Object.keys(resultDB.result);
@@ -184,7 +184,20 @@ export class DashboardComponent implements OnInit {
         resultDB.result[filtro].filter(dia => dia.pais == p.descricao).length ? 
           p.data.push(parseInt(resultDB.result[filtro].filter(dia => dia.pais == p.descricao)[0].total)) : p.data.push(0)          
       })
-    })    
+    })
+
+    //VERIFICA TIPO DE AGRUPAMENTO
+    let dInicio = moment(this.range.value.start)
+    let dFim = moment(this.range.value.end)        
+    let meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+    let intervalo = dFim.diff(dInicio, 'days')    
+    let eixoXX = []
+    if(intervalo > 40){
+      eixoX.forEach(eixo => {        
+        eixoXX.push(meses[parseInt(eixo)])
+      })
+    }
+    eixoX = eixoXX;
     
     //AJUSTA OBJETO DE DADOS PARA O PONTOS DO GRAFICO
     let dados:any = []
