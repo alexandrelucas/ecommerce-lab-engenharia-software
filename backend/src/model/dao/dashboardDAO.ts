@@ -70,7 +70,7 @@ export default class DashboardDAO implements IDAO {
             switch(fluxoData) {
                 case 1:
                     queryData = `DATE_PART('day', pedidos.data) AS dia`;
-                    selectedDate = 'dia;'
+                    selectedDate = 'dia';
                     break;
                 case 2:
                     queryData = `DATE_PART('month', pedidos.data) AS mes`;
@@ -101,6 +101,8 @@ export default class DashboardDAO implements IDAO {
                 ${filtroPais} ${filtroTipo} ${filtroCategoria} ${filtroTempoGuarda}
                 GROUP BY ${selectedDate}, pais, completo
                 ORDER BY ${selectedDate}, pais`;
+
+                console.log(queryTest);
 
                 let consulta = fluxoData != -1 ?  await PgDatabase.query(queryTest, [entidade.dataInicio, entidade.dataFim]) : await PgDatabase.query(queryTest);
                 return {resultado: consulta.rows};
