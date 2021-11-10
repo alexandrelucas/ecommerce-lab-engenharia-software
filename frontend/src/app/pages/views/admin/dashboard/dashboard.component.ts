@@ -192,7 +192,9 @@ export class DashboardComponent implements OnInit {
     let meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
     let intervalo = dFim.diff(dInicio, 'days')
     let eixoXX = []
-    if(intervalo > 40){
+
+    // Arrumar depois ... ou não
+    if(intervalo > 40 && eixoX[1] != '2021'){
       eixoX.forEach(eixo => { eixoXX.push(meses[parseInt(eixo)-1]) })
       eixoX = eixoXX;
     }
