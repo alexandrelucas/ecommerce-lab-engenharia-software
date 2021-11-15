@@ -77,8 +77,10 @@ export default class EstoqueDAO implements IDAO {
 
     async inativarProduto(entidade: any): Promise<EntidadeDominio> {
         if(!entidade.produtoId) return {error: 'ProdutoId nao informado'} as EntidadeDominio;
-        if(!entidade.inativado) return {error: 'Inativar nao informado'} as EntidadeDominio;
+        if(entidade.inativado == undefined || entidade.inativado == null) return {error: 'Inativado nao informado'} as EntidadeDominio;
         if(!entidade.motivoInativo) return {error: 'Motivo nao informado'} as EntidadeDominio;
+
+
         try {
             let query2 = 
             `UPDATE estoque SET inativado='${entidade.inativado}', 
