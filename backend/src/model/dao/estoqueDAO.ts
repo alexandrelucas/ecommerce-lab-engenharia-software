@@ -8,6 +8,7 @@ export default class EstoqueDAO implements IDAO {
 
     async salvar(entidade: EntidadeDominio): Promise<EntidadeDominio> {
         if(entidade.hasId()) return null!;
+        
         try {            
             delete entidade.id;
             let colunas = Object.keys(entidade).map((e) => `"${e}"`).reduce((prev, cur) => `${prev} , ${cur}`);

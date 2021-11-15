@@ -6,7 +6,6 @@ import Estoque from "../entidade/estoque.model";
 import Pedido from "../entidade/pedido.model";
 import Venda from "../entidade/venda.model";
 import CupomClienteDAO from "./cupomClienteDAO";
-import CupomDAO from "./cupomDAO";
 import EstoqueDAO from "./estoqueDAO";
 import IDAO from "./IDAO";
 import PedidoDAO from "./pedidoDAO";
@@ -83,8 +82,29 @@ export default class VendaDAO implements IDAO {
         return entidade;
     }
     
-    async alterar(entidade: EntidadeDominio): Promise<EntidadeDominio> {
-        throw new Error("Method not implemented.");
+    async alterar(entidade: Venda): Promise<EntidadeDominio> {
+        if(!entidade.pedidoId) return {error: 'Sem o id do pedido'} as EntidadeDominio;
+        try {
+            if(await this.consultarPedidoExistente(entidade.pedidoId)) return {error: 'Pedido já consta como vendido!'} as EntidadeDominio;
+
+            let pedidoDAO = new PedidoDAO();
+            let pedido = (await pedidoDAO.consultar(new Pedido(entidade.pedidoId)))[0] as Pedido;
+
+            
+            if(!pedido) return {error: 'Pedido inválido!'} as EntidadeDominio;
+
+            let query = `UPDATE pagamentos SET status = -1 WHERE id = '${pedido.pagamentoId}';`;
+
+            let resultPagamento = await PgDatabase.query(query);
+
+            let queryAtualizaStatusPedido = `UPDATE pedidos SET status = -1 WHERE id = ${pedido.id}`;
+
+            let resultPedido = await PgDatabase.query(queryAtualizaStatusPedido);
+        } catch (e: any) {
+            return {error: 'VendaDAO.salvar(): ' + e.toString()} as EntidadeDominio;
+        }
+
+        return entidade;
     }
     async excluir(entidade: EntidadeDominio): Promise<boolean> {
         throw new Error("Method not implemented.");

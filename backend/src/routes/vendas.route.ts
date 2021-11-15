@@ -37,3 +37,22 @@ VendaRouter.post('/autorizar', async (req, res) => {
         });
     }
 });
+
+// Rejeita venda
+VendaRouter.post('/rejeitar', async (req, res) => {
+    try {
+        let rejeitarVenda = Object.assign(new Venda(), req.body);
+        let msg = await fachada.alterar(rejeitarVenda);
+
+        if(Number.parseInt(msg)) {
+            res.status(200).json({status: 0, message: msg});
+        } else {
+            res.status(400).json({status: 1, message: msg});
+        }
+    } catch(e: any) {
+        res.status(500).json({
+            status: -1,
+            message: e.toString()
+        });
+    }
+});
