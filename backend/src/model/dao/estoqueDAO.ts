@@ -83,7 +83,7 @@ export default class EstoqueDAO implements IDAO {
             let query2 = 
             `UPDATE estoque SET inativado='${entidade.inativado}', 
             "motivoInativo"= '${entidade.motivoInativo}'
-            WHERE "produtoId";`;
+            WHERE "produtoId" = '${entidade.produtoId}';`;
             let query = await PgDatabase.query(query2);
             
             if(query.rowCount) {
