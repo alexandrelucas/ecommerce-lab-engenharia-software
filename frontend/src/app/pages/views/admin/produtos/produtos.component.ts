@@ -19,7 +19,7 @@ export class ProdutosComponent implements OnInit {
   public listaProdutos: Array<Produto> = []  
   dataSource: MatTableDataSource<Produto>; 
 
-  displayedColumns: string[] = ['codigo', 'titulo', 'tipo', 'categoriaId', 'tempoGuarda', 'quantidadeML', 'paisId', 'inativado', 'acoes'];
+  displayedColumns: string[] = ['codigo', 'titulo', 'tipo', 'categoriaId', 'tempoGuarda', 'quantidadeML', 'paisId', 'inativado', 'motivoInativo', 'acoes'];
 
   constructor(
     private servicoService: SandBoxService,
@@ -46,6 +46,7 @@ export class ProdutosComponent implements OnInit {
 
   carregaListaProdutos(){
     this.servicoService.getListaProdutos().subscribe((result:any) => {
+      console.log(result.produtos)
       this.listaProdutos = result.produtos;
       this.dataSource = new MatTableDataSource(this.listaProdutos);
     })
@@ -59,9 +60,10 @@ export class ProdutosComponent implements OnInit {
     return this.categorias.filter(c => c.id == categoriaId)[0].descricao;
   }
 
-  onInativoChange(event) {    
+  onInativoChange(event) {
+    console.log(event.target.id)
     let index = this.listaProdutos.findIndex(p => p.id == event.target.id);
-    this.listaProdutos[index].inativado = event.target.checked;
+    this.listaProdutos[index].inativado = event.target.checked;    
   }
 
   showCadastroModal(produto?: any) {
@@ -85,7 +87,29 @@ export class ProdutosComponent implements OnInit {
   }
 
   addEstoqueModal(produto) {
-    this.modalService.open(EstoqueDialogComponent);
+    const mdRef = this.modalService.open(EstoqueDialogComponent);
+    mdRef.componentInstance.produto = produto;
+  }
+
+  showModalStatus(content, produtoId){
+    let index = this.listaProdutos.findIndex(p => p.id == produtoId);
+    this.produtoSelecionado = this.listaProdutos[index];
+
+    const md = this.modalService.open(content, {
+      windowClass: 'modal-compra'
+    });
+
+    md.result.then(result => {      
+      console.log(this.listaProdutos[index])
+      let produto = {
+        "produtoId": parseInt(produtoId),
+        "inativado": this.listaProdutos[index].inativado,
+        "motivoInativo": this.produtoSelecionado.motivoInativo
+      }
+      this.servicoService.inativarProduto(produto).subscribe((result:any) => {
+        console.log(result)
+      })
+    })
   }
 
   showModalExcluiProduto(content, produto){

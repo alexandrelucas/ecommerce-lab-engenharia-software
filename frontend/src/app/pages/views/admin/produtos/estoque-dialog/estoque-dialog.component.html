@@ -1,11 +1,30 @@
 <div class="modal-header">
     <div class="d-flex align-items-center">
-        <p class="modal-title p-0 m-0"><strong>Produto Adicionado ao Estoque</strong></p>
+        <p class="modal-title p-0 m-0"><strong>Adicionar ao Estoque</strong></p>
     </div>
 </div>
-<div class="modal-body">        
-    <h3>Produto Adicionado ao Estoque</h3>
+<div class="modal-body">
+    <form class="px-4" [formGroup]="estoqueForm">
+        <p class="modal-title p-0 mb-3"><strong>{{ '#' + produto.codigo + ' - ' }}</strong> {{ produto.titulo }} </p>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <input class="form-control form-control-sm" formControlName="quantidade" placeholder="Quantidade" [ngClass]="aplicaCssErro('quantidade','estoqueForm')"/>
+                <div class="invalid-feedback">
+                    {{ verificarErro('quantidade') }}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">        
+                <input class="form-control form-control-sm" formControlName="valorCusto" placeholder="Valor de Custo" prefix="R$ " mask="separator.2" thousandSeparator="." [ngClass]="aplicaCssErro('valorCusto','estoqueForm')"/>
+                <div class="invalid-feedback">
+                    Valor obrigatório
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-dark" (click)="closeModal()" id="btn-confirmcao-pedido">OK</button>
+    <button type="button" class="btn btn-danger btn-sm" (click)="closeModal()">Cancelar</button>
+    <button type="button" class="btn btn-dark btn-sm" (click)="adicionarEstoque()" id="btn-confirmcao-pedido" [disabled]="estoqueForm.invalid" >Confirmar</button>
 </div>

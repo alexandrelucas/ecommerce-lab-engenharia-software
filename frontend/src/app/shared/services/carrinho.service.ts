@@ -38,17 +38,15 @@ export class SandBoxService {
   }
   updateProduto(idProduto, produto){
     return this.http.put(this.baseUrl + `/produto/${idProduto}`, produto);
-  }
+  }  
 
   /* ESTOQUE */
   retirarEstoqueProduto(idProduto){
     return this.http.delete(this.baseUrl + `/estoque/${idProduto}`);
   }
-
   addEstoqueProduto(produto) {
     return this.http.post(this.baseUrl + '/estoque/', produto);
-  }
-
+  }  
   getEstoqueProduto(idProduto){
     return this.http.get(this.baseUrl + `/estoque/${idProduto}`);
   }
@@ -57,6 +55,9 @@ export class SandBoxService {
   }  
   darBaixaEstoque(produtoId, quantidade){    
     return this.http.put(this.baseUrl + `/estoque/${produtoId}`, quantidade);
+  }
+  inativarProduto(produto){
+    return this.http.post(this.baseUrl + `/estoque/inativar`, produto)
   }
 
   /* CUPOM */

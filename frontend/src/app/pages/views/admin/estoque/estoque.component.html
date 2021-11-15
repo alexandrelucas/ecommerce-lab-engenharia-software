@@ -36,7 +36,7 @@
             <ng-container matColumnDef="acoes">
                 <th mat-header-cell *matHeaderCellDef> Ações </th>
                 <td mat-cell *matCellDef="let element">
-                  <button class="btn btn-dark btn-sm mr-2" (click)="showCadastroModal(element.id)">
+                  <button class="btn btn-dark btn-sm mr-2" (click)="showModalQtd(modalAlterarQtd, element)">
                     <i class="fas fa-pen"></i>
                   </button>
                   <button class="btn btn-danger btn-sm" (click)="showModalExcluiProduto(modalExcluiProduto, element)">
@@ -73,4 +73,21 @@
       <button type="button" class="btn btn-danger btn-sm" (click)="modal.close()">Cancelar</button>
       <button type="button" class="btn btn-dark btn-sm" (click)="retiraProduto()">Confirmar</button>
     </div>
+</ng-template> 
+
+<!-- MOTIVO ATIVAR/INATIVAR -->
+<ng-template #modalAlterarQtd let-modal class="modal-cancela">
+  <div class="modal-header">
+    <div class="d-flex align-items-center">
+        <mat-icon class="mr-2">assignment</mat-icon>
+        <p class="modal-title p-0 m-0"><strong>{{ 'Alterar a quantidade: ' }}</strong></p>
+    </div>
+  </div>
+  <div class="modal-body">
+    <p><strong>{{ produtoSelecionado.titulo}}</strong></p>
+    <input type="text" class="form-control form-control-sm" placeholder="Quantidade" [(ngModel)]="produtoSelecionado.quantidade">
+  </div>
+  <div class="modal-footer">    
+    <button type="button" class="btn btn-dark btn-sm" (click)="modal.close()">Gravar</button>
+  </div>
 </ng-template> 

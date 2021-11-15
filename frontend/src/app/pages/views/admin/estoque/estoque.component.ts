@@ -42,10 +42,24 @@ export class EstoqueComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  
+  showModalQtd(content, produto){
+    this.produtoSelecionado = produto;
+    const qtdAnterior = produto.quantidade;
+    console.log(produto)
+
+    const mdQtd = this.modalService.open(content, {
+      windowClass: 'modal-compra'
+    });
+
+    mdQtd.result.then(result => {
+      this.service.darBaixaEstoque(produto.id, { "quantidade": this.produtoSelecionado.quantidade}).subscribe(result => {
+        console.log(result);
+      })
+    })
+  }
 
   showModalExcluiProduto(content, produto){
-    this.produtoSelecionado = produto;
+    this.produtoSelecionado = produto;    
 
     this.modalService.open(content, {
       windowClass: 'modal-compra'
@@ -68,8 +82,3 @@ export interface Estoque {
   quantidade: number;
   valorCusto: number;
 }
-
-// const ELEMENT_DATA_COMPRA: Estoque[] = [
-//   {id: 1, codigo: '015645', tipo: 'TROCA', status: 'ATIVO', valorTotal: 41.0, validade: "12/11/2021"},
-//   {id: 2, codigo: '045451', tipo: 'TROCA', status: 'ATIVO', valorTotal: 19.8, validade: "19/10/2021"}  
-// ];
