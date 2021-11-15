@@ -75,4 +75,17 @@ EstoqueRouter.get('/:produtoId', async (req, res) => {
     }
 });
 
+EstoqueRouter.post('/inativar', async (req, res) => {
+    try {
+        let produto = Object.assign(new Estoque(), req.body);
+        let msg = await fachada.inativarProduto(produto);
+        res.status(200).json({status: msg ? 1:0, message: msg ?? 'OK'});
+    } catch(e: any) {
+        res.status(500).json({
+            status: -1,
+            message: e.toString()
+        });
+    }
+});
+
 export default EstoqueRouter;

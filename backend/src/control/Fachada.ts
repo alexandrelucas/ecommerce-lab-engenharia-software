@@ -149,4 +149,8 @@ export default class Fachada implements IFachada {
         return (this.listaDaos?.get('Cliente') as ClienteDAO).login(entidade);
     }
 
+    async inativarProduto(entidade: any) : Promise<EntidadeDominio> {
+        return (this.listaDaos?.get('Estoque') as EstoqueDAO).inativarProduto(entidade);
+    }
+
 }

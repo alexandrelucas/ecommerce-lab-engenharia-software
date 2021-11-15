@@ -67,12 +67,32 @@ export default class EstoqueDAO implements IDAO {
             FROM estoque
             INNER JOIN produtos ON produtos.id = estoque."produtoId"
             INNER JOIN pais ON produtos."paisId" = pais.id
-            INNER JOIN categorias ON produtos."categoriaId" = categorias.id WHERE estoque."quantidade" > 0 ORDER BY "dataEntrada" DESC;`;
+            INNER JOIN categorias ON produtos."categoriaId" = categorias.id WHERE estoque."quantidade" > 0 AND estoque."inativado" = FALSE ORDER BY "dataEntrada" DESC;`;
         }
 
-        let cupons = PgDatabase.query(query);
-        let result:Array<EntidadeDominio> = (await cupons).rows;
+        let estoque = PgDatabase.query(query);
+        let result:Array<EntidadeDominio> = (await estoque).rows;
         return result ?? [];
+    }
+
+    async inativarProduto(entidade: any): Promise<EntidadeDominio> {
+        if(!entidade.produtoId) return {error: 'ProdutoId nao informado'} as EntidadeDominio;
+        if(!entidade.inativado) return {error: 'Inativar nao informado'} as EntidadeDominio;
+        if(!entidade.motivoInativo) return {error: 'Motivo nao informado'} as EntidadeDominio;
+        try {
+            let query2 = 
+            `UPDATE estoque SET inativado='${entidade.inativado}', 
+            "motivoInativo"= '${entidade.motivoInativo}'
+            WHERE "produtoId";`;
+            let query = await PgDatabase.query(query2);
+            
+            if(query.rowCount) {
+                return entidade;
+            } else return {error: 'Não foi possível inativar produto no estoque!'} as EntidadeDominio;
+            
+        } catch (err: any) {
+            return {error: 'EstoqueDAO.inativarProduto(): ' + err.toString()} as EntidadeDominio;
+        }
     }
 
 }

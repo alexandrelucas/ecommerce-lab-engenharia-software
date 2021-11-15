@@ -50,8 +50,18 @@ export default class VendaDAO implements IDAO {
                     // Dar baixa no estoque;
                     let estoqueDAO = new EstoqueDAO();
                     let consultarEstoque = await (await estoqueDAO.consultar(new Estoque(null!, p.produtoId))) as Estoque[];
+
                     let quantidadeBaixada = consultarEstoque[0].quantidade! - p.quantidade;
                     await estoqueDAO.alterar({produtoId: p.id, quantidade: quantidadeBaixada} as Estoque);
+
+                    // Se a quantidade for <= 0 inativa o produto
+                    if(quantidadeBaixada <= 0) {
+                        estoqueDAO.inativarProduto({
+                            produtoId: p.id,
+                            inativado: true,
+                            motivoInativo: 'FORA DE MERCADO'
+                        });
+                    }
                 }
 
                if(Math.sign(pedido.valorTotal!) == -1) {
