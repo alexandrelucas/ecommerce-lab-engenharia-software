@@ -76,6 +76,8 @@ export class PagamentoComponent implements OnInit {
   } 
 
   gravarPedido(){
+    console.log(this.pedido)
+
     this.servico.setPedido(this.pedido).subscribe((ret:any) => {
       this.carrinhoCompra.status = 0;
       this.carrinhoCompra.numeroPedido = ret.message;

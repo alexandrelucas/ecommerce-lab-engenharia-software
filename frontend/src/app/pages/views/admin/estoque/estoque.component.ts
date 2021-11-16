@@ -44,8 +44,7 @@ export class EstoqueComponent implements OnInit, AfterViewInit {
 
   showModalQtd(content, produto){
     this.produtoSelecionado = produto;
-    const qtdAnterior = produto.quantidade;
-    console.log(produto)
+    const qtdAnterior = produto.quantidade;    
 
     const mdQtd = this.modalService.open(content, {
       windowClass: 'modal-compra'

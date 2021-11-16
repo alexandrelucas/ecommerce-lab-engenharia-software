@@ -21,6 +21,8 @@ export default class PedidoDAO implements IDAO {
         if(pagamento.id) {
                 entidade.codigo = Math.floor(100000 + Math.random() * 900000);
                 entidade.status = 0;
+            
+            let data = entidade.data == undefined ? new Date().toUTCString() : entidade.data;
 
             try {
                 let query = 
@@ -29,13 +31,13 @@ export default class PedidoDAO implements IDAO {
                 VALUES ('${entidade.codigo}', '${entidade.status}', '${entidade.valorFrete}', '${entidade.transportadora}',
                 '${entidade.valorSubTotal}',
                 '${entidade.valorTotal}', ${entidade.cupomId ? entidade.cupomId : ''} '${pagamento.id}',
-                '${new Date().toUTCString()}', '${entidade.enderecoId}', '${entidade.clienteId}') RETURNING id;`;
+                '${ data }', '${entidade.enderecoId}', '${entidade.clienteId}') RETURNING id;`;
                
                 let result = await PgDatabase.query(query);
                 pedidoId = result.rows[0].id;
 
                 // fix temporario para exibir o codigo do pedido na API
-                entidade.id = Number.parseInt(entidade.codigo);
+                entidade.id = pedidoId;
 
                 //return entidade;
             } catch (e: any) {

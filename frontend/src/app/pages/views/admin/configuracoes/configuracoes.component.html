@@ -1,2 +1,10 @@
 <div class="card-header"><h2>Configurações</h2></div>
-<div class="card-body"></div>
+<div class="card-body">
+    <div>
+        <input type="text" placeholder="qtd" [(ngModel)]="qtdPedidos"> 
+    </div>
+    <div>        
+        <button (click)="criarPedido()">criar pedido</button>
+        <!-- <button (click)="incluirProdutos()">produtos pedido</button> -->
+    </div>    
+</div>

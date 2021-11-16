@@ -76,7 +76,7 @@
                   <button class="btn btn-danger btn-sm mr-2" (click)="showModalExcluiProduto(modalExcluiProduto, element)">
                     <i class="fas fa-trash"></i>
                   </button>
-                  <button class="btn btn-success btn-sm" (click)="addEstoqueModal(element)">
+                  <button class="btn btn-success btn-sm" (click)="addEstoqueModal(element)" [disabled]="element.onEstoque">
                     <i class="fas fa-plus"></i>
                   </button>
                 </td>

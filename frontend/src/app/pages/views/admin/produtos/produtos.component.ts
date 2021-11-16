@@ -45,8 +45,7 @@ export class ProdutosComponent implements OnInit {
   }
 
   carregaListaProdutos(){
-    this.servicoService.getListaProdutos().subscribe((result:any) => {
-      console.log(result.produtos)
+    this.servicoService.getListaProdutos().subscribe((result:any) => {      
       this.listaProdutos = result.produtos;
       this.dataSource = new MatTableDataSource(this.listaProdutos);
     })
@@ -61,7 +60,6 @@ export class ProdutosComponent implements OnInit {
   }
 
   onInativoChange(event) {
-    console.log(event.target.id)
     let index = this.listaProdutos.findIndex(p => p.id == event.target.id);
     this.listaProdutos[index].inativado = event.target.checked;    
   }
@@ -100,7 +98,6 @@ export class ProdutosComponent implements OnInit {
     });
 
     md.result.then(result => {      
-      console.log(this.listaProdutos[index])
       let produto = {
         "produtoId": parseInt(produtoId),
         "inativado": this.listaProdutos[index].inativado,
