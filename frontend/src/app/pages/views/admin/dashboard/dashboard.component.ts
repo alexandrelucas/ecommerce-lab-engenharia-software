@@ -178,13 +178,7 @@ export class DashboardComponent implements OnInit {
   //AJUSTA RETORNO DO DB E MONTA DADOS PARA O GRAFICO
   preparaDadosDB(resultDB, filtro){
     let eixoX = Object.keys(resultDB.result);
-    this.paises.forEach(p => {
-      p.data = [];
-      Object.keys(resultDB.result).forEach(filtro => {
-        resultDB.result[filtro].filter(dia => dia.pais == p.descricao).length ? 
-          p.data.push(parseInt(resultDB.result[filtro].filter(dia => dia.pais == p.descricao)[0].total)) : p.data.push(0)          
-      })
-    })
+    
 
     //VERIFICA TIPO DE AGRUPAMENTO
     let dInicio = moment(this.range.value.start)
@@ -193,10 +187,32 @@ export class DashboardComponent implements OnInit {
     let intervalo = dFim.diff(dInicio, 'days')
     let eixoXX = []
 
+    if(intervalo <= 31){
+      this.paises.forEach(p => {
+        p.data = [];
+        Object.keys(resultDB.result).forEach(filtro => {
+          resultDB.result[filtro].filter(dia => dia.pais == p.descricao).length ? 
+            p.data.push(parseInt(resultDB.result[filtro].filter(dia => dia.pais == p.descricao)[0].total)) : p.data.push(0)          
+        })
+      })
+    }
+
     // Arrumar depois ... ou não
-    if(intervalo > 40 && eixoX[1] != '2021'){
+    if(intervalo > 31 && eixoX[1] != '2021'){
       eixoX.forEach(eixo => { eixoXX.push(meses[parseInt(eixo)-1]) })
       eixoX = eixoXX;
+
+      this.paises.forEach(p => {
+        p.data = [];
+        Object.keys(resultDB.result).forEach(filtro => {
+          console.log(resultDB.result[filtro])
+          let cont = 0;
+          resultDB.result[filtro].forEach(f => {
+            f.pais == p.descricao ? cont += parseInt(f.total): 0            
+          })
+          p.data.push(cont)      
+        })
+      })
     }
 
     //Intervalo ANO
