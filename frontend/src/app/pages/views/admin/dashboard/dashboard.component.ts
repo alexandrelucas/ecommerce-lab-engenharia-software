@@ -198,6 +198,21 @@ export class DashboardComponent implements OnInit {
       eixoX.forEach(eixo => { eixoXX.push(meses[parseInt(eixo)-1]) })
       eixoX = eixoXX;
     }
+
+    //Intervalo ANO
+    if(eixoX[1] == '2021'){
+      this.paises.forEach(p => {
+        p.data = [];
+        Object.keys(resultDB.result).forEach(filtro => {
+          console.log(resultDB.result[filtro])
+          let cont = 0;
+          resultDB.result[filtro].forEach(f => {
+            f.pais == p.descricao ? cont += parseInt(f.total): 0            
+          })
+          p.data.push(cont)      
+        })
+      })
+    }
     
     //AJUSTA OBJETO DE DADOS PARA O PONTOS DO GRAFICO
     let dados:any = []
