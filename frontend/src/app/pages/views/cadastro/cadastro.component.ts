@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Endereco } from 'src/app/shared/models/endereco.model';
 import { ClienteService } from 'src/app/shared/services/cliente.service';
 import { SandBoxService } from 'src/app/shared/services/carrinho.service';
+import { AvisoDialog } from 'src/app/shared/dialogs/aviso/aviso-dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-cadastro',
@@ -36,7 +38,8 @@ export class CadastroComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private service: ClienteService,
-    private servico: SandBoxService
+    private servico: SandBoxService,
+    private dialog: MatDialog
     ) {
     this.cliente = new Cliente();
     this.cliente.endereco = [];
@@ -180,15 +183,25 @@ export class CadastroComponent implements OnInit {
     this.preparaDados();
     this.preparaEndereco();
     
-    this.service.setCliente(this.dadosCliente).subscribe( (result:any) => {      
+    this.service.setCliente(this.dadosCliente).subscribe( (result:any) => {
       this.storage.setItem('clienteId', JSON.stringify(result.message));
-
       this.dadosEndereco.forEach( e => {
         delete e.pais;
         this.service.setEndereco(result.message, e).subscribe( result => {          
         });
       })
       this.router.navigate(['home/produto']);
+    }, (error: any) => {
+      this.showModalAviso('Erro', error.error.message);
+    });
+  }
+
+  showModalAviso(title, message){
+    this.dialog.open(AvisoDialog,{
+      data: {
+        title: title,
+        message: message
+      }
     });
   }
 }

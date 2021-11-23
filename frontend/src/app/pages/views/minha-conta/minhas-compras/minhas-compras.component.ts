@@ -85,8 +85,12 @@ export class MinhasComprasComponent implements OnInit, AfterViewInit {
   getStatus(status: number, statusCancelamento: number) {
     if((statusCancelamento != 0 && statusCancelamento != 13)) {
       return StatusPedidoNome[statusCancelamento];
-    } else 
-    return StatusPedidoNome[status];
+    } else {
+      if(status == -1) {
+        return 'Pagamento Rejeitado';
+      }
+      return StatusPedidoNome[status];
+    }
   }
 
   getValor(valor) {

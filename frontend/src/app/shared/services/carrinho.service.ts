@@ -125,6 +125,13 @@ export class SandBoxService {
       pedidoId: pedidoId
     });
   }
+
+  // Rejeitar Venda
+  rejeitarVenda(pedidoId){
+    return this.http.post(this.baseUrl + `/venda/rejeitar`, {
+      pedidoId: pedidoId
+    });
+  }
     
   /** VENDAS */
   getListaVendas(){

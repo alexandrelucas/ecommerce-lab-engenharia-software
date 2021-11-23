@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,    
     FormsModule,
     ReactiveFormsModule,
+    MatDialogModule,
     CadastroRoutingModule,
     MatStepperModule,
     MatIconModule,

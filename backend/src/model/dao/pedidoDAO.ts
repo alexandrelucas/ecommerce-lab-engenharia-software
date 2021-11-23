@@ -36,7 +36,6 @@ export default class PedidoDAO implements IDAO {
                 let result = await PgDatabase.query(query);
                 pedidoId = result.rows[0].id;
 
-                // fix temporario para exibir o codigo do pedido na API
                 entidade.id = pedidoId;
 
                 //return entidade;
@@ -126,12 +125,12 @@ export default class PedidoDAO implements IDAO {
             pedidos as p INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."id" = '${pedidoId}';`;
         } else if (clienteId) {
             query = `SELECT p.id, p.codigo, p.status, p."statusCancelamento", p."valorFrete", p.transportadora, p."enderecoId", p."pagamentoId", pagamentos.status as "statusPagamento", p."valorSubTotal", p."valorTotal", p.data FROM 
-            pedidos as p INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."clienteId" = '${clienteId}' ORDER BY id DESC;`;
+            pedidos as p INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" WHERE p."clienteId" = '${clienteId}' ORDER BY p.data DESC;`;
         }
         else{
             // query = `SELECT * FROM ${this.tabela}`;
             query = `SELECT p.id, p.codigo, p.status, p."statusCancelamento", p."valorFrete", p.transportadora, p."enderecoId", p."pagamentoId", pagamentos.status as "statusPagamento" , p."valorSubTotal", p."valorTotal", p.data FROM 
-            pedidos as p INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId";`;
+            pedidos as p INNER JOIN pagamentos ON pagamentos.id = p."pagamentoId" order by p.data desc;`;
         }
 
         let pedidos = await PgDatabase.query(query);

@@ -28,19 +28,28 @@ export default class DashboardDAO implements IDAO {
         query = 'SELECT COUNT(*) FROM pedidos WHERE status >= 4 AND status <= 9;';
         let numPedidosConcluidos = (await (await PgDatabase.query(query)).rows[0].count);
 
-        query = 'SELECT COUNT(*) FROM vendas;';
-        let numVendas = (await PgDatabase.query(query)).rows[0].count;
-        
-        query = `SELECT COUNT(*) FROM vendas 
-        INNER JOIN pedidos ON pedidos.id = vendas."pedidoId" 
-        WHERE pedidos.data > now() - interval '30' day;`;
-        
-        let numVendasMes = (await PgDatabase.query(query)).rows[0].count;
+        // query = 'SELECT COUNT(*) FROM vendas;';
+        query = 'SELECT SUM(quantidade) FROM vendas INNER JOIN "pedidosProdutos" ON "pedidosProdutos"."pedidoId" = vendas."pedidoId";';
+        let numVendas = (await PgDatabase.query(query)).rows[0].sum;
 
-        query = 'SELECT SUM(valor) FROM vendas;';
+        
+        // query = `SELECT COUNT(*) FROM vendas 
+        // INNER JOIN pedidos ON pedidos.id = vendas."pedidoId" 
+        // WHERE pedidos.data > now() - interval '30' day;`;
+        query = `
+        SELECT SUM(quantidade) FROM vendas 
+        INNER JOIN "pedidosProdutos" 
+        ON "pedidosProdutos"."pedidoId" = vendas."pedidoId"
+        INNER JOIN pedidos ON vendas."pedidoId" = pedidos.id
+        WHERE pedidos.data > now() - interval '30' day;
+        `;
+        
+        let numVendasMes = (await PgDatabase.query(query)).rows[0].sum;
+
+        query = 'SELECT SUM(valor * 0.1) FROM vendas;';
         let receitaVendas = (await PgDatabase.query(query)).rows[0].sum;
         
-        query = `SELECT SUM(valor) FROM vendas INNER JOIN pedidos ON pedidos.id = vendas."pedidoId" WHERE pedidos.data > now() - interval '30' day;`;
+        query = `SELECT SUM(valor * 0.25) FROM vendas INNER JOIN pedidos ON pedidos.id = vendas."pedidoId" WHERE pedidos.data > now() - interval '30' day;`;
         let receitaVendasMes = (await PgDatabase.query(query)).rows[0].sum;
 
         objetoFinal.totalPedidos = parseInt(numPedidos);

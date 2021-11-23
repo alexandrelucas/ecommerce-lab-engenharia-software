@@ -44,7 +44,7 @@ VendaRouter.post('/rejeitar', async (req, res) => {
         let rejeitarVenda = Object.assign(new Venda(), req.body);
         let msg = await fachada.alterar(rejeitarVenda);
 
-        if(Number.parseInt(msg)) {
+        if(!Number.parseInt(msg)) {
             res.status(200).json({status: 0, message: msg});
         } else {
             res.status(400).json({status: 1, message: msg});

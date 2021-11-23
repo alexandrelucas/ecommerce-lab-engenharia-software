@@ -39,7 +39,7 @@
             </ng-container>
   
             <ng-container matColumnDef="ativo">
-              <th mat-header-cell *matHeaderCellDef> Ativado </th>
+              <th mat-header-cell *matHeaderCellDef> Desabilitado </th>
               <td mat-cell *matCellDef="let element">
                 <input type="checkbox" [id]="element?.id" data-toggle="toggle" [checked]="element?.ativo" (change)="onInativoChange($event)" data-onstyle="primary">
               </td>

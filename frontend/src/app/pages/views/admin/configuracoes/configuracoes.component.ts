@@ -14,8 +14,8 @@ export class ConfiguracoesComponent implements OnInit {
   ) { }
 
   public listaProdutos = [
-    {id: 1, precoDe: 45},
-    {id: 2, precoDe: 21.51},
+    {id: 1, precoDe: 43},
+    {id: 2, precoDe: 32.51},
     {id: 4, precoDe: 24.9},
     {id: 5, precoDe: 26.71},
     {id: 6, precoDe: 39.5},
@@ -59,8 +59,8 @@ export class ConfiguracoesComponent implements OnInit {
   }
 
   gerarData(){    
-      let start = new Date('2020-10-01')
-      let end = new Date('2021-10-30')
+      let start = new Date('2021-01-01')
+      let end = new Date('2021-02-28')
 
       var diff =  end.getTime() - start.getTime();
       var new_diff = diff * Math.random();
@@ -73,9 +73,9 @@ export class ConfiguracoesComponent implements OnInit {
       this.incluirProdutos();
 
       let pedido = {
-        clienteId: 2,
+        clienteId: 1,
         cupons: [],
-        enderecoId: 7,
+        enderecoId: 4,
         pagamento: [
           {cartaoId: 3, valor: this.valorTotal}
         ],

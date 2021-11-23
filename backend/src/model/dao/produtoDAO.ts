@@ -71,7 +71,7 @@ export default class ProdutoDAO implements IDAO {
             "precoDe", "precoPor", "quantidadeML", "tempoGuarda",
             "teorAlcoolico", tipo, peso, comprimento, altura, largura, diametro, formato, "paisId", "categoriaId", inativado, "motivoInativo", ("inativado" IS NOT NULL) as "onEstoque"
             FROM produtos 
-            LEFT OUTER JOIN estoque ON estoque."produtoId" = produtos.id;`;
+            LEFT OUTER JOIN estoque ON estoque."produtoId" = produtos.id order by produtos.id;`;
         }
 
         let produtos = PgDatabase.query(query);

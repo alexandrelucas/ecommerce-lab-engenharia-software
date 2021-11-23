@@ -52,7 +52,10 @@ export class PedidosComponent implements OnInit {
   getStatus(status: number, statusCancelamento: number) {
     if((statusCancelamento != 0 && statusCancelamento != 13)) {
       return StatusPedidoNome[statusCancelamento];
-    } else 
+    } else
+    if(status == -1) {
+      return 'Pagamento Rejeitado';
+    }
     return StatusPedidoNome[status];
   }
 
@@ -78,6 +81,14 @@ export class PedidosComponent implements OnInit {
 
   autorizarVenda(pedidoId) {
     this.servico.autorizarVenda(pedidoId).subscribe((result: any) => {
+      if(result.status == 0) {
+        this.carregarListaPedidos();
+      }
+    });
+  }
+
+  rejeitarVenda(pedidoId) {
+    this.servico.rejeitarVenda(pedidoId).subscribe((result: any) => {
       if(result.status == 0) {
         this.carregarListaPedidos();
       }

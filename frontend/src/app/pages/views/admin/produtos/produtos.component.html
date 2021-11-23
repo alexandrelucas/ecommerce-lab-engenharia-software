@@ -58,7 +58,7 @@
             <ng-container matColumnDef="inativado">
                 <th mat-header-cell *matHeaderCellDef> Desativado </th>
                 <td mat-cell *matCellDef="let element" [ngClass]="element.inativado ? 'cinza': ''">
-                  <input type="checkbox" [id]="element?.id" data-toggle="toggle" [checked]="element?.inativado" (change)="onInativoChange($event);showModalStatus(modalStatusProduto, $event.target.id)" data-onstyle="primary">
+                  <input type="checkbox" *ngIf="element.onEstoque" [id]="element?.id" data-toggle="toggle" [checked]="element?.inativado" (change)="onInativoChange($event);showModalStatus(modalStatusProduto, $event.target.id)" data-onstyle="primary">
                 </td>
             </ng-container>
 
