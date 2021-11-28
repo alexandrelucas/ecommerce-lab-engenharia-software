@@ -77,10 +77,10 @@ export default class DashboardDAO implements IDAO {
             let listaTempoGuarda: any[] = entidade.tempoGuarda;
             let listaCategoria: any[] = entidade.categoria;
             
-            let filtroPais = listaPaises.map( (v, index) => (index != 0 ? 'OR' : 'AND') + ` produtos."paisId" = '${v}' `).reduce( (accum, curr) => accum + curr , '');
-            let filtroTipo = listaTipos.map( (v, index ) => (index != 0 ? 'OR' : 'AND') + ` produtos."tipo" = '${v}' `).reduce( (accum, curr) => accum + curr ,'');
-            let filtroTempoGuarda = listaTempoGuarda.map( (v, index) => (index != 0 ? 'OR' : 'AND') + ` produtos."tempoGuarda" = '${v}' `).reduce( (accum, curr) => accum + curr ,'');
-            let filtroCategoria = listaCategoria.map( (v, index) => (index != 0 ? 'OR' : 'AND') + ` produtos."categoriaId" = '${v}' `).reduce( (accum, curr) => accum + curr ,'');
+            let filtroPais = listaPaises.map( (v, index) => (index != 0 ? 'OR' : 'AND (') + ` produtos."paisId" = '${v}' ` + (index == listaPaises.length - 1 ? ')' : '')).reduce( (accum, curr) => accum + curr , '');
+            let filtroTipo = listaTipos.map( (v, index ) => (index != 0 ? 'OR' : 'AND (') + ` produtos."tipo" = '${v}' ` + (index == listaTipos.length - 1 ? ')' : '')).reduce( (accum, curr) => accum + curr ,'');
+            let filtroTempoGuarda = listaTempoGuarda.map( (v, index) => (index != 0 ? 'OR' : 'AND (') + ` produtos."tempoGuarda" = '${v}' ` + (index == listaTempoGuarda.length - 1 ? ')' : '')).reduce( (accum, curr) => accum + curr ,'');
+            let filtroCategoria = listaCategoria.map( (v, index) => (index != 0 ? 'OR' : 'AND (') + ` produtos."categoriaId" = '${v}' ` + (index == listaCategoria.length - 1 ? ')' : '')).reduce( (accum, curr) => accum + curr ,'');
             
 
             
@@ -115,14 +115,14 @@ export default class DashboardDAO implements IDAO {
                 INNER JOIN categorias ON produtos."categoriaId" = categorias.id
                 INNER JOIN pais ON produtos."paisId" = pais.id
                 INNER JOIN vendas ON pedidos.id = vendas."pedidoId"
-                WHERE vendas."pedidoId" = pedidos.id ${ fluxoData != -1 ? 'AND pedidos.data BETWEEN $1 AND $2' : ''} 
+                WHERE vendas."pedidoId" = pedidos.id ${ fluxoData != -1 ? `AND (pedidos.data BETWEEN '${entidade.dataInicio}' AND '${entidade.dataFim}')` : ''} 
                 ${filtroPais} ${filtroTipo} ${filtroCategoria} ${filtroTempoGuarda}
                 GROUP BY ${selectedDate}, pais, completo
                 ORDER BY ${selectedDate}, pais`;
 
-                // console.log(queryTest);
+                console.log(queryTest);
 
-                let consulta = fluxoData != -1 ?  await PgDatabase.query(queryTest, [entidade.dataInicio, entidade.dataFim]) : await PgDatabase.query(queryTest);
+                let consulta = fluxoData != -1 ?  await PgDatabase.query(queryTest) : await PgDatabase.query(queryTest);
 
 
                 const grupos = consulta.rows.reduce((groups, item) => {
