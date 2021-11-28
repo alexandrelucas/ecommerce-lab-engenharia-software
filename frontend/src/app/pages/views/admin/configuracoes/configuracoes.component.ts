@@ -60,7 +60,7 @@ export class ConfiguracoesComponent implements OnInit {
 
   gerarData(){    
       let start = new Date('2021-01-01')
-      let end = new Date('2021-02-28')
+      let end = new Date('2021-01-30')
 
       var diff =  end.getTime() - start.getTime();
       var new_diff = diff * Math.random();
